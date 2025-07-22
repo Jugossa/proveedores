@@ -12,7 +12,8 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const upload = multer({ dest: 'uploads/' });
-const dataPath = "I:/Pagina/proveedores";
+const dataPath = path.join(__dirname, 'data');
+
 
 // Página principal
 app.get("/", (req, res) => {
