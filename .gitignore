@@ -1,0 +1,17 @@
+# node_modules no se sube nunca
+node_modules/
+
+# archivos temporales de sistema
+.DS_Store
+Thumbs.db
+
+# logs
+logs
+*.log
+
+# backups
+*.bak
+*.tmp
+
+# jsons locales si no querés subirlos
+# data/*.json
