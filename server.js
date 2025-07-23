@@ -5,12 +5,12 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Ruta dinámica para local vs Render
+// Ruta dinámica local vs Render
 const baseDir = process.env.RENDER === "true"
   ? path.join(__dirname, "data")
   : path.join("C:", "Temp", "proveedores", "data");
 
-// Cargar archivos JSON correctamente
+// Cargar archivos
 const proveedores = JSON.parse(fs.readFileSync(path.join(baseDir, "proveedores.json"), "utf8"));
 const proFru = JSON.parse(fs.readFileSync(path.join(baseDir, "profru.json"), "utf8"));
 const lastUpdate = JSON.parse(fs.readFileSync(path.join(baseDir, "lastUpdate.json"), "utf8"));
@@ -25,10 +25,16 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Ruta de login
+// Login con validación flexible
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
-  const proveedor = proveedores.find(p => p.cuit === cui && p.clave === password);
+
+  const normalizado = cui.replace(/[^0-9]/g, ""); // solo números
+
+  const proveedor = proveedores.find(p =>
+    p.cuit.replace(/[^0-9]/g, "") === normalizado &&
+    p.clave.trim() === password.trim()
+  );
 
   if (!proveedor) {
     return res.status(401).send("CUIT o clave incorrectos");
@@ -46,7 +52,6 @@ app.post("/login", (req, res) => {
   });
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor funcionando en http://localhost:${PORT}`);
 });
