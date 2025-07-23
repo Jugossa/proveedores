@@ -5,14 +5,14 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Ruta dinámica: local vs producción en Render
+// Ruta dinámica para local vs Render
 const baseDir = process.env.RENDER === "true"
   ? path.join(__dirname, "data")
   : path.join("C:", "Temp", "proveedores", "data");
 
-// Cargar archivos JSON
+// Cargar archivos JSON correctamente
 const proveedores = JSON.parse(fs.readFileSync(path.join(baseDir, "proveedores.json"), "utf8"));
-const proFru = JSON.parse(fs.readFileSync(path.join(baseDir, "ProFru.json"), "utf8"));
+const proFru = JSON.parse(fs.readFileSync(path.join(baseDir, "profru.json"), "utf8"));
 const lastUpdate = JSON.parse(fs.readFileSync(path.join(baseDir, "lastUpdate.json"), "utf8"));
 
 // Middleware
@@ -46,6 +46,7 @@ app.post("/login", (req, res) => {
   });
 });
 
+// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor funcionando en http://localhost:${PORT}`);
 });
