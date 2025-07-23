@@ -140,7 +140,7 @@
 
         document.getElementById("login").style.display = "none";
         const nombre = result.proveedor || "Proveedor";
-        bienvenidaDiv.innerHTML = `✅ Bienvenido <strong>${nombre}</strong><br><span style="font-size: 13px; color: gray;">Última actualización: ${fecha}</span>`;
+        bienvenidaDiv.innerHTML = `✅ Bienvenido <strong>${nombre}</strong><br><span style="font-size: 13px; color: gray;">Última actualización: ${result.ultimaActualizacion}</span>`;
         bienvenidaDiv.style.display = "block";
         avisoDiv.style.display = "block";
         document.getElementById("avisoCuit").style.display = "none";

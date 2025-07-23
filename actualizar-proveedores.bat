@@ -1,22 +1,18 @@
 @echo off
-echo -------------------------------------
-echo 📦 ACTUALIZANDO portal de proveedores
-echo -------------------------------------
+echo === Paso 1: Ejecutando conversión desde Excel ===
+node convertirProveedores.js
 
-cd /d C:\Temp\proveedores
+echo === Paso 2: Subiendo a GitHub ===
+git add data/proveedores.json
+git commit -m "Actualizar proveedores desde Excel"
+git push
 
-echo.
-echo ✅ Haciendo commit...
-git add .
-git commit -m "Actualización automática" || echo (sin cambios nuevos)
-
-echo.
-echo 🚀 Haciendo push a GitHub...
-git push origin main
-
-echo.
-echo 🌐 Solicitando redeploy en Render...
-curl -X POST https://api.render.com/deploy/srv-d1volnnfte5s7392flp0?key=EOtxVwEul-c
+echo === Paso 3: Desplegando en Render ===
+curl -X POST https://api.render.com/v1/services/srv-d1volnnfte5s7392flp0/deploys ^
+ -H "Authorization: Bearer rnd_WaePIC6ZELL8oyJYzybT4Ns8X89u" ^
+ -H "Accept: application/json" ^
+ -d ""
 
 echo.
+echo ✅ Proveedores actualizados en GitHub y Render.
 pause

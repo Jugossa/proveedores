@@ -52,7 +52,7 @@ app.post("/login", (req, res) => {
   const cuiLimpio = cui.replace(/[^0-9]/g, "");
 
   const proveedor = proveedores.find(p =>
-    p.cuit.replace(/[^0-9]/g, "") === cuiLimpio &&
+    p.cui.replace(/[^0-9]/g, "") === cuiLimpio &&
     p.clave.trim() === password.trim()
   );
 

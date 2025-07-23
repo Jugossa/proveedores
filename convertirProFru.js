@@ -1,11 +1,12 @@
-const XLSX = require('xlsx');
-const fs = require('fs');
+const XLSX = require("xlsx");
+const fs = require("fs");
+const path = require("path");
 
-// Ruta del Excel origen
-const excelPath = "I:/Pagina/proveedores/ProFru.xlsx";
-
-// Ruta de salida
-const jsonPath = "I:/Pagina/proveedores/ProFru.json";
+// Ruta al archivo Excel y carpeta de salida
+const baseDir = path.join(__dirname, "data");
+const excelPath = path.join(baseDir, "ProFru.xlsx");
+const jsonPath = path.join(baseDir, "ProFru.json");
+const lastUpdatePath = path.join(baseDir, "lastUpdate.json");
 
 // Leer el archivo Excel
 const workbook = XLSX.readFile(excelPath);
@@ -30,4 +31,8 @@ const entregas = data.map(row => ({
 // Guardar como JSON
 fs.writeFileSync(jsonPath, JSON.stringify(entregas, null, 2), "utf8");
 
-console.log("✅ Archivo ProFru.json generado con", entregas.length, "entregas.");
+// Actualizar fecha en lastUpdate.json
+const fecha = new Date().toISOString().replace("T", " ").substring(0, 16);
+fs.writeFileSync(lastUpdatePath, JSON.stringify({ fecha }, null, 2), "utf8");
+
+console.log("✅ ProFru.json y lastUpdate.json actualizados en /data");

@@ -1,11 +1,10 @@
-const XLSX = require('xlsx');
-const fs = require('fs');
+const XLSX = require("xlsx");
+const fs = require("fs");
+const path = require("path");
 
-// Ruta del Excel origen
-const excelPath = "I:/Pagina/proveedores/proveedores.xlsx";
-
-// Ruta de salida
-const jsonPath = "I:/Pagina/proveedores/proveedores.json";
+const baseDir = path.join(__dirname, "data");
+const excelPath = path.join(baseDir, "proveedores.xlsx");
+const jsonPath = path.join(baseDir, "proveedores.json");
 
 // Leer el archivo Excel
 const workbook = XLSX.readFile(excelPath);
