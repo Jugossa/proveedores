@@ -8,6 +8,13 @@ const excelPath = path.join(baseDir, "ProFru.xlsx");
 const jsonPath = path.join(baseDir, "ProFru.json");
 const lastUpdatePath = path.join(baseDir, "lastUpdate.json");
 
+// Función para convertir fecha de Excel a texto
+function convertirFechaExcel(numero) {
+  const base = new Date(1899, 11, 30);
+  base.setDate(base.getDate() + Math.floor(numero));
+  return base.toISOString().split("T")[0]; // yyyy-mm-dd
+}
+
 // Leer el archivo Excel
 const workbook = XLSX.readFile(excelPath);
 const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -16,7 +23,7 @@ const data = XLSX.utils.sheet_to_json(sheet);
 // Transformar columnas esperadas
 const entregas = data.map(row => ({
   "Nro Jugos": String(row["Nro Jugos"] || "").trim(),
-  "Fecha": row.Fecha,
+  "Fecha": convertirFechaExcel(row.Fecha),
   "Remito": String(row.Remito || "").trim(),
   "CantBins": Number(row.CantBins || 0),
   "ProveedorT": String(row.ProveedorT || "").trim(),
@@ -35,4 +42,4 @@ fs.writeFileSync(jsonPath, JSON.stringify(entregas, null, 2), "utf8");
 const fecha = new Date().toISOString().replace("T", " ").substring(0, 16);
 fs.writeFileSync(lastUpdatePath, JSON.stringify({ fecha }, null, 2), "utf8");
 
-console.log("✅ ProFru.json y lastUpdate.json actualizados en /data");
+console.log("✅ ProFru.json (con fechas legibles) y lastUpdate.json actualizados en /data");
