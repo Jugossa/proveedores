@@ -34,20 +34,17 @@
 </head>
 <body>
 
-  <!-- Logo y título centrados -->
   <div id="titulo" style="text-align: center; margin-bottom: 10px;">
     <img src="img/logo.png" alt="Logo Jugos SA" style="height: 60px;" />
     <h2 style="margin: 10px 0;">🔐 Ingreso de Proveedores</h2>
   </div>
 
-  <!-- Login -->
   <div id="login" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
     <input type="text" id="cui" placeholder="CUIT / CUIL" style="width: 150px;" />
     <input type="password" id="password" placeholder="Contraseña" style="width: 150px;" />
     <button onclick="login()">Ingresar</button>
   </div>
 
-  <!-- Aviso CUIT -->
   <div id="avisoCuit" style="font-size: 12px; color: #444; margin: 4px 0 5px 0;">
     * El CUIT puede ingresarse con o sin guiones.
   </div>
@@ -68,7 +65,6 @@
     </div>
 
     <div id="resumen"></div>
-
     <div id="acciones">
       <button onclick="descargarExcel()">📄 Descargar Excel</button> 
       <button onclick="window.print()">📅 Descargar PDF</button>
@@ -132,7 +128,9 @@
           return;
         }
 
-        const data = await res.json();
+        const result = await res.json();
+        const data = result.entregas || [];
+
         if (!data.length) {
           tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
           return;
@@ -141,12 +139,10 @@
         entregasOriginal = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
 
         document.getElementById("login").style.display = "none";
-
-        const nombre = data[0].ProveedorT || "Proveedor";
-        bienvenidaDiv.innerHTML = `✅ Bienvenido <strong>${nombre}</strong>`;
+        const nombre = result.proveedor || "Proveedor";
+        bienvenidaDiv.innerHTML = `✅ Bienvenido <strong>${nombre}</strong><br><span style="font-size: 13px; color: gray;">Última actualización: ${fecha}</span>`;
         bienvenidaDiv.style.display = "block";
         avisoDiv.style.display = "block";
-
         document.getElementById("avisoCuit").style.display = "none";
 
         mostrarFiltrosYTabla(entregasOriginal);
