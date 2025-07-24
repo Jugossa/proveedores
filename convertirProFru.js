@@ -1,56 +1,64 @@
-
-function formatDate(excelDate) {
-    const date = new Date(excelDate);
-    if (isNaN(date.getTime())) return "";
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-}
-
-const XLSX = require("xlsx");
-const fs = require("fs");
-const path = require("path");
-
-// Ruta al archivo Excel y carpeta de salida
-const baseDir = path.join(__dirname, "data");
-const excelPath = path.join(baseDir, "ProFru.xlsx");
-const jsonPath = path.join(baseDir, "ProFru.json");
-const lastUpdatePath = path.join(baseDir, "lastUpdate.json");
-
-// Función para convertir fecha de Excel a texto
-// función antigua eliminada {
-  const base = new Date(1899, 11, 30);
-  base.setDate(base.getDate() + Math.floor(numero));
-  return base.toISOString().split("T")[0]; // yyyy-mm-dd
-}
+const xlsx = require('xlsx');
+const fs = require('fs');
+const path = require('path');
 
 // Leer el archivo Excel
-const workbook = XLSX.readFile(excelPath);
-const sheet = workbook.Sheets[workbook.SheetNames[0]];
-const data = XLSX.utils.sheet_to_json(sheet);
+const workbook = xlsx.readFile(path.join(__dirname, 'data', 'ProFru.xlsx'));
+const sheetName = workbook.SheetNames[0];
+const worksheet = workbook.Sheets[sheetName];
 
-// Transformar columnas esperadas
-const entregas = data.map(row => ({
-  "Nro Jugos": String(row["Nro Jugos"] || "").trim(),
-  "Fecha": convertirFechaExcel(row.Fecha),
-  "Remito": String(row.Remito || "").trim(),
-  "CantBins": Number(row.CantBins || 0),
-  "ProveedorT": String(row.ProveedorT || "").trim(),
-  "Origen": String(row.Origen || "").trim(),
-  "Especie": String(row.Especie || "").trim(),
-  "NomVariedad": String(row.NomVariedad || "").trim(),
-  "KgsD": Number(row.KgsD || 0),
-  "Certificado": String(row.Certificado || "").trim(),
-  "pagado": String(row.pagado || "").toLowerCase().trim() === "si"
-}));
+// Convertir la hoja a JSON
+let data = xlsx.utils.sheet_to_json(worksheet);
+
+// Función para convertir número de Excel a fecha
+function excelDateToJSDate(serial) {
+  const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+  const days = Math.floor(serial);
+  const milliseconds = days * 24 * 60 * 60 * 1000;
+  const date = new Date(excelEpoch.getTime() + milliseconds);
+  return date;
+}
+
+// Función para formatear a dd/mm/yyyy
+function formatDateToDDMMYYYY(date) {
+  const d = date.getUTCDate().toString().padStart(2, '0');
+  const m = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+  const y = date.getUTCFullYear();
+  return `${d}/${m}/${y}`;
+}
+
+// Aplicar conversión de fecha
+data = data.map(row => {
+  if (typeof row.Fecha === 'number') {
+    const jsDate = excelDateToJSDate(row.Fecha);
+    row.Fecha = formatDateToDDMMYYYY(jsDate);
+  }
+  return row;
+});
 
 // Guardar como JSON
-fs.writeFileSync(jsonPath, JSON.stringify(entregas, null, 2), "utf8");
+fs.writeFileSync(
+  path.join(__dirname, 'data', 'ProFru.json'),
+  JSON.stringify(data, null, 2),
+  'utf-8'
+);
 
-// Actualizar fecha en lastUpdate.json
-const now = new Date();
-const fecha = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-fs.writeFileSync(lastUpdatePath, JSON.stringify({ fecha }, null, 2), "utf8");
+// Guardar fecha de última actualización
+const lastUpdate = {
+  fecha: new Date().toLocaleString('es-AR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).replace(',', '')
+};
 
-console.log("✅ ProFru.json (con fechas legibles) y lastUpdate.json actualizados en /data");
+fs.writeFileSync(
+  path.join(__dirname, 'data', 'lastUpdate.json'),
+  JSON.stringify(lastUpdate, null, 2),
+  'utf-8'
+);
+
+console.log('Conversión completa. Archivos actualizados en /data.');
