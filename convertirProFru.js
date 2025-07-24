@@ -24,9 +24,7 @@ const output = data.map(row => ({
   "KgsD": row["KgsD"],
   "Certificado": row["Certificado"],
   "pagado": false,
-  "dt1": row["dt1"] || 0,
-  "kgs": row["kgs"] || 0
-}));
+  }));
 
 fs.writeFileSync("data/profru.json", JSON.stringify(output, null, 2));
 
