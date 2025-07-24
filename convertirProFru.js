@@ -1,3 +1,13 @@
+
+function formatDate(excelDate) {
+    const date = new Date(excelDate);
+    if (isNaN(date.getTime())) return "";
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
@@ -8,17 +18,11 @@ const excelPath = path.join(baseDir, "ProFru.xlsx");
 const jsonPath = path.join(baseDir, "ProFru.json");
 const lastUpdatePath = path.join(baseDir, "lastUpdate.json");
 
-// Función para convertir fecha de Excel a dd/mm/yyyy
-function convertirFechaExcel(numero) {
-  if (typeof numero === "number") {
-    const base = new Date(1899, 11, 30);
-    base.setDate(base.getDate() + Math.floor(numero));
-    const day = String(base.getDate()).padStart(2, "0");
-    const month = String(base.getMonth() + 1).padStart(2, "0");
-    const year = base.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
-  return "";
+// Función para convertir fecha de Excel a texto
+// función antigua eliminada {
+  const base = new Date(1899, 11, 30);
+  base.setDate(base.getDate() + Math.floor(numero));
+  return base.toISOString().split("T")[0]; // yyyy-mm-dd
 }
 
 // Leer el archivo Excel
@@ -45,7 +49,8 @@ const entregas = data.map(row => ({
 fs.writeFileSync(jsonPath, JSON.stringify(entregas, null, 2), "utf8");
 
 // Actualizar fecha en lastUpdate.json
-const fecha = new Date().toISOString().replace("T", " ").substring(0, 16);
+const now = new Date();
+const fecha = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 fs.writeFileSync(lastUpdatePath, JSON.stringify({ fecha }, null, 2), "utf8");
 
-console.log("✅ ProFru.json (con fechas dd/mm/yyyy) y lastUpdate.json actualizados en /data");
+console.log("✅ ProFru.json (con fechas legibles) y lastUpdate.json actualizados en /data");
