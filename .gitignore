@@ -1,17 +1,20 @@
-# node_modules no se sube nunca
+# 📁 node_modules
 node_modules/
 
-# archivos temporales de sistema
+# 🗃️ Archivos temporales y de sistema
 .DS_Store
 Thumbs.db
 
-# logs
-logs
+# 🧪 Logs y temporales
+logs/
 *.log
-
-# backups
-*.bak
 *.tmp
+*.bak
 
-# jsons locales si no querés subirlos
+# 🔐 Archivos secretos locales
+secrets.txt
+actualizar-*.bat
+convertir*.bat
+
+# 📂 Datos que no querés subir (si aplica)
 # data/*.json

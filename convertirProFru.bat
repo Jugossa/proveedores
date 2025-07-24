@@ -15,9 +15,13 @@ git add .
 git commit -m "Actualización completa de ProFru"
 git push
 
-echo === 🚀 Forzando deploy en Render...
-curl -X POST https://api.render.com/v1/services/srv-d1volnnfte5s7392flp0/deploys ^
- -H "Authorization: Bearer rnd_WaePIC6ZELL8oyJYzybT4Ns8X89u" ^
+echo === 🚀 Forzando deploy en Render desde secrets.txt ===
+for /f "tokens=1,2 delims==" %%A in (secrets.txt) do (
+    if "%%A"=="RENDER_TOKEN" set TOKEN=%%B
+    if "%%A"=="RENDER_SERVICE" set SERVICE=%%B
+)
+curl -X POST https://api.render.com/v1/services/%SERVICE%/deploys ^
+ -H "Authorization: Bearer %TOKEN%" ^
  -H "Accept: application/json" ^
  -d ""
 
@@ -26,3 +30,4 @@ start https://proveedores-y0xr.onrender.com/
 
 echo ✅ Todo listo: Access, conversión, subida y deploy completados.
 pause
+se
