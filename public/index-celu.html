@@ -1,203 +1,275 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portal Proveedores Móvil</title>
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   Portal Proveedores
+  </title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+  </script>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 1em;
-      text-align: center;
+   body { font-family: sans-serif; margin: 40px 20px; max-width: none; }
+    input, button, select { padding: 10px; margin: 5px 5px 5px 0; }
+    input[type="date"] { width: auto; }
+    button { cursor: pointer; }
+    table { width: auto; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; font-size: 14px; white-space: nowrap; }
+    th { background: #f0f0f0; }
+    #error { color: red; margin-top: 10px; }
+    #resumen { font-weight: bold; margin: 10px 0; }
+    #acciones { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+    #acciones button { width: auto; max-width: 200px; padding: 8px 12px; }
+    #bienvenida { margin: 20px 0 5px 0; font-size: 16px; color: green; font-weight: bold; display: none; }
+    #aviso { font-size: 12px; color: black; margin-bottom: 15px; display: none; font-weight: normal; }
+    #filtroEspecie { width: auto; }
+    td[col-id="KgsD"],td[col-id="CantBins"] {
+      text-align: right;
     }
-    img.logo {
-      width: 120px;
-      margin-bottom: 1em;
-    }
-    .contenedor-login input {
-      width: 80%;
-      padding: 10px;
-      margin: 5px auto;
-      font-size: 16px;
-      display: block;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    .contenedor-login button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
+    #filtroFechas {
+      display: flex;
+      gap: 10px;
+      align-items: center;
       margin-top: 10px;
+      flex-wrap: wrap;
     }
-    .error {
-      color: red;
-      margin-top: 10px;
-    }
-    .oculto {
-      display: none;
-    }
-    .botones button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-    }
-    .resumen {
-      font-size: 18px;
-      margin-top: 1em;
-    }
-    table {
-      margin: 10px auto;
-      border-collapse: collapse;
-      width: 95%;
-    }
-    table th, table td {
-      border: 1px solid #ccc;
-      padding: 6px;
-      font-size: 14px;
-    }
-    #datos {
-      margin-top: 20px;
-    }
-    #proveedorNombre {
-      font-weight: bold;
-      margin-top: 5px;
-    }
-    #fechaActualizacion {
-      margin-top: 10px;
-      font-size: 14px;
-      color: gray;
-    }
+    #filtroFechas label { margin-right: 5px; }
   </style>
-</head>
-<body>
-  <img src="img/logo.png" alt="Logo Jugos" class="logo" />
-
-  <div class="contenedor-login" id="loginForm">
-    <h2>Ingreso de Proveedores</h2>
-    <input type="text" id="cuit" placeholder="CUIT / CUIL" />
-    <input type="password" id="clave" placeholder="Contraseña" />
-    <button onclick="ingresar()">Ingresar</button>
-    <div class="error" id="error"></div>
+  <style>
+   body {
+    max-width: 100vw;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+input, button {
+    width: 90%;
+    font-size: 1.1em;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+  </style>
+ </head>
+ <body>
+  <div id="titulo" style="text-align: center; margin-bottom: 10px;">
+   <img alt="Logo Jugos SA" src="img/logo.png" style="height: 60px;"/>
+   <h2 style="margin: 10px 0;">
+    🔐 Ingreso de Proveedores
+   </h2>
   </div>
-
-  <div id="app" class="oculto">
-    <h2>Portal Proveedores Móvil</h2>
-    <div id="proveedorNombre"></div>
-
-    <div class="botones">
-      <button onclick="filtrar('PERA')">🍐 Pera</button>
-      <button onclick="filtrar('MANZA')">🍎 Manzana</button>
-      <button onclick="filtrar('')">📄 Todas</button>
-    </div>
-
-    <div class="resumen" id="resumenTotales"></div>
-
-    <button onclick="document.getElementById('datos').classList.toggle('oculto')">Ver detalle</button>
-
-    <table id="datos" class="oculto">
-      <thead>
-        <tr>
-          <th>Nro Jugos</th>
-          <th>Fecha</th>
-          <th>Remito</th>
-          <th>CantBins</th>
-          <th>Proveedor</th>
-          <th>Especie</th>
-          <th>NomVariedad</th>
-          <th>KgsD</th>
-        </tr>
-      </thead>
-      <tbody id="tabla"></tbody>
-    </table>
-
-    <div id="fechaActualizacion"></div>
+  <div id="login" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+   <input id="cui" placeholder="CUIT / CUIL" style="width: 150px;" type="text"/>
+   <input id="password" placeholder="Contraseña" style="width: 150px;" type="password"/>
+   <button onclick="login()">
+    Ingresar
+   </button>
   </div>
-
+  <div id="avisoCuit" style="font-size: 12px; color: #444; margin: 4px 0 5px 0;">
+   * El CUIT puede ingresarse con o sin guiones.
+  </div>
+  <div id="error">
+  </div>
+  <div id="bienvenida">
+  </div>
+  <div id="aviso">
+   Cualquier consulta comunicarse con la administración de Jugos SA.
+  </div>
+  <div id="filtros" style="display:none;">
+   <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px;">
+    <label for="filtroEspecie">
+     Especie:
+    </label>
+    <select id="filtroEspecie">
+    </select>
+    <label for="desde">
+     Desde:
+    </label>
+    <input id="desde" type="date"/>
+    <label for="hasta">
+     Hasta:
+    </label>
+    <input id="hasta" type="date"/>
+    <button onclick="filtrarEspecie()">
+     Ver
+    </button>
+   </div>
+   <div id="resumen">
+   </div>
+   <div id="acciones">
+    <button onclick="descargarExcel()">
+     📄 Descargar Excel
+    </button>
+    <button onclick="window.print()">
+     📅 Descargar PDF
+    </button>
+   </div>
+  </div>
+  <div id="tabla">
+  </div>
   <script>
-    let entregas = [];
+   let entregasOriginal = [];
+    let entregasFiltradas = [];
 
-    function ingresar() {
-      const cuit = document.getElementById("cuit").value.trim();
-      const clave = document.getElementById("clave").value.trim();
-      fetch("/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cuit, clave }),
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error("Login incorrecto");
-          return res.json();
-        })
-        .then((data) => {
-          document.getElementById("loginForm").classList.add("oculto");
-          document.getElementById("app").classList.remove("oculto");
-          document.getElementById("proveedorNombre").textContent = `Proveedor: ${data.nombre}`;
-          cargarDatos(data.nombre);
-        })
-        .catch(() => {
-          document.getElementById("error").textContent = "❌ CUIT o contraseña incorrectos";
-        });
+    function convertirFecha(excelNumber) {
+      const baseDate = new Date(1899, 11, 30);
+      const dias = parseInt(excelNumber);
+      if (isNaN(dias)) return excelNumber;
+      const fecha = new Date(baseDate.getTime() + dias * 86400000);
+      return fecha.toLocaleDateString("es-AR", { day: '2-digit', month: '2-digit', year: 'numeric' });
     }
 
-    function cargarDatos(nombre) {
-      fetch("/data/profru.json")
-        .then((r) => r.json())
-        .then((datos) => {
-          entregas = datos.filter((d) => d.ProveedorT === nombre);
-          filtrar('');
-        });
-
-      fetch("/data/lastUpdate.json")
-        .then((r) => r.json())
-        .then((u) => {
-          document.getElementById("fechaActualizacion").textContent = `Actualizado el ${u.fecha} a las ${u.hora}`;
-        });
+    function fechaDentroDeRango(fechaStr, desdeStr, hastaStr) {
+      if (!desdeStr && !hastaStr) return true;
+      const [dia, mes, anio] = fechaStr.split("/");
+      const fecha = new Date(`${anio}-${mes}-${dia}`);
+      const desde = desdeStr ? new Date(desdeStr) : null;
+      const hasta = hastaStr ? new Date(hastaStr) : null;
+      if (desde && fecha < desde) return false;
+      if (hasta && fecha > hasta) return false;
+      return true;
     }
 
-    function filtrar(tipo) {
-      let filtradas = entregas;
-      if (tipo) filtradas = entregas.filter((e) => e.Especie.toUpperCase().includes(tipo));
-      const totalPera = entregas.filter(e => e.Especie.includes("PERA")).reduce((acc, e) => acc + parseFloat(e.KgsD), 0);
-      const totalManzana = entregas.filter(e => e.Especie.includes("MANZA")).reduce((acc, e) => acc + parseFloat(e.KgsD), 0);
-      const total = totalPera + totalManzana;
+    async function login() {
+      const cui = document.getElementById("cui").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorDiv = document.getElementById("error");
+      const tablaDiv = document.getElementById("tabla");
+      const filtrosDiv = document.getElementById("filtros");
+      const bienvenidaDiv = document.getElementById("bienvenida");
+      const avisoDiv = document.getElementById("aviso");
 
-      document.getElementById("resumenTotales").innerHTML = `
-        <p><strong>Total Pera:</strong> ${totalPera.toLocaleString('es-AR', {minimumFractionDigits: 2})} kg</p>
-        <p><strong>Total Manzana:</strong> ${totalManzana.toLocaleString('es-AR', {minimumFractionDigits: 2})} kg</p>
-        <p><strong>Total de todas:</strong> ${total.toLocaleString('es-AR', {minimumFractionDigits: 2})} kg</p>
-      `;
+      errorDiv.textContent = "";
+      tablaDiv.innerHTML = "";
+      filtrosDiv.style.display = "none";
+      bienvenidaDiv.style.display = "none";
+      avisoDiv.style.display = "none";
 
-      const tbody = document.getElementById("tabla");
-      tbody.innerHTML = "";
-      filtradas.forEach((d) => {
-        const row = `<tr>
-          <td>${d["Nro Jugos"]}</td>
-          <td>${excelFecha(d.Fecha)}</td>
-          <td>${d.Remito}</td>
-          <td>${d.CantBins}</td>
-          <td>${d.ProveedorT}</td>
-          <td>${d.Especie}</td>
-          <td>${d.NomVariedad}</td>
-          <td>${parseFloat(d.KgsD).toFixed(2)}</td>
-        </tr>`;
-        tbody.innerHTML += row;
+      if (!cui || !password) {
+        errorDiv.textContent = "Por favor complete CUIT y contraseña.";
+        return;
+      }
+
+      try {
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cui, password })
+        });
+
+        if (res.status === 401) {
+          errorDiv.textContent = "❌ CUIT o contraseña incorrectos.";
+          return;
+        }
+
+        const result = await res.json();
+        const data = result.entregas || [];
+
+        if (!data.length) {
+          tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
+          return;
+        }
+
+        entregasOriginal = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
+
+        document.getElementById("login").style.display = "none";
+        const nombre = result.proveedor || "Proveedor";
+        bienvenidaDiv.innerHTML = `✅ Bienvenido <strong>${nombre}</strong><br><span style="font-size: 13px; color: gray;">Última actualización: ${result.ultimaActualizacion}</span>`;
+        bienvenidaDiv.style.display = "block";
+        avisoDiv.style.display = "block";
+        document.getElementById("avisoCuit").style.display = "none";
+
+        mostrarFiltrosYTabla(entregasOriginal);
+      } catch (err) {
+        errorDiv.textContent = "❌ Error de red.";
+        console.error(err);
+      }
+    }
+
+    function mostrarFiltrosYTabla(data) {
+      const especies = [...new Set(data.map(e => e.Especie).filter(Boolean))];
+      const select = document.getElementById("filtroEspecie");
+
+      select.innerHTML = `<option value="TODAS">Todas las especies</option>`;
+      especies.forEach(v => {
+        select.innerHTML += `<option value="${v}">${v}</option>`;
       });
+
+      document.getElementById("filtros").style.display = "block";
+      filtrarEspecie();
     }
 
-    function excelFecha(n) {
-      const d = new Date((n - 25569) * 86400 * 1000);
-      return d.toLocaleDateString("es-AR");
+    function filtrarEspecie() {
+      const especie = document.getElementById("filtroEspecie").value;
+      const desde = document.getElementById("desde").value;
+      const hasta = document.getElementById("hasta").value;
+
+      entregasFiltradas = entregasOriginal.filter(e => {
+        const coincideEspecie = especie === "TODAS" || e.Especie === especie;
+        const enRango = fechaDentroDeRango(e.FechaStr, desde, hasta);
+        return coincideEspecie && enRango;
+      });
+
+      renderTabla(entregasFiltradas);
+    }
+
+    function renderTabla(data) {
+      const tablaDiv = document.getElementById("tabla");
+      const resumenDiv = document.getElementById("resumen");
+
+      if (!data.length) {
+        tablaDiv.innerHTML = "<p>No hay datos.</p>";
+        resumenDiv.textContent = "";
+        return;
+      }
+
+      const totalKgs = data.reduce((sum, row) => sum + Number(row.KgsD || 0), 0);
+      resumenDiv.textContent = `Total kilos entregados: ${totalKgs.toLocaleString("es-AR")} kg`;
+
+      const columnasOcultas = ["pagado", "ProveedorT"];
+      const encabezados = Object.keys(data[0]).filter(k => !columnasOcultas.includes(k) && k !== "FechaStr");
+
+      let html = "<table><thead><tr>";
+      encabezados.forEach(k => html += `<th col-id="${k}">${k}</th>`);
+      html += "</tr></thead><tbody>";
+
+      data.forEach(row => {
+        html += "<tr>";
+        encabezados.forEach(k => {
+          let val = row[k];
+          if (k === "Fecha") val = convertirFecha(val);
+          if (k === "KgsD") val = Number(val).toLocaleString("es-AR");
+          html += `<td col-id="${k}">${val}</td>`;
+        });
+        html += "</tr>";
+      });
+
+      html += "</tbody></table>";
+      tablaDiv.innerHTML = html;
+    }
+
+    function descargarExcel() {
+      const columnasOcultas = ["pagado", "ProveedorT"];
+      const datosExportar = entregasFiltradas.map(row => {
+        const fila = {};
+        for (let key in row) {
+          if (!columnasOcultas.includes(key) && key !== "FechaStr") {
+            let val = row[key];
+            if (key === "Fecha") val = convertirFecha(val);
+            fila[key] = val;
+          }
+        }
+        return fila;
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(datosExportar);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Entregas");
+      XLSX.writeFile(workbook, "entregas.xlsx");
     }
   </script>
-</body>
+ </body>
 </html>
-<!-- Actualización forzada: 2025-07-25 15:39:12 -->
+&lt;!-- Modificado para celu: login funcional, cui ok --&gt;
