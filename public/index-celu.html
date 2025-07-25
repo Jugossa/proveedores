@@ -1,116 +1,128 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proveedores - Móvil</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jugos SA - Entregas</title>
   <style>
-    body { font-family: sans-serif; margin: 1em; background: #f4f4f4; }
-    h1 { text-align: center; }
-    .filtros { text-align: center; margin-bottom: 1em; }
-    .filtros button {
-      margin: 0.2em;
-      padding: 0.5em 1em;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background-color: #007bff;
-      color: white;
-    }
-    .resumen {
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 1em;
       text-align: center;
-      font-size: 1.5em;
-      margin: 1em 0;
-      font-weight: bold;
     }
-    .detalle {
-      display: none;
-      overflow-x: auto;
+    .login, .contenido {
+      max-width: 400px;
+      margin: auto;
+    }
+    input {
+      display: block;
+      width: 100%;
+      padding: 0.7em;
+      margin: 0.5em 0;
+      font-size: 1em;
+    }
+    button {
+      padding: 0.7em;
+      font-size: 1em;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 0.5em;
       margin-top: 1em;
     }
-    table { border-collapse: collapse; width: 100%; font-size: 0.9em; }
-    th, td { border: 1px solid #ccc; padding: 0.5em; text-align: left; }
-    .btn-ver {
-      display: block;
-      margin: 0 auto;
-      padding: 0.5em 1em;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background-color: #28a745;
-      color: white;
+    .botones {
+      margin: 1em 0;
     }
+    .botones button {
+      background: #007bff;
+      margin: 0.2em;
+    }
+    .oculto { display: none; }
+    .kilos { font-size: 1.5em; font-weight: bold; margin: 1em 0; }
   </style>
 </head>
 <body>
-  <h1>Entregas</h1>
-  <div class="filtros">
-    <button onclick="filtrar('pera')">🍐 Pera</button>
-    <button onclick="filtrar('manzana')">🍎 Manzana</button>
-    <button onclick="filtrar('todas')">📋 Todas</button>
+  <div class="login" id="login">
+    <h2>Ingreso de Proveedores</h2>
+    <input type="text" id="cuit" placeholder="CUIT / CUIL" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button onclick="ingresar()">Ingresar</button>
+    <p id="error" style="color:red;"></p>
   </div>
 
-  <div class="resumen" id="resumen">Total: 0 kg</div>
-  <button class="btn-ver" onclick="toggleDetalle()">Ver detalles</button>
-  <div class="detalle" id="detalle">
-    <table id="tabla">
-      <thead>
-        <tr>
-          <th>Proveedor</th><th>Fecha</th><th>Remito</th><th>Variedad</th><th>Kgs</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <div class="contenido oculto" id="contenido">
+    <h2>Entregas</h2>
+    <div class="botones">
+      <button onclick="filtrar('pera')">🍐 Pera</button>
+      <button onclick="filtrar('manzana')">🍎 Manzana</button>
+      <button onclick="filtrar('')">🗂️ Todas</button>
+    </div>
+    <div class="kilos">Total: <span id="totalKgs">0</span> kg</div>
+    <button onclick="verDetalles()">Ver detalles</button>
+    <div id="tabla" class="oculto"></div>
   </div>
 
-  <script>
-    let datos = [];
-    let visible = false;
+<script>
+let entregas = [];
+let proveedor = "";
+function convertirFecha(excelNumber) {
+  const baseDate = new Date(1899, 11, 30);
+  return new Date(baseDate.getTime() + excelNumber * 86400000)
+    .toLocaleDateString("es-AR");
+}
+async function ingresar() {
+  const cui = document.getElementById("cuit").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const error = document.getElementById("error");
 
-    function convertirFecha(excelNumber) {
-      const baseDate = new Date(1899, 11, 30);
-      const dias = parseInt(excelNumber);
-      if (isNaN(dias)) return excelNumber;
-      const fecha = new Date(baseDate.getTime() + dias * 86400000);
-      return fecha.toLocaleDateString("es-AR", { day: '2-digit', month: '2-digit', year: 'numeric' });
+  if (!cui || !password) {
+    error.textContent = "Ingrese CUIT y contraseña.";
+    return;
+  }
+
+  try {
+    const res = await fetch(`/data/proveedores.json`);
+    const lista = await res.json();
+    const prov = lista.find(p => p.cuit === cui && p.clave === password);
+    if (!prov) {
+      error.textContent = "CUIT o contraseña incorrectos.";
+      return;
     }
-
-    function toggleDetalle() {
-      visible = !visible;
-      document.getElementById("detalle").style.display = visible ? 'block' : 'none';
-    }
-
-    function filtrar(tipo) {
-      const tbody = document.querySelector("#tabla tbody");
-      tbody.innerHTML = "";
-      let total = 0;
-
-      const filtrado = datos.filter(e => {
-        if (tipo === 'todas') return true;
-        return e.Especie?.toLowerCase() === tipo;
-      });
-
-      filtrado.forEach(e => {
-        const fila = `<tr>
-          <td>${e.ProveedorT}</td>
-          <td>${convertirFecha(e.Fecha)}</td>
-          <td>${e.Remito}</td>
-          <td>${e.NomVariedad}</td>
-          <td>${e.KgsD}</td>
-        </tr>`;
-        total += e.KgsD;
-        tbody.insertAdjacentHTML("beforeend", fila);
-      });
-
-      document.getElementById("resumen").innerText = `Total: ${total.toLocaleString('es-AR')} kg`;
-    }
-
-    fetch("/data/profru.json")
-      .then(res => res.json())
-      .then(json => {
-        datos = json;
-        filtrar("todas");
-      });
-  </script>
+    proveedor = prov.nombre;
+    mostrarEntregas();
+  } catch {
+    error.textContent = "Error al cargar datos.";
+  }
+}
+async function mostrarEntregas() {
+  document.getElementById("login").classList.add("oculto");
+  document.getElementById("contenido").classList.remove("oculto");
+  const res = await fetch(`/data/ProFru.json`);
+  const datos = await res.json();
+  entregas = datos.filter(e => e.ProveedorT === proveedor);
+  filtrar('');
+}
+function filtrar(especie) {
+  const filtradas = especie ? entregas.filter(e => (e.Especie || "").toLowerCase() === especie) : entregas;
+  const total = filtradas.reduce((s, r) => s + Number(r.KgsD || 0), 0);
+  document.getElementById("totalKgs").textContent = total.toLocaleString("es-AR");
+  window._filtradas = filtradas;
+  document.getElementById("tabla").classList.add("oculto");
+}
+function verDetalles() {
+  const t = window._filtradas || entregas;
+  let html = "<table style='width:100%; border-collapse:collapse'><tr><th>Fecha</th><th>Remito</th><th>CantBins</th><th>Origen</th><th>Especie</th><th>Variedad</th><th>Kgs</th></tr>";
+  t.forEach(e => {
+    html += `<tr><td>${convertirFecha(e.Fecha)}</td><td>${e.Remito}</td><td>${e.CantBins}</td><td>${e.Origen}</td><td>${e.Especie}</td><td>${e.NomVariedad}</td><td>${Number(e.KgsD).toLocaleString("es-AR")}</td></tr>`;
+  });
+  html += "</table>";
+  const tabla = document.getElementById("tabla");
+  tabla.innerHTML = html;
+  tabla.classList.remove("oculto");
+}
+</script>
 </body>
 </html>
