@@ -3,128 +3,199 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jugos SA - Total Entregas (Móvil)</title>
+  <title>Portal Proveedores Móvil</title>
   <style>
     body {
       font-family: sans-serif;
       background: #f5f5f5;
-      text-align: center;
+      margin: 0;
       padding: 1em;
+      text-align: center;
     }
-    .login, .contenido { max-width: 400px; margin: auto; }
-    input {
-      width: 100%; padding: 0.5em; margin-bottom: 1em;
-      border: 1px solid #ccc; border-radius: 4px;
+    img.logo {
+      width: 120px;
+      margin-bottom: 1em;
     }
-    button {
-      padding: 0.5em 1em; margin: 0.2em;
-      border: none; border-radius: 5px;
-      background-color: #007bff; color: white;
-      font-size: 1em;
+    .contenedor-login input {
+      width: 80%;
+      padding: 10px;
+      margin: 5px auto;
+      font-size: 16px;
+      display: block;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
-    button.verde { background-color: #28a745; }
-    .oculto { display: none; }
-    .tabla-container { overflow-x: auto; margin-top: 1em; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
-    th, td { border: 1px solid #ccc; padding: 4px; }
-    th { background-color: #f0f0f0; }
+    .contenedor-login button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+    .oculto {
+      display: none;
+    }
+    .botones button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+    }
+    .resumen {
+      font-size: 18px;
+      margin-top: 1em;
+    }
+    table {
+      margin: 10px auto;
+      border-collapse: collapse;
+      width: 95%;
+    }
+    table th, table td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      font-size: 14px;
+    }
+    #datos {
+      margin-top: 20px;
+    }
+    #proveedorNombre {
+      font-weight: bold;
+      margin-top: 5px;
+    }
+    #fechaActualizacion {
+      margin-top: 10px;
+      font-size: 14px;
+      color: gray;
+    }
   </style>
 </head>
 <body>
-  <div class="login">
+  <img src="img/logo.png" alt="Logo Jugos" class="logo" />
+
+  <div class="contenedor-login" id="loginForm">
     <h2>Ingreso de Proveedores</h2>
-    <input type="text" id="cuit" placeholder="CUIT / CUIL">
-    <input type="password" id="password" placeholder="Contraseña">
-    <button class="verde" onclick="ingresar()">Ingresar</button>
-    <p id="error" style="color: red;"></p>
+    <input type="text" id="cuit" placeholder="CUIT / CUIL" />
+    <input type="password" id="clave" placeholder="Contraseña" />
+    <button onclick="ingresar()">Ingresar</button>
+    <div class="error" id="error"></div>
   </div>
 
-  <div id="contenido" class="contenido oculto">
-    <h2>Entregas</h2>
-    <button onclick="filtrar('Pera')">🍐 Pera</button>
-    <button onclick="filtrar('Manzana')">🍎 Manzana</button>
-    <button onclick="filtrar('Todas')">📄 Todas</button>
-    <div id="totales"></div>
-    <h3>Total: <span id="totalKgs">0</span> kg</h3>
-    <button class="verde" onclick="verDetalles()">Ver detalles</button>
-    <div id="tabla" class="tabla-container oculto"></div>
+  <div id="app" class="oculto">
+    <h2>Portal Proveedores Móvil</h2>
+    <div id="proveedorNombre"></div>
+
+    <div class="botones">
+      <button onclick="filtrar('PERA')">🍐 Pera</button>
+      <button onclick="filtrar('MANZA')">🍎 Manzana</button>
+      <button onclick="filtrar('')">📄 Todas</button>
+    </div>
+
+    <div class="resumen" id="resumenTotales"></div>
+
+    <button onclick="document.getElementById('datos').classList.toggle('oculto')">Ver detalle</button>
+
+    <table id="datos" class="oculto">
+      <thead>
+        <tr>
+          <th>Nro Jugos</th>
+          <th>Fecha</th>
+          <th>Remito</th>
+          <th>CantBins</th>
+          <th>Proveedor</th>
+          <th>Especie</th>
+          <th>NomVariedad</th>
+          <th>KgsD</th>
+        </tr>
+      </thead>
+      <tbody id="tabla"></tbody>
+    </table>
+
+    <div id="fechaActualizacion"></div>
   </div>
 
   <script>
     let entregas = [];
-    let entregasFiltradas = [];
-    let proveedor = "";
 
-    function convertirFecha(excelDate) {
-      const base = new Date(1899, 11, 30);
-      return new Date(base.getTime() + (excelDate * 86400000)).toLocaleDateString("es-AR");
+    function ingresar() {
+      const cuit = document.getElementById("cuit").value.trim();
+      const clave = document.getElementById("clave").value.trim();
+      fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cuit, clave }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Login incorrecto");
+          return res.json();
+        })
+        .then((data) => {
+          document.getElementById("loginForm").classList.add("oculto");
+          document.getElementById("app").classList.remove("oculto");
+          document.getElementById("proveedorNombre").textContent = `Proveedor: ${data.nombre}`;
+          cargarDatos(data.nombre);
+        })
+        .catch(() => {
+          document.getElementById("error").textContent = "❌ CUIT o contraseña incorrectos";
+        });
     }
 
-    async function ingresar() {
-      const cuit = document.getElementById("cuit").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const errorDiv = document.getElementById("error");
-      errorDiv.textContent = "";
-      if (!cuit || !password) {
-        errorDiv.textContent = "⛔ CUIT o contraseña vacía";
-        return;
-      }
-
-      try {
-        const res = await fetch("/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cuit, password })
+    function cargarDatos(nombre) {
+      fetch("/data/profru.json")
+        .then((r) => r.json())
+        .then((datos) => {
+          entregas = datos.filter((d) => d.ProveedorT === nombre);
+          filtrar('');
         });
-        if (!res.ok) throw new Error("Login fallido");
-        const { entregas: data } = await res.json();
-        proveedor = data.length > 0 ? data[0].ProveedorT : "";
-        entregas = data.map(e => ({ ...e, FechaStr: convertirFecha(e.Fecha) }));
-        document.querySelector(".login").style.display = "none";
-        document.getElementById("contenido").classList.remove("oculto");
-        filtrar("Todas");
-      } catch (err) {
-        errorDiv.textContent = "❌ CUIT o contraseña incorrectos";
-      }
+
+      fetch("/data/lastUpdate.json")
+        .then((r) => r.json())
+        .then((u) => {
+          document.getElementById("fechaActualizacion").textContent = `Actualizado el ${u.fecha} a las ${u.hora}`;
+        });
     }
 
     function filtrar(tipo) {
-      if (tipo === "Todas") {
-        entregasFiltradas = [...entregas];
-      } else {
-        entregasFiltradas = entregas.filter(e => e.Especie.toUpperCase() === tipo.toUpperCase());
-      }
-      const total = entregasFiltradas.reduce((s, r) => s + Number(r.KgsD || 0), 0);
-      document.getElementById("totalKgs").textContent = total.toLocaleString("es-AR", { minimumFractionDigits: 0 });
+      let filtradas = entregas;
+      if (tipo) filtradas = entregas.filter((e) => e.Especie.toUpperCase().includes(tipo));
+      const totalPera = entregas.filter(e => e.Especie.includes("PERA")).reduce((acc, e) => acc + parseFloat(e.KgsD), 0);
+      const totalManzana = entregas.filter(e => e.Especie.includes("MANZA")).reduce((acc, e) => acc + parseFloat(e.KgsD), 0);
+      const total = totalPera + totalManzana;
 
-      const resumen = ["Pera", "Manzana"].map(t => {
-        const suma = entregas.filter(e => e.Especie.toUpperCase() === t.toUpperCase())
-          .reduce((acc, el) => acc + Number(el.KgsD || 0), 0);
-        return `<p><b>${t}</b>: ${suma.toLocaleString("es-AR")} kg</p>`;
-      }).join("");
-      document.getElementById("totales").innerHTML = resumen;
-    }
+      document.getElementById("resumenTotales").innerHTML = `
+        <p><strong>Total Pera:</strong> ${totalPera.toLocaleString('es-AR', {minimumFractionDigits: 2})} kg</p>
+        <p><strong>Total Manzana:</strong> ${totalManzana.toLocaleString('es-AR', {minimumFractionDigits: 2})} kg</p>
+        <p><strong>Total de todas:</strong> ${total.toLocaleString('es-AR', {minimumFractionDigits: 2})} kg</p>
+      `;
 
-    function verDetalles() {
-      const tabla = document.getElementById("tabla");
-      if (tabla.classList.contains("oculto")) {
-        const html = renderTabla(entregasFiltradas);
-        tabla.innerHTML = html;
-        tabla.classList.remove("oculto");
-      } else {
-        tabla.classList.add("oculto");
-      }
-    }
-
-    function renderTabla(data) {
-      if (data.length === 0) return "<p>No hay datos.</p>";
-      const cols = ["FechaStr", "Remito", "CantBins", "ProveedorT", "Especie", "NomVariedad", "KgsD"];
-      let html = "<table><tr>" + cols.map(c => `<th>${c.replace("FechaStr", "Fecha")}</th>`).join("") + "</tr>";
-      data.forEach(row => {
-        html += "<tr>" + cols.map(c => `<td>${row[c] ?? ""}</td>`).join("") + "</tr>";
+      const tbody = document.getElementById("tabla");
+      tbody.innerHTML = "";
+      filtradas.forEach((d) => {
+        const row = `<tr>
+          <td>${d["Nro Jugos"]}</td>
+          <td>${excelFecha(d.Fecha)}</td>
+          <td>${d.Remito}</td>
+          <td>${d.CantBins}</td>
+          <td>${d.ProveedorT}</td>
+          <td>${d.Especie}</td>
+          <td>${d.NomVariedad}</td>
+          <td>${parseFloat(d.KgsD).toFixed(2)}</td>
+        </tr>`;
+        tbody.innerHTML += row;
       });
-      html += "</table>";
-      return html;
+    }
+
+    function excelFecha(n) {
+      const d = new Date((n - 25569) * 86400 * 1000);
+      return d.toLocaleDateString("es-AR");
     }
   </script>
 </body>
