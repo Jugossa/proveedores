@@ -46,6 +46,11 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+// Página para celular
+app.get("/index-celu.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index-celu.html"));
+});
+
 // Endpoint de login
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
