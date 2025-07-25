@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proveedores - Móvil</title>
+  <style>
+    body { font-family: sans-serif; margin: 1em; background: #f4f4f4; }
+    h1 { text-align: center; }
+    .filtros { text-align: center; margin-bottom: 1em; }
+    .filtros button {
+      margin: 0.2em;
+      padding: 0.5em 1em;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+    }
+    .resumen {
+      text-align: center;
+      font-size: 1.5em;
+      margin: 1em 0;
+      font-weight: bold;
+    }
+    .detalle {
+      display: none;
+      overflow-x: auto;
+      margin-top: 1em;
+    }
+    table { border-collapse: collapse; width: 100%; font-size: 0.9em; }
+    th, td { border: 1px solid #ccc; padding: 0.5em; text-align: left; }
+    .btn-ver {
+      display: block;
+      margin: 0 auto;
+      padding: 0.5em 1em;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background-color: #28a745;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Entregas</h1>
+  <div class="filtros">
+    <button onclick="filtrar('pera')">🍐 Pera</button>
+    <button onclick="filtrar('manzana')">🍎 Manzana</button>
+    <button onclick="filtrar('todas')">📋 Todas</button>
+  </div>
+
+  <div class="resumen" id="resumen">Total: 0 kg</div>
+  <button class="btn-ver" onclick="toggleDetalle()">Ver detalles</button>
+  <div class="detalle" id="detalle">
+    <table id="tabla">
+      <thead>
+        <tr>
+          <th>Proveedor</th><th>Fecha</th><th>Remito</th><th>Variedad</th><th>Kgs</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    let datos = [];
+    let visible = false;
+
+    function convertirFecha(excelNumber) {
+      const baseDate = new Date(1899, 11, 30);
+      const dias = parseInt(excelNumber);
+      if (isNaN(dias)) return excelNumber;
+      const fecha = new Date(baseDate.getTime() + dias * 86400000);
+      return fecha.toLocaleDateString("es-AR", { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    function toggleDetalle() {
+      visible = !visible;
+      document.getElementById("detalle").style.display = visible ? 'block' : 'none';
+    }
+
+    function filtrar(tipo) {
+      const tbody = document.querySelector("#tabla tbody");
+      tbody.innerHTML = "";
+      let total = 0;
+
+      const filtrado = datos.filter(e => {
+        if (tipo === 'todas') return true;
+        return e.Especie?.toLowerCase() === tipo;
+      });
+
+      filtrado.forEach(e => {
+        const fila = `<tr>
+          <td>${e.ProveedorT}</td>
+          <td>${convertirFecha(e.Fecha)}</td>
+          <td>${e.Remito}</td>
+          <td>${e.NomVariedad}</td>
+          <td>${e.KgsD}</td>
+        </tr>`;
+        total += e.KgsD;
+        tbody.insertAdjacentHTML("beforeend", fila);
+      });
+
+      document.getElementById("resumen").innerText = `Total: ${total.toLocaleString('es-AR')} kg`;
+    }
+
+    fetch("/data/profru.json")
+      .then(res => res.json())
+      .then(json => {
+        datos = json;
+        filtrar("todas");
+      });
+  </script>
+</body>
+</html>
