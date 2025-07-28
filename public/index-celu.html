@@ -3,49 +3,7 @@
  <head>
   <meta charset="utf-8"/>
   <title>Portal Proveedores</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
-    function mostrarResumenTotales(data) {
-      const totalPera = data.filter(e => (e.Especie || "").toLowerCase() === "pera").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
-      const totalManza = data.filter(e => (e.Especie || "").toLowerCase() === "manza").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
-      const total = data.reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
-      document.getElementById("btnPera").innerText = `🍐 Pera - ${totalPera.toLocaleString("es-AR")} kg`;
-      document.getElementById("btnManzana").innerText = `🍎 Manzana - ${totalManza.toLocaleString("es-AR")} kg`;
-      document.getElementById("btnTodas").innerText = `📋 Todas - ${total.toLocaleString("es-AR")} kg`;
-    }
-
-    function mostrarMiniDetalle(tipo) {
-      const cont = document.getElementById("miniDetalle");
-      let datos = entregasOriginal;
-      if (tipo === "pera") {
-        datos = datos.filter(e => (e.Especie || "").toLowerCase() === "pera");
-      } else if (tipo === "manza") {
-        datos = datos.filter(e => (e.Especie || "").toLowerCase() === "manza");
-      }
-
-      const mini = datos.map(e => {
-        const nro = e.nro || "-";
-        const fec = convertirFecha(e.Fecha);
-        const kgs = Number(e.KgsD || 0).toLocaleString("es-AR");
-        return `<tr><td>${nro}</td><td>${fec}</td><td style="text-align:right;">${kgs}</td></tr>`;
-      });
-
-      cont.innerHTML = `
-        <table style="margin:10px auto; font-size: 14px;">
-          <thead><tr><th>Nro</th><th>Fecha</th><th>Kgs</th></tr></thead>
-          <tbody>${mini.join("")}</tbody>
-        </table>
-        <button onclick="volverResumen()" style="margin-top: 5px; padding: 10px 15px;">🔙 Volver</button>
-      `;
-      cont.style.display = "block";
-      document.getElementById("resumenEspecies").style.display = "none";
-    }
-
-    function volverResumen() {
-      document.getElementById("miniDetalle").style.display = "none";
-      document.getElementById("resumenEspecies").style.display = "block";
-    }
-
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -95,23 +53,22 @@
   <div id="bienvenida" style="display:none; font-weight: bold; margin-top: 15px;"></div>
   <div id="aviso" style="font-size: 12px; display: none;">Cualquier consulta comunicarse con la administración de Jugos SA.</div>
 
-  <div id="miniDetalle" style="display:none; margin-top:10px;"></div>
   <div id="resumenEspecies" style="display:none; text-align:center; margin-top: 20px;">
     <h2>Entregas</h2>
     <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin: 10px 0;">
-      <button style="background-color:#007bff; height:60px; font-size:1.1em; width:140px; color:white; border:none;">🍐 Pera</button>
-      <button style="background-color:#007bff; height:60px; font-size:1.1em; width:140px; color:white; border:none;">🍎 Manzana</button>
-      <button style="background-color:#007bff; height:60px; font-size:1.1em; width:140px; color:white; border:none;">📋 Todas</button>
+      <button style="background-color:#007bff; color:white; border:none;">🍐 Pera</button>
+      <button style="background-color:#007bff; color:white; border:none;">🍎 Manzana</button>
+      <button style="background-color:#007bff; color:white; border:none;">📋 Todas</button>
     </div>
-    
-    <button onclick="mostrarDetalle()" style="padding: 15px 20px; background-color: green; color: white; border: none; border-radius: 5px; font-size: 1.1em; width: 140px; margin-top: 15px;">
+    <div id="resumenTotales">Total: 0 kg</div>
+    <button onclick="mostrarDetalle()" style="padding: 10px 20px; background-color: green; color: white; border: none; border-radius: 5px;">
       Ver detalles
     </button>
   </div>
 
   <div id="filtros" style="display:none;">
     <label for="filtroEspecie">Especie:</label>
-    <select id="filtroEspecie"><option value="TODAS">Todas</option></select>
+    <select id="filtroEspecie"></select>
     <label for="desde">Desde:</label>
     <input id="desde" type="date"/>
     <label for="hasta">Hasta:</label>
@@ -176,8 +133,8 @@
     }
 
     function mostrarResumenTotales(data) {
-      const totalPera = data.filter(e => e.Especie.toLowerCase() === "pera").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
-      const totalManza = data.filter(e => e.Especie.toLowerCase() === "manza").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
+      const totalPera = data.filter(e => e.Especie === "PERA").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
+      const totalManza = data.filter(e => e.Especie === "MANZANA").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
       const total = data.reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
       const resumenDiv = document.getElementById("resumenTotales");
       resumenDiv.innerHTML = `🍐 ${totalPera.toLocaleString("es-AR")} kg | 🍎 ${totalManza.toLocaleString("es-AR")} kg | Total: <strong>${total.toLocaleString("es-AR")} kg</strong>`;
@@ -263,48 +220,6 @@
       XLSX.utils.book_append_sheet(workbook, worksheet, "Entregas");
       XLSX.writeFile(workbook, "entregas.xlsx");
     }
-  
-    function mostrarResumenTotales(data) {
-      const totalPera = data.filter(e => (e.Especie || "").toLowerCase() === "pera").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
-      const totalManza = data.filter(e => (e.Especie || "").toLowerCase() === "manza").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
-      const total = data.reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
-      document.getElementById("btnPera").innerText = `🍐 Pera - ${totalPera.toLocaleString("es-AR")} kg`;
-      document.getElementById("btnManzana").innerText = `🍎 Manzana - ${totalManza.toLocaleString("es-AR")} kg`;
-      document.getElementById("btnTodas").innerText = `📋 Todas - ${total.toLocaleString("es-AR")} kg`;
-    }
-
-    function mostrarMiniDetalle(tipo) {
-      const cont = document.getElementById("miniDetalle");
-      let datos = entregasOriginal;
-      if (tipo === "pera") {
-        datos = datos.filter(e => (e.Especie || "").toLowerCase() === "pera");
-      } else if (tipo === "manza") {
-        datos = datos.filter(e => (e.Especie || "").toLowerCase() === "manza");
-      }
-
-      const mini = datos.map(e => {
-        const nro = e.nro || "-";
-        const fec = convertirFecha(e.Fecha);
-        const kgs = Number(e.KgsD || 0).toLocaleString("es-AR");
-        return `<tr><td>${nro}</td><td>${fec}</td><td style="text-align:right;">${kgs}</td></tr>`;
-      });
-
-      cont.innerHTML = `
-        <table style="margin:10px auto; font-size: 14px;">
-          <thead><tr><th>Nro</th><th>Fecha</th><th>Kgs</th></tr></thead>
-          <tbody>${mini.join("")}</tbody>
-        </table>
-        <button onclick="volverResumen()" style="margin-top: 5px; padding: 10px 15px;">🔙 Volver</button>
-      `;
-      cont.style.display = "block";
-      document.getElementById("resumenEspecies").style.display = "none";
-    }
-
-    function volverResumen() {
-      document.getElementById("miniDetalle").style.display = "none";
-      document.getElementById("resumenEspecies").style.display = "block";
-    }
-
-</script>
+  </script>
  </body>
 </html>
