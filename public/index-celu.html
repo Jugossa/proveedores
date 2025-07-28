@@ -56,9 +56,9 @@
   <div id="resumenEspecies" style="display:none; text-align:center; margin-top: 20px;">
     <h2>Entregas</h2>
     <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin: 10px 0;">
-      <button style="background-color:#007bff; color:white; border:none;">🍐 Pera</button>
-      <button style="background-color:#007bff; color:white; border:none;">🍎 Manzana</button>
-      <button style="background-color:#007bff; color:white; border:none;">📋 Todas</button>
+      <button style="background-color:#007bff; height:60px; font-size:1.1em; width:140px; color:white; border:none;">🍐 Pera</button>
+      <button style="background-color:#007bff; height:60px; font-size:1.1em; width:140px; color:white; border:none;">🍎 Manzana</button>
+      <button style="background-color:#007bff; height:60px; font-size:1.1em; width:140px; color:white; border:none;">📋 Todas</button>
     </div>
     <div id="resumenTotales">Total: 0 kg</div>
     <button onclick="mostrarDetalle()" style="padding: 10px 20px; background-color: green; color: white; border: none; border-radius: 5px;">
@@ -68,7 +68,7 @@
 
   <div id="filtros" style="display:none;">
     <label for="filtroEspecie">Especie:</label>
-    <select id="filtroEspecie"></select>
+    <select id="filtroEspecie"><option value="TODAS">Todas</option></select>
     <label for="desde">Desde:</label>
     <input id="desde" type="date"/>
     <label for="hasta">Hasta:</label>
@@ -133,8 +133,8 @@
     }
 
     function mostrarResumenTotales(data) {
-      const totalPera = data.filter(e => e.Especie === "PERA").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
-      const totalManza = data.filter(e => e.Especie === "MANZANA").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
+      const totalPera = data.filter(e => e.Especie.toLowerCase() === "pera").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
+      const totalManza = data.filter(e => e.Especie.toLowerCase() === "manza").reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
       const total = data.reduce((sum, e) => sum + Number(e.KgsD || 0), 0);
       const resumenDiv = document.getElementById("resumenTotales");
       resumenDiv.innerHTML = `🍐 ${totalPera.toLocaleString("es-AR")} kg | 🍎 ${totalManza.toLocaleString("es-AR")} kg | Total: <strong>${total.toLocaleString("es-AR")} kg</strong>`;
