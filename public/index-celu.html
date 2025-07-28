@@ -57,13 +57,13 @@ input, button {
   <div id="titulo" style="text-align: center; margin-bottom: 10px;">
    <img alt="Logo Jugos SA" src="img/logo.png" style="height: 60px;"/>
    <h2 style="margin: 10px 0;">
-    🔐 Ingreso de Proveedores
+    Ingreso de Proveedores
    </h2>
   </div>
-  <div id="login" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-   <input id="cui" placeholder="CUIT / CUIL" style="width: 150px;" type="text"/>
-   <input id="password" placeholder="Contraseña" style="width: 150px;" type="password"/>
-   <button onclick="login()">
+  <div id="login" style="display:flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px;" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+   <input id="cui" style="max-width: 300px;" placeholder="CUIT / CUIL" style="width: 150px;" type="text"/>
+   <input id="password" style="max-width: 300px;" placeholder="Contraseña" style="width: 150px;" type="password"/>
+   <button onclick="login()" style="max-width: 200px;">
     Ingresar
    </button>
   </div>
@@ -272,4 +272,4 @@ input, button {
   </script>
  </body>
 </html>
-&lt;!-- Modificado para celu: login funcional, cui ok --&gt;
+
