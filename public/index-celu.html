@@ -1,112 +1,132 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <title>Portal Proveedores - Celular</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juggs - Proveedores</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 10px; }
-    button {
-      display: block;
-      width: 90%;
-      max-width: 320px;
-      margin: 10px auto;
-      padding: 20px;
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 10px;
+      background: #fefefe;
+      margin: 0;
+    }
+
+    img.logo {
+      width: 140px;
+      margin: 20px auto 10px;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+
+    .login-box input {
       font-size: 20px;
-      border-radius: 10px;
-    }
-    .btn-verde { background-color: #008f00; color: white; }
-    .btn-azul { background-color: #007bff; color: white; }
-    table {
+      padding: 14px;
+      width: 80%;
+      max-width: 400px;
       margin: 10px auto;
-      border-collapse: collapse;
-      width: 95%;
-    }
-    th, td {
+      display: block;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      padding: 8px;
-      font-size: 14px;
     }
-    #detalleEspecie { display: none; }
+
+    .login-box button {
+      font-size: 22px;
+      padding: 16px;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 10px;
+      margin-top: 15px;
+      background: #ddd;
+      border: none;
+    }
+
+    .bienvenida {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .ultima-act {
+      font-size: 14px;
+      color: gray;
+      margin-bottom: 20px;
+    }
+
+    .titulo {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 25px 0 15px;
+    }
+
+    .btn {
+      font-size: 24px;
+      padding: 18px;
+      margin: 12px auto;
+      width: 90%;
+      max-width: 420px;
+      display: block;
+      border-radius: 10px;
+      border: none;
+      color: white;
+    }
+
+    .pera { background-color: #3399ff; }
+    .manzana { background-color: #0066cc; }
+    .todas { background-color: #004c99; }
+    .ver-detalles { background-color: green; }
+
   </style>
 </head>
 <body>
-  <h2>Ingreso de Proveedores</h2>
-  <div id="login">
-    <input id="cui" placeholder="CUIT / CUIL"><br>
-    <input id="clave" type="password" placeholder="Contraseña"><br>
+
+  <img src="logo.png" alt="Juggs logo" class="logo" />
+  <h1>Ingreso de Proveedores</h1>
+
+  <div class="login-box" id="loginBox">
+    <input type="text" id="cuit" placeholder="CUIT / CUIL" />
+    <input type="password" id="clave" placeholder="Contraseña" />
     <button onclick="login()">Ingresar</button>
+    <p style="font-size:14px; margin-top:10px;">* El CUIT puede ingresarse con o sin guiones.</p>
   </div>
-  <div id="bienvenida" style="display:none;"></div>
-  <div id="pantalla2" style="display:none;">
-    <h3>Entregas</h3>
-    <button id="btnPera" class="btn-azul" onclick="verDetalle('PERA')"></button>
-    <button id="btnManza" class="btn-azul" onclick="verDetalle('MANZA')"></button>
-    <button id="btnTodas" class="btn-azul" onclick="verDetalle('TODAS')"></button>
-    <button class="btn-verde" onclick="verDetalle('DETALLE')">Ver detalles</button>
+
+  <div id="entregasBox" style="display:none;">
+    <p class="bienvenida" id="bienvenida"></p>
+    <p class="ultima-act" id="ultimaActualizacion"></p>
+
+    <p class="titulo">Entregas a cobrar</p>
+    <button class="btn pera" onclick="ver('Pera')">🍐 Pera - <span id="kgPera">-</span></button>
+    <button class="btn manzana" onclick="ver('Manzana')">🍎 Manzana - <span id="kgManzana">-</span></button>
+    <button class="btn todas" onclick="ver('Todas')">📋 Todas - <span id="kgTodas">-</span></button>
+    <button class="btn ver-detalles" onclick="verDetalles()">Ver detalles</button>
   </div>
-  <div id="detalleEspecie">
-    <div id="tablaMini"></div>
-    <button onclick="volver()">Volver</button>
-  </div>
+
   <script>
-    let entregas = [], proveedor = "", actualizacion = "";
+    function login() {
+      // lógica de login real con fetch o validación
+      document.getElementById('loginBox').style.display = 'none';
+      document.getElementById('entregasBox').style.display = 'block';
 
-    async function login() {
-      const cui = document.getElementById("cui").value.trim();
-      const clave = document.getElementById("clave").value.trim();
-      const res = await fetch("/login", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cui, password: clave })
-      });
-      if (!res.ok) return alert("CUIT o clave incorrectos");
-      const data = await res.json();
-      entregas = data.entregas || [];
-      proveedor = data.proveedor;
-      actualizacion = data.ultimaActualizacion;
-      mostrarResumen();
+      // datos simulados para mostrar el efecto visual
+      document.getElementById('bienvenida').textContent = "✅ Bienvenido MINISINI JORGE RAUL";
+      document.getElementById('ultimaActualizacion').textContent = "Última actualización: 25/07/2025 02:28 p. m.";
+      document.getElementById('kgPera').textContent = "1.943.501,86 kg";
+      document.getElementById('kgManzana').textContent = "1.863.988,88 kg";
+      document.getElementById('kgTodas').textContent = "3.807.490,74 kg";
     }
 
-    function mostrarResumen() {
-      document.getElementById("login").style.display = "none";
-      document.getElementById("bienvenida").style.display = "block";
-      document.getElementById("pantalla2").style.display = "block";
-      document.getElementById("bienvenida").innerHTML =
-        `✅ <b>Bienvenido ${proveedor}</b><br><small>Última actualización: ${actualizacion}</small>`;
-
-      const total = entregas.reduce((a, e) => a + Number(e.KgsD || 0), 0);
-      const totalPera = entregas.filter(e => (e.Especie || '').toLowerCase() === 'pera')
-                                 .reduce((a, e) => a + Number(e.KgsD || 0), 0);
-      const totalManza = entregas.filter(e => (e.Especie || '').toLowerCase() === 'manza')
-                                 .reduce((a, e) => a + Number(e.KgsD || 0), 0);
-
-      document.getElementById("btnPera").textContent = `🍐 Pera - ${totalPera.toLocaleString('es-AR')} kg`;
-      document.getElementById("btnManza").textContent = `🍎 Manzana - ${totalManza.toLocaleString('es-AR')} kg`;
-      document.getElementById("btnTodas").textContent = `📋 Todas - ${total.toLocaleString('es-AR')} kg`;
+    function ver(tipo) {
+      alert("Ver detalle reducido de: " + tipo);
     }
 
-    function verDetalle(tipo) {
-      document.getElementById("pantalla2").style.display = "none";
-      document.getElementById("detalleEspecie").style.display = "block";
-
-      let datos = entregas;
-      if (tipo === "PERA") datos = entregas.filter(e => (e.Especie || '').toLowerCase() === 'pera');
-      else if (tipo === "MANZA") datos = entregas.filter(e => (e.Especie || '').toLowerCase() === 'manza');
-      else if (tipo === "DETALLE") datos = entregas;
-
-      let html = "<table><tr><th>Nro Jugos</th><th>Fecha</th><th>Kgs</th></tr>";
-      datos.forEach(e => {
-        const fecha = new Date(1899, 11, 30 + Number(e.Fecha || 0));
-        html += `<tr><td>${e["Nro Jugos"]}</td><td>${fecha.toLocaleDateString("es-AR")}</td><td>${Number(e.KgsD || 0).toLocaleString("es-AR")}</td></tr>`;
-      });
-      html += "</table>";
-      document.getElementById("tablaMini").innerHTML = html;
-    }
-
-    function volver() {
-      document.getElementById("pantalla2").style.display = "block";
-      document.getElementById("detalleEspecie").style.display = "none";
+    function verDetalles() {
+      alert("Ver vista completa con filtros y exportación.");
     }
   </script>
+
 </body>
 </html>
