@@ -119,7 +119,7 @@
       if (tipo !== "Todas") data = data.filter(e => e.Especie === tipo);
 
       const sum = data.reduce((s, e) => s + parseFloat(e.KgsD || 0), 0).toLocaleString("es-AR", {minimumFractionDigits:2});
-      const html = data.map(e => `📦 Nro: ${e["Nro Jugos"]} | 📅 ${excelDateToString(e.Fecha)} | ${parseFloat(e.KgsD).toLocaleString("es-AR", {minimumFractionDigits:2})} kg`).join("<br>");
+      const html = data.map(e => ` Nro: ${e["Nro Jugos"]} |  ${excelDateToString(e.Fecha)} | ${parseFloat(e.KgsD).toLocaleString("es-AR", {minimumFractionDigits:2})} kg`).join("<br>");
       document.getElementById("detalleMini").innerHTML = html + `<br><br><strong>Total: ${sum} kg</strong><br><button class='btn volver' onclick="volver()">Volver</button>`;
     }
 
