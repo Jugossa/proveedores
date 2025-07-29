@@ -19,57 +19,57 @@
     }
 
     h1 {
-      font-size: 26px;
-      margin-bottom: 20px;
+      font-size: 22px;
+      margin-bottom: 15px;
     }
 
     .login-box input {
-      font-size: 20px;
-      padding: 14px;
+      font-size: 16px;
+      padding: 10px;
       width: 80%;
       max-width: 400px;
-      margin: 10px auto;
+      margin: 8px auto;
       display: block;
-      border-radius: 8px;
+      border-radius: 6px;
       border: 1px solid #ccc;
     }
 
     .login-box button {
-      font-size: 22px;
-      padding: 16px;
+      font-size: 18px;
+      padding: 12px;
       width: 80%;
       max-width: 400px;
-      border-radius: 10px;
-      margin-top: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
       background: #ddd;
       border: none;
     }
 
     .bienvenida {
-      font-size: 20px;
-      margin-bottom: 6px;
+      font-size: 18px;
+      margin-bottom: 4px;
     }
 
     .ultima-act {
-      font-size: 14px;
+      font-size: 13px;
       color: gray;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .titulo {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: bold;
-      margin: 25px 0 15px;
+      margin: 20px 0 12px;
     }
 
     .btn {
-      font-size: 24px;
-      padding: 18px;
-      margin: 12px auto;
+      font-size: 20px;
+      padding: 14px;
+      margin: 10px auto;
       width: 90%;
       max-width: 420px;
       display: block;
-      border-radius: 10px;
+      border-radius: 8px;
       border: none;
       color: white;
     }
@@ -79,21 +79,43 @@
     .todas { background-color: #004c99; }
     .ver-detalles { background-color: green; }
 
-    .detalle {
+    .detalle, .tabla-detalle {
       margin-top: 20px;
-      font-size: 18px;
+      font-size: 16px;
       text-align: left;
-      max-width: 500px;
+      max-width: 95%;
       margin-left: auto;
       margin-right: auto;
       display: none;
     }
 
-    .detalle p {
-      background: #eee;
-      padding: 8px;
-      border-radius: 5px;
-      margin: 5px 0;
+    .tabla-detalle table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .tabla-detalle th, .tabla-detalle td {
+      border: 1px solid #ccc;
+      padding: 6px;
+    }
+
+    .filtros {
+      margin: 20px auto;
+      max-width: 500px;
+      display: none;
+    }
+
+    .filtros input {
+      font-size: 14px;
+      margin: 5px;
+      padding: 6px;
+    }
+
+    .filtros select {
+      font-size: 14px;
+      margin: 5px;
+      padding: 6px;
     }
   </style>
 </head>
@@ -106,7 +128,7 @@
     <input type="text" id="cuit" placeholder="CUIT / CUIL" />
     <input type="password" id="clave" placeholder="Contraseña" />
     <button onclick="login()">Ingresar</button>
-    <p style="font-size:14px; margin-top:10px;">* El CUIT puede ingresarse con o sin guiones.</p>
+    <p style="font-size:13px; margin-top:8px;">* El CUIT puede ingresarse con o sin guiones.</p>
   </div>
 
   <div id="entregasBox" style="display:none;">
@@ -120,9 +142,25 @@
     <button class="btn ver-detalles" onclick="verDetalles()">Ver detalles</button>
 
     <div class="detalle" id="detalleReducido"></div>
+
+    <div class="filtros" id="filtros">
+      <input type="date" id="desde" />
+      <input type="date" id="hasta" />
+      <select id="especie">
+        <option value="">Todas</option>
+        <option value="Pera">Pera</option>
+        <option value="Manzana">Manzana</option>
+      </select>
+      <button onclick="aplicarFiltros()">Aplicar</button>
+    </div>
+
+    <div class="tabla-detalle" id="tablaDetalle"></div>
   </div>
 
   <script>
+    let entregasGlobal = [];
+    let proveedorActual = null;
+
     async function login() {
       const cuit = document.getElementById("cuit").value.trim();
       const clave = document.getElementById("clave").value.trim();
@@ -139,6 +177,8 @@
         return;
       }
 
+      proveedorActual = usuario.nombre;
+
       document.getElementById("loginBox").style.display = "none";
       document.getElementById("entregasBox").style.display = "block";
 
@@ -147,20 +187,18 @@
 
       const entregasRes = await fetch("/data/ProFru.json");
       const entregas = await entregasRes.json();
-      const propias = entregas.filter(e => e.ProveedorT === usuario.nombre);
+      entregasGlobal = entregas.filter(e => e.ProveedorT === usuario.nombre);
 
       document.getElementById("ultimaActualizacion").textContent = "Última actualización: " + new Date().toLocaleString();
 
-      const pera = propias.filter(e => e.Especie === "Pera");
-      const manzana = propias.filter(e => e.Especie === "Manzana");
+      const pera = entregasGlobal.filter(e => e.Especie === "Pera");
+      const manzana = entregasGlobal.filter(e => e.Especie === "Manzana");
 
       const sumKg = arr => arr.reduce((s, e) => s + parseFloat(e.KgsD || 0), 0).toLocaleString("es-AR", {minimumFractionDigits:2});
 
       document.getElementById("kgPera").textContent = sumKg(pera) + " kg";
       document.getElementById("kgManzana").textContent = sumKg(manzana) + " kg";
-      document.getElementById("kgTodas").textContent = sumKg(propias) + " kg";
-
-      window._entregas = propias;
+      document.getElementById("kgTodas").textContent = sumKg(entregasGlobal) + " kg";
     }
 
     function filtrar(tipo) {
@@ -168,7 +206,7 @@
       contenedor.style.display = 'block';
       contenedor.innerHTML = "";
 
-      let filtrado = window._entregas || [];
+      let filtrado = entregasGlobal || [];
       if (tipo !== "Todas") filtrado = filtrado.filter(e => e.Especie === tipo);
 
       filtrado.forEach(e => {
@@ -178,7 +216,43 @@
     }
 
     function verDetalles() {
-      // desactivado
+      document.getElementById("filtros").style.display = "block";
+      document.getElementById("tablaDetalle").style.display = "block";
+      renderizarTabla(entregasGlobal);
+    }
+
+    function aplicarFiltros() {
+      const desde = new Date(document.getElementById("desde").value);
+      const hasta = new Date(document.getElementById("hasta").value);
+      const especie = document.getElementById("especie").value;
+
+      let filtrado = entregasGlobal.filter(e => {
+        const f = new Date((e.Fecha - 25569) * 86400 * 1000);
+        return (!isNaN(desde) ? f >= desde : true) &&
+               (!isNaN(hasta) ? f <= hasta : true) &&
+               (especie ? e.Especie === especie : true);
+      });
+
+      renderizarTabla(filtrado);
+    }
+
+    function renderizarTabla(data) {
+      const cont = document.getElementById("tablaDetalle");
+      cont.innerHTML = `
+        <table><thead><tr>
+          <th>Ide</th><th>Nro</th><th>Fecha</th><th>Remito</th><th>CantBins</th>
+          <th>Origen</th><th>Especie</th><th>Variedad</th><th>KgsD</th>
+        </tr></thead><tbody>
+        ${data.map(e => `
+          <tr>
+            <td>${e["Ide Jugos"]}</td><td>${e["Nro Jugos"]}</td>
+            <td>${excelDateToString(e.Fecha)}</td><td>${e.Remito}</td><td>${e.CantBins}</td>
+            <td>${e.Origen}</td><td>${e.Especie}</td><td>${e.NomVariedad}</td>
+            <td>${parseFloat(e.KgsD).toLocaleString("es-AR", {minimumFractionDigits:2})}</td>
+          </tr>
+        `).join("")}
+        </tbody></table>
+      `;
     }
 
     function excelDateToString(n) {
