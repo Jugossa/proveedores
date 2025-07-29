@@ -117,34 +117,38 @@
   document.getElementById("filtros").style.display = "none";
   document.getElementById("tablaDetalle").style.display = "none";
 
-  let data = entregasGlobal;
+  let data = entregasGlobal || [];
   const especieTipo = tipo.toLowerCase();
   if (especieTipo !== "todas") {
     data = data.filter(e => {
-      const especie = e.Especie ? e.Especie.toLowerCase() : "";
-      if (especieTipo === "pera") return especie.includes("pera");
-      if (especieTipo === "manzana") return especie.includes("manza");
-      return false;
+      const especie = (e.Especie || "").toLowerCase();
+      return (especieTipo === "pera" && especie.includes("pera")) ||
+             (especieTipo === "manzana" && especie.includes("manza"));
     });
   }
 
   let total = 0;
-  if (data.length > 0) contenedor.innerHTML += `<p><strong>Nro | Fecha | Kgs</strong></p>`;
-  data.forEach(e => {
-    const fecha = convertirFecha(e.Fecha);
-    const kgs = parseFloat(e.KgsD || 0);
-    total += kgs;
-    contenedor.innerHTML += `<p>${e["Nro Jugos"]} | ${fecha} | ${kgs.toLocaleString("es-AR", {minimumFractionDigits:2})} kg</p>`;
-  });
+  if (data.length > 0) {
+    contenedor.innerHTML += `<p><strong>Nro | Fecha | Kgs</strong></p>`;
+    data.forEach(e => {
+      const fecha = convertirFecha(e.Fecha);
+      const kgs = parseFloat(e.KgsD || 0);
+      total += kgs;
+      contenedor.innerHTML += `<p>${e["Nro Jugos"]} | ${fecha} | ${kgs.toLocaleString("es-AR", {minimumFractionDigits:2})} kg</p>`;
+    });
+  } else {
+    contenedor.innerHTML += `<p>No hay entregas para esta especie.</p>`;
+  }
 
-      if (tipo !== "Todas") data = data.filter(e => e.Especie === tipo);
+  contenedor.innerHTML += `<br><strong>Total: ${total.toLocaleString("es-AR", {minimumFractionDigits:2})} kg</strong><br><button class='btn volver' onclick="volver()">Volver</button>`;
+}
 
-      const sum = data.reduce((s, e) => s + parseFloat(e.KgsD || 0), 0).toLocaleString("es-AR", {minimumFractionDigits:2});
-      const html = data.map(e => ` Nro: ${e["Nro Jugos"]} |  ${excelDateToString(e.Fecha)} | ${parseFloat(e.KgsD).toLocaleString("es-AR", {minimumFractionDigits:2})} kg`).join("<br>");
-      document.getElementById("detalleMini").innerHTML = html + `<br><br><strong>Total: ${sum} kg</strong><br><button class='btn volver' onclick="volver()">Volver</button>`;
-    }
-
-    function volver() {
+function volver() {
+  document.getElementById("detalleMini").style.display = "none";
+  document.getElementById("filtros").style.display = "none";
+  document.getElementById("tablaDetalle").style.display = "none";
+}
+ {
       document.getElementById("detalleMini").style.display = "none";
       document.getElementById("filtros").style.display = "none";
       document.getElementById("tablaDetalle").style.display = "none";
