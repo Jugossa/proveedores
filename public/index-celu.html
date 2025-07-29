@@ -2,98 +2,31 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Juggs - Proveedores</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juggs - Proveedores (Celu)</title>
   <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 10px;
-      background: #fefefe;
-      margin: 0;
+    body { font-family: sans-serif; text-align: center; padding: 10px; margin: 0; background: #fefefe; }
+    img.logo { margin: 20px auto 10px; }
+    h1 { font-size: 22px; margin-bottom: 15px; }
+    input, button {
+      font-size: 16px; padding: 10px; width: 80%; max-width: 400px; margin: 8px auto; display: block;
+      border-radius: 6px; border: 1px solid #ccc;
     }
-
-    img.logo {
-      margin: 20px auto 10px;
-    }
-
-    h1 {
-      font-size: 22px;
-      margin-bottom: 15px;
-    }
-
-    .login-box input {
-      font-size: 16px;
-      padding: 10px;
-      width: 80%;
-      max-width: 400px;
-      margin: 8px auto;
-      display: block;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    .login-box button {
-      font-size: 18px;
-      padding: 12px;
-      width: 80%;
-      max-width: 400px;
-      border-radius: 8px;
-      margin-top: 10px;
-      background: #ddd;
-      border: none;
-    }
-
-    .bienvenida {
-      font-size: 18px;
-      margin-bottom: 4px;
-    }
-
-    .ultima-act {
-      font-size: 13px;
-      color: gray;
-      margin-bottom: 16px;
-    }
-
-    .titulo {
-      font-size: 20px;
-      font-weight: bold;
-      margin: 20px 0 12px;
-    }
-
+    button { background: #ddd; border: none; cursor: pointer; }
     .btn {
-      font-size: 20px;
-      padding: 14px;
-      margin: 10px auto;
-      width: 90%;
-      max-width: 420px;
-      display: block;
-      border-radius: 8px;
-      border: none;
-      color: white;
+      font-size: 20px; padding: 14px; margin: 10px auto; width: 90%; max-width: 420px;
+      display: block; border-radius: 8px; border: none; color: white;
     }
-
     .pera { background-color: #3399ff; }
     .manzana { background-color: #0066cc; }
     .todas { background-color: #004c99; }
-
-    .detalle {
-      margin-top: 20px;
-      font-size: 16px;
-      text-align: left;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-      display: none;
-    }
-
-    .detalle p {
-      background: #eee;
-      padding: 6px;
-      border-radius: 4px;
-      margin: 4px 0;
-    }
+    .detalle { margin-top: 20px; font-size: 16px; text-align: left; max-width: 500px;
+      margin-left: auto; margin-right: auto; display: none; }
+    .detalle p { background: #eee; padding: 6px; border-radius: 4px; margin: 4px 0; }
+    .bienvenida { font-size: 18px; margin-bottom: 4px; }
+    .ultima-act { font-size: 13px; color: gray; margin-bottom: 16px; }
+    #error { color: red; font-size: 14px; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -102,17 +35,18 @@
   <h1>Ingreso de Proveedores</h1>
 
   <div class="login-box" id="loginBox">
-    <input type="text" id="cuit" placeholder="CUIT / CUIL" />
-    <input type="password" id="clave" placeholder="Contraseña" />
+    <input type="text" id="cui" placeholder="CUIT / CUIL">
+    <input type="password" id="password" placeholder="Contraseña">
     <button onclick="login()">Ingresar</button>
-    <p style="font-size:13px; margin-top:8px;">* El CUIT puede ingresarse con o sin guiones.</p>
+    <p style="font-size:13px; margin-top:6px;">* El CUIT puede ingresarse con o sin guiones.</p>
+    <div id="error"></div>
   </div>
 
   <div id="entregasBox" style="display:none;">
     <p class="bienvenida" id="bienvenida"></p>
     <p class="ultima-act" id="ultimaActualizacion"></p>
 
-    <p class="titulo">Entregas a cobrar</p>
+    <p style="font-size:18px; font-weight:bold;">Entregas a cobrar</p>
     <button class="btn pera" onclick="filtrar('Pera')">🍐 Pera - <span id="kgPera">-</span></button>
     <button class="btn manzana" onclick="filtrar('Manzana')">🍎 Manzana - <span id="kgManzana">-</span></button>
     <button class="btn todas" onclick="filtrar('Todas')">📋 Todas - <span id="kgTodas">-</span></button>
@@ -122,46 +56,61 @@
 
   <script>
     let entregasGlobal = [];
-    let proveedorActual = null;
 
     async function login() {
-      const cuit = document.getElementById("cuit").value.trim();
-      const clave = document.getElementById("clave").value.trim();
+      const cui = document.getElementById("cui").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorDiv = document.getElementById("error");
+      errorDiv.textContent = "";
 
-      const res = await fetch("/data/proveedores.json");
-      const proveedores = await res.json();
-
-      const usuario = proveedores.find(p => 
-        p.cuit.replace(/-/g, '') === cuit.replace(/-/g, '') && p.clave === clave
-      );
-
-      if (!usuario) {
-        alert("CUIT o contraseña incorrecta");
+      if (!cui || !password) {
+        errorDiv.textContent = "Por favor complete CUIT y contraseña.";
         return;
       }
 
-      proveedorActual = usuario.nombre;
+      try {
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cui, password })
+        });
 
-      document.getElementById("loginBox").style.display = "none";
-      document.getElementById("entregasBox").style.display = "block";
+        if (res.status === 401) {
+          errorDiv.textContent = "❌ CUIT o contraseña incorrectos.";
+          return;
+        }
 
-      document.getElementById("bienvenida").textContent = "✅ Bienvenido " + usuario.nombre;
-      document.getElementById("ultimaActualizacion").textContent = "Cargando entregas...";
+        const result = await res.json();
+        const data = result.entregas || [];
+        const nombre = result.proveedor || "Proveedor";
 
-      const entregasRes = await fetch("/data/ProFru.json");
-      const entregas = await entregasRes.json();
-      entregasGlobal = entregas.filter(e => e.ProveedorT === usuario.nombre);
+        if (!data.length) {
+          errorDiv.textContent = "No hay entregas registradas.";
+          return;
+        }
 
-      document.getElementById("ultimaActualizacion").textContent = "Última actualización: " + new Date().toLocaleString();
+        entregasGlobal = data;
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("entregasBox").style.display = "block";
 
-      const pera = entregasGlobal.filter(e => e.Especie === "Pera");
-      const manzana = entregasGlobal.filter(e => e.Especie === "Manzana");
+        document.getElementById("bienvenida").textContent = "✅ Bienvenido " + nombre;
+        document.getElementById("ultimaActualizacion").textContent =
+          "Última actualización: " + result.ultimaActualizacion;
 
-      const sumKg = arr => arr.reduce((s, e) => s + parseFloat(e.KgsD || 0), 0).toLocaleString("es-AR", {minimumFractionDigits:2});
+        const pera = data.filter(e => e.Especie === "Pera");
+        const manzana = data.filter(e => e.Especie === "Manzana");
 
-      document.getElementById("kgPera").textContent = sumKg(pera) + " kg";
-      document.getElementById("kgManzana").textContent = sumKg(manzana) + " kg";
-      document.getElementById("kgTodas").textContent = sumKg(entregasGlobal) + " kg";
+        const sumKg = arr => arr.reduce((s, e) => s + parseFloat(e.KgsD || 0), 0)
+                              .toLocaleString("es-AR", {minimumFractionDigits:2});
+
+        document.getElementById("kgPera").textContent = sumKg(pera) + " kg";
+        document.getElementById("kgManzana").textContent = sumKg(manzana) + " kg";
+        document.getElementById("kgTodas").textContent = sumKg(data) + " kg";
+
+      } catch (err) {
+        errorDiv.textContent = "❌ Error de red.";
+        console.error(err);
+      }
     }
 
     function filtrar(tipo) {
@@ -173,12 +122,12 @@
       if (tipo !== "Todas") filtrado = filtrado.filter(e => e.Especie === tipo);
 
       filtrado.forEach(e => {
-        const fecha = excelDateToString(e.Fecha);
+        const fecha = convertirFecha(e.Fecha);
         contenedor.innerHTML += `<p>📦 Nro: ${e["Nro Jugos"]} | 📅 Fecha: ${fecha} | ⚖️ ${parseFloat(e.KgsD).toLocaleString("es-AR", {minimumFractionDigits:2})} kg</p>`;
       });
     }
 
-    function excelDateToString(n) {
+    function convertirFecha(n) {
       const d = new Date((n - 25569) * 86400 * 1000);
       return d.toLocaleDateString("es-AR");
     }
