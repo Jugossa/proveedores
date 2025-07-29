@@ -122,14 +122,26 @@
   if (especieTipo !== "todas") {
     data = data.filter(e => {
       const especie = e.Especie ? e.Especie.toLowerCase() : "";
-      if (especieTipo === "pera") return especie.includes("pera");
-      if (especieTipo === "manzana") return especie.includes("manza");
-      return false;
+      return (especieTipo === "pera" && especie.includes("pera")) ||
+             (especieTipo === "manzana" && especie.includes("manza"));
     });
   }
 
   let total = 0;
-  if (data.length > 0) contenedor.innerHTML += `<p><strong>Nro | Fecha | Kgs</strong></p>`;
+  if (data.length > 0) {
+    contenedor.innerHTML += `<p><strong>Nro | Fecha | Kgs</strong></p>`;
+    data.forEach(e => {
+      const fecha = convertirFecha(e.Fecha);
+      const kgs = parseFloat(e.KgsD || 0);
+      total += kgs;
+      contenedor.innerHTML += `<p>${e["Nro Jugos"]} | ${fecha} | ${kgs.toLocaleString("es-AR", {minimumFractionDigits:2})} kg</p>`;
+    });
+  } else {
+    contenedor.innerHTML += `<p>No hay entregas disponibles.</p>`;
+  }
+
+  contenedor.innerHTML += `<br><strong>Total: ${total.toLocaleString("es-AR", {minimumFractionDigits:2})} kg</strong><br><button class='btn volver' onclick="volver()">Volver</button>`;
+}
   data.forEach(e => {
     const fecha = convertirFecha(e.Fecha);
     const kgs = parseFloat(e.KgsD || 0);
