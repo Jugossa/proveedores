@@ -65,7 +65,7 @@
     <select id="especie">
       <option value="">Todas</option>
       <option value="pera">Pera</option>
-      <option value="manzana">Manzana</option>
+      <option value="manza">Manzana</option>
     </select>
     <button onclick="aplicarFiltros()">Filtrar</button>
   </div>
@@ -103,7 +103,7 @@
                             .toLocaleString("es-AR", {minimumFractionDigits:2});
 
       const pera = data.filter(e => e.Especie.toLowerCase() === "pera");
-      const manzana = data.filter(e => e.Especie.toLowerCase() === "manzana");
+      const manzana = data.filter(e => e.Especie.toLowerCase() === "manza");
 
       document.getElementById("kgPera").textContent = sumKg(pera) + " kg";
       document.getElementById("kgManzana").textContent = sumKg(manzana) + " kg";
