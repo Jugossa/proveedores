@@ -3,54 +3,110 @@
 <head>
   <meta charset="utf-8" />
   <title>Portal Proveedores - Celular</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 10px;
-      text-align: center;
-      background: #f9f9f9;
-    }
-    img { height: 60px; margin-top: 10px; }
-    h2 { margin: 10px 0; }
-    .input-box {
-      width: 90%; max-width: 300px;
-      margin: 10px auto;
-      padding: 10px;
-      font-size: 18px;
-      border-radius: 5px;
-    }
+    body { font-family: Arial, sans-serif; text-align: center; padding: 10px; }
     button {
-      display: inline-block;
-      margin: 10px;
+      display: block;
+      width: 90%;
+      max-width: 320px;
+      margin: 10px auto;
       padding: 20px;
       font-size: 20px;
-      width: 95%;
-      max-width: 320px;
       border-radius: 10px;
-      cursor: pointer;
     }
     .btn-verde { background-color: #008f00; color: white; }
     .btn-azul { background-color: #007bff; color: white; }
     table {
       margin: 10px auto;
       border-collapse: collapse;
-      font-size: 14px;
+      width: 95%;
     }
-    td, th {
-      padding: 5px 10px;
+    th, td {
       border: 1px solid #ccc;
-    }
-    #detalleEspecie, #pantallaDetalleCompleta { display: none; }
-    #filtrosCelu input, #filtrosCelu select {
       padding: 8px;
-      margin: 5px;
       font-size: 14px;
     }
+    #detalleEspecie { display: none; }
   </style>
 </head>
 <body>
-  <!-- [contenido completo omitido por espacio] -->
+  <h2>Ingreso de Proveedores</h2>
+  <div id="login">
+    <input id="cui" placeholder="CUIT / CUIL"><br>
+    <input id="clave" type="password" placeholder="Contraseña"><br>
+    <button onclick="login()">Ingresar</button>
+  </div>
+  <div id="bienvenida" style="display:none;"></div>
+  <div id="pantalla2" style="display:none;">
+    <h3>Entregas</h3>
+    <button id="btnPera" class="btn-azul" onclick="verDetalle('PERA')"></button>
+    <button id="btnManza" class="btn-azul" onclick="verDetalle('MANZA')"></button>
+    <button id="btnTodas" class="btn-azul" onclick="verDetalle('TODAS')"></button>
+    <button class="btn-verde" onclick="verDetalle('DETALLE')">Ver detalles</button>
+  </div>
+  <div id="detalleEspecie">
+    <div id="tablaMini"></div>
+    <button onclick="volver()">Volver</button>
+  </div>
+  <script>
+    let entregas = [], proveedor = "", actualizacion = "";
+
+    async function login() {
+      const cui = document.getElementById("cui").value.trim();
+      const clave = document.getElementById("clave").value.trim();
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cui, password: clave })
+      });
+      if (!res.ok) return alert("CUIT o clave incorrectos");
+      const data = await res.json();
+      entregas = data.entregas || [];
+      proveedor = data.proveedor;
+      actualizacion = data.ultimaActualizacion;
+      mostrarResumen();
+    }
+
+    function mostrarResumen() {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("bienvenida").style.display = "block";
+      document.getElementById("pantalla2").style.display = "block";
+      document.getElementById("bienvenida").innerHTML =
+        `✅ <b>Bienvenido ${proveedor}</b><br><small>Última actualización: ${actualizacion}</small>`;
+
+      const total = entregas.reduce((a, e) => a + Number(e.KgsD || 0), 0);
+      const totalPera = entregas.filter(e => (e.Especie || '').toLowerCase() === 'pera')
+                                 .reduce((a, e) => a + Number(e.KgsD || 0), 0);
+      const totalManza = entregas.filter(e => (e.Especie || '').toLowerCase() === 'manza')
+                                 .reduce((a, e) => a + Number(e.KgsD || 0), 0);
+
+      document.getElementById("btnPera").textContent = `🍐 Pera - ${totalPera.toLocaleString('es-AR')} kg`;
+      document.getElementById("btnManza").textContent = `🍎 Manzana - ${totalManza.toLocaleString('es-AR')} kg`;
+      document.getElementById("btnTodas").textContent = `📋 Todas - ${total.toLocaleString('es-AR')} kg`;
+    }
+
+    function verDetalle(tipo) {
+      document.getElementById("pantalla2").style.display = "none";
+      document.getElementById("detalleEspecie").style.display = "block";
+
+      let datos = entregas;
+      if (tipo === "PERA") datos = entregas.filter(e => (e.Especie || '').toLowerCase() === 'pera');
+      else if (tipo === "MANZA") datos = entregas.filter(e => (e.Especie || '').toLowerCase() === 'manza');
+      else if (tipo === "DETALLE") datos = entregas;
+
+      let html = "<table><tr><th>Nro Jugos</th><th>Fecha</th><th>Kgs</th></tr>";
+      datos.forEach(e => {
+        const fecha = new Date(1899, 11, 30 + Number(e.Fecha || 0));
+        html += `<tr><td>${e["Nro Jugos"]}</td><td>${fecha.toLocaleDateString("es-AR")}</td><td>${Number(e.KgsD || 0).toLocaleString("es-AR")}</td></tr>`;
+      });
+      html += "</table>";
+      document.getElementById("tablaMini").innerHTML = html;
+    }
+
+    function volver() {
+      document.getElementById("pantalla2").style.display = "block";
+      document.getElementById("detalleEspecie").style.display = "none";
+    }
+  </script>
 </body>
 </html>
