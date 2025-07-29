@@ -98,9 +98,9 @@
     <p class="ultima-act" id="ultimaActualizacion"></p>
 
     <p class="titulo">Entregas a cobrar</p>
-    <button class="btn pera" onclick="ver('Pera')">🍐 Pera - <span id="kgPera">-</span></button>
-    <button class="btn manzana" onclick="ver('Manzana')">🍎 Manzana - <span id="kgManzana">-</span></button>
-    <button class="btn todas" onclick="ver('Todas')">📋 Todas - <span id="kgTodas">-</span></button>
+    <button class="btn pera" onclick="filtrar('Pera')">🍐 Pera - <span id="kgPera">-</span></button>
+    <button class="btn manzana" onclick="filtrar('Manzana')">🍎 Manzana - <span id="kgManzana">-</span></button>
+    <button class="btn todas" onclick="filtrar('Todas')">📋 Todas - <span id="kgTodas">-</span></button>
     <button class="btn ver-detalles" onclick="verDetalles()">Ver detalles</button>
   </div>
 
@@ -116,8 +116,10 @@
       document.getElementById('kgTodas').textContent = "3.807.490,74 kg";
     }
 
-    function ver(tipo) {
-      alert("Ver detalle reducido de: " + tipo);
+    function filtrar(tipo) {
+      // Aquí iría la lógica de filtrado por especie
+      // Por ahora simplemente simula que va a mostrar algo
+      console.log("Filtrar por: " + tipo);
     }
 
     function verDetalles() {
