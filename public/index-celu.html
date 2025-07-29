@@ -120,19 +120,29 @@
   let data = entregasGlobal || [];
   const especieTipo = tipo.toLowerCase();
 
-  if (especieTipo === "todas") {
-    let total = 0;
-    contenedor.innerHTML += `<p><strong>Nro | Fecha | Kgs</strong></p>`;
+  if (especieTipo !== "todas") {
+    data = data.filter(e => {
+      const especie = (e.Especie || "").toLowerCase();
+      return (especieTipo === "pera" && especie.includes("pera")) ||
+             (especieTipo === "manzana" && especie.includes("manza"));
+    });
+  }
+
+  let total = 0;
+  if (data.length > 0) {
+    contenedor.innerHTML += `<div style="text-align:center"><strong>Nro | Fecha | Kgs</strong></div>`;
     data.forEach(e => {
       const fecha = convertirFecha(e.Fecha);
       const kgs = parseFloat(e.KgsD || 0);
       total += kgs;
-      contenedor.innerHTML += `<p>${e["Nro Jugos"]} | ${fecha} | ${kgs.toLocaleString("es-AR", {minimumFractionDigits:2})} kg</p>`;
+      contenedor.innerHTML += `<div style="text-align:center">${e["Nro Jugos"]} | ${fecha} | ${kgs.toLocaleString("es-AR", {minimumFractionDigits:2})} kg</div>`;
     });
-    contenedor.innerHTML += `<br><strong>Total: ${total.toLocaleString("es-AR", {minimumFractionDigits:2})} kg</strong><br><button class='btn volver' onclick="volver()">Volver</button>`;
+    contenedor.innerHTML += `<br><div style="text-align:center"><strong>Total: ${total.toLocaleString("es-AR", {minimumFractionDigits:2})} kg</strong></div>`;
   } else {
-    contenedor.innerHTML += `<p>Esta vista solo está disponible para el botón "Todas".</p><button class='btn volver' onclick="volver()">Volver</button>`;
+    contenedor.innerHTML += `<div style="text-align:center">No hay entregas disponibles</div>`;
   }
+
+  contenedor.innerHTML += `<div style="text-align:center"><br><button class='btn volver' onclick="volver()">Volver</button></div>`;
 }
 
 function volver() {
