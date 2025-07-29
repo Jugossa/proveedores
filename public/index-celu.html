@@ -15,7 +15,6 @@
     }
 
     img.logo {
-      width: 100px;
       margin: 20px auto 10px;
     }
 
@@ -84,7 +83,7 @@
 </head>
 <body>
 
-  <img src="logo.png" alt="Juggs logo" class="logo" />
+  <img src="img/logo.png" alt="Juggs logo" class="logo" />
   <h1>Ingreso de Proveedores</h1>
 
   <div class="login-box" id="loginBox">
@@ -107,11 +106,9 @@
 
   <script>
     function login() {
-      // lógica de login real con fetch o validación
       document.getElementById('loginBox').style.display = 'none';
       document.getElementById('entregasBox').style.display = 'block';
 
-      // datos simulados para mostrar el efecto visual
       document.getElementById('bienvenida').textContent = "✅ Bienvenido MINISINI JORGE RAUL";
       document.getElementById('ultimaActualizacion').textContent = "Última actualización: 25/07/2025 02:28 p. m.";
       document.getElementById('kgPera').textContent = "1.943.501,86 kg";
