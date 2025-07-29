@@ -1,1 +1,139 @@
-<!-- Próximo: versión con 'Entregas a cobrar', botones más anchos y tabla completa -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Portal Proveedores - Celular</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 10px;
+      text-align: center;
+      background: #f9f9f9;
+    }
+    img { height: 60px; margin-top: 10px; }
+    h2 { margin: 10px 0; }
+    .input-box {
+      width: 90%; max-width: 300px;
+      margin: 10px auto;
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 5px;
+    }
+    button {
+      display: inline-block;
+      margin: 10px;
+      padding: 20px;
+      font-size: 20px;
+      width: 95%;
+      max-width: 320px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .btn-verde { background-color: #008f00; color: white; }
+    .btn-azul { background-color: #007bff; color: white; }
+    table {
+      margin: 10px auto;
+      border-collapse: collapse;
+    }
+    td, th {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+    }
+    #detalleEspecie { display: none; }
+  </style>
+</head>
+<body>
+  <img src="img/logo.png" alt="Logo Jugos" />
+  <h2>Ingreso de Proveedores</h2>
+  <div id="login">
+    <input id="cui" class="input-box" placeholder="CUIT / CUIL" />
+    <input id="clave" class="input-box" placeholder="Contraseña" type="password" />
+    <button onclick="login()">Ingresar</button>
+    <div style="font-size: 12px; color: #555;">* El CUIT puede ingresarse con o sin guiones.</div>
+  </div>
+  <div id="bienvenida" style="display:none; margin-top:20px;"></div>
+  <div id="pantalla2" style="display:none;">
+    <h3>Entregas a cobrar</h3>
+    <div>
+      <button id="btnPera" class="btn-azul" onclick="verDetalle('PERA')"></button><br>
+      <button id="btnManza" class="btn-azul" onclick="verDetalle('MANZA')"></button><br>
+      <button id="btnTodas" class="btn-azul" onclick="verDetalle('TODAS')"></button>
+    </div>
+    <button class="btn-verde" onclick="verDetalle('DETALLE')">Ver detalles</button>
+  </div>
+  <div id="detalleEspecie">
+    <div id="tablaMini"></div>
+    <button onclick="volver()">Volver</button>
+  </div>
+
+  <script>
+    let entregas = [], proveedor = "", actualizacion = "";
+
+    async function login() {
+      const cui = document.getElementById("cui").value.trim();
+      const clave = document.getElementById("clave").value.trim();
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cui, password: clave })
+      });
+      if (!res.ok) return alert("CUIT o clave incorrectos");
+      const data = await res.json();
+      entregas = data.entregas || [];
+      proveedor = data.proveedor;
+      actualizacion = data.ultimaActualizacion;
+      mostrarResumen();
+    }
+
+    function mostrarResumen() {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("bienvenida").style.display = "block";
+      document.getElementById("pantalla2").style.display = "block";
+
+      document.getElementById("bienvenida").innerHTML =
+        `<div>✅ <b>Bienvenido ${proveedor}</b><br><span style='font-size:13px'>Última actualización: ${actualizacion}</span></div>`;
+
+      const total = entregas.reduce((a, e) => a + (parseFloat(e.KgsD) || 0), 0);
+      const totalPera = entregas.filter(e => (e.Especie || "").toUpperCase().includes("PERA"))
+                                 .reduce((a, e) => a + (parseFloat(e.KgsD) || 0), 0);
+      const totalManza = entregas.filter(e => (e.Especie || "").toUpperCase().includes("MANZA"))
+                                  .reduce((a, e) => a + (parseFloat(e.KgsD) || 0), 0);
+
+      document.getElementById("btnPera").textContent = `🍐 Pera - ${totalPera.toLocaleString('es-AR')} kg`;
+      document.getElementById("btnManza").textContent = `🍎 Manzana - ${totalManza.toLocaleString('es-AR')} kg`;
+      document.getElementById("btnTodas").textContent = `📋 Todas - ${total.toLocaleString('es-AR')} kg`;
+    }
+
+    function verDetalle(tipo) {
+      document.getElementById("pantalla2").style.display = "none";
+      document.getElementById("detalleEspecie").style.display = "block";
+
+      let datos = entregas;
+      if (tipo === "PERA") datos = entregas.filter(e => (e.Especie || "").toUpperCase().includes("PERA"));
+      else if (tipo === "MANZA") datos = entregas.filter(e => (e.Especie || "").toUpperCase().includes("MANZA"));
+      else if (tipo === "DETALLE") datos = entregas;
+
+      let html = "<table><tr><th>Nro Jugos</th><th>Fecha</th><th>Kgs</th></tr>";
+      datos.forEach(d => {
+        const fecha = convertirFecha(d.Fecha);
+        html += `<tr><td>${d["Nro Jugos"] || ""}</td><td>${fecha}</td><td>${parseFloat(d.KgsD || 0).toLocaleString('es-AR')}</td></tr>`;
+      });
+      html += "</table>";
+      document.getElementById("tablaMini").innerHTML = html;
+    }
+
+    function volver() {
+      document.getElementById("pantalla2").style.display = "block";
+      document.getElementById("detalleEspecie").style.display = "none";
+    }
+
+    function convertirFecha(num) {
+      if (!num) return "";
+      const base = new Date(1899, 11, 30);
+      const fecha = new Date(base.getTime() + (num * 86400000));
+      return fecha.toLocaleDateString("es-AR");
+    }
+  </script>
+</body>
+</html>
