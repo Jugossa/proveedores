@@ -123,22 +123,44 @@
   </div>
 
   <script>
-    const entregas = [
-      { nro: 101, fecha: "12/07/2025", kgs: "23.400", especie: "Pera" },
-      { nro: 102, fecha: "14/07/2025", kgs: "18.200", especie: "Manzana" },
-      { nro: 103, fecha: "15/07/2025", kgs: "45.000", especie: "Pera" },
-      { nro: 104, fecha: "18/07/2025", kgs: "19.800", especie: "Manzana" }
-    ];
+    async function login() {
+      const cuit = document.getElementById("cuit").value.trim();
+      const clave = document.getElementById("clave").value.trim();
 
-    function login() {
-      document.getElementById('loginBox').style.display = 'none';
-      document.getElementById('entregasBox').style.display = 'block';
+      const res = await fetch("/data/proveedores.json");
+      const proveedores = await res.json();
 
-      document.getElementById('bienvenida').textContent = "✅ Bienvenido MINISINI JORGE RAUL";
-      document.getElementById('ultimaActualizacion').textContent = "Última actualización: 25/07/2025 02:28 p. m.";
-      document.getElementById('kgPera').textContent = "1.943.501,86 kg";
-      document.getElementById('kgManzana').textContent = "1.863.988,88 kg";
-      document.getElementById('kgTodas').textContent = "3.807.490,74 kg";
+      const usuario = proveedores.find(p => 
+        p.cuit.replace(/-/g, '') === cuit.replace(/-/g, '') && p.clave === clave
+      );
+
+      if (!usuario) {
+        alert("CUIT o contraseña incorrecta");
+        return;
+      }
+
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("entregasBox").style.display = "block";
+
+      document.getElementById("bienvenida").textContent = "✅ Bienvenido " + usuario.nombre;
+      document.getElementById("ultimaActualizacion").textContent = "Cargando entregas...";
+
+      const entregasRes = await fetch("/data/ProFru.json");
+      const entregas = await entregasRes.json();
+      const propias = entregas.filter(e => e.ProveedorT === usuario.nombre);
+
+      document.getElementById("ultimaActualizacion").textContent = "Última actualización: " + new Date().toLocaleString();
+
+      const pera = propias.filter(e => e.Especie === "Pera");
+      const manzana = propias.filter(e => e.Especie === "Manzana");
+
+      const sumKg = arr => arr.reduce((s, e) => s + parseFloat(e.KgsD || 0), 0).toLocaleString("es-AR", {minimumFractionDigits:2});
+
+      document.getElementById("kgPera").textContent = sumKg(pera) + " kg";
+      document.getElementById("kgManzana").textContent = sumKg(manzana) + " kg";
+      document.getElementById("kgTodas").textContent = sumKg(propias) + " kg";
+
+      window._entregas = propias;
     }
 
     function filtrar(tipo) {
@@ -146,14 +168,22 @@
       contenedor.style.display = 'block';
       contenedor.innerHTML = "";
 
-      const filtrado = tipo === "Todas" ? entregas : entregas.filter(e => e.especie === tipo);
+      let filtrado = window._entregas || [];
+      if (tipo !== "Todas") filtrado = filtrado.filter(e => e.Especie === tipo);
+
       filtrado.forEach(e => {
-        contenedor.innerHTML += `<p>📦 Nro: ${e.nro} | 📅 Fecha: ${e.fecha} | ⚖️ ${e.kgs} kg</p>`;
+        const fecha = excelDateToString(e.Fecha);
+        contenedor.innerHTML += `<p>📦 Nro: ${e["Nro Jugos"]} | 📅 Fecha: ${fecha} | ⚖️ ${parseFloat(e.KgsD).toLocaleString("es-AR", {minimumFractionDigits:2})} kg</p>`;
       });
     }
 
     function verDetalles() {
-      // desactiva redirección, se puede agregar función futura
+      // desactivado
+    }
+
+    function excelDateToString(n) {
+      const d = new Date((n - 25569) * 86400 * 1000);
+      return d.toLocaleDateString("es-AR");
     }
   </script>
 
