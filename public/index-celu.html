@@ -79,6 +79,22 @@
     .todas { background-color: #004c99; }
     .ver-detalles { background-color: green; }
 
+    .detalle {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: left;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      display: none;
+    }
+
+    .detalle p {
+      background: #eee;
+      padding: 8px;
+      border-radius: 5px;
+      margin: 5px 0;
+    }
   </style>
 </head>
 <body>
@@ -102,9 +118,18 @@
     <button class="btn manzana" onclick="filtrar('Manzana')">🍎 Manzana - <span id="kgManzana">-</span></button>
     <button class="btn todas" onclick="filtrar('Todas')">📋 Todas - <span id="kgTodas">-</span></button>
     <button class="btn ver-detalles" onclick="verDetalles()">Ver detalles</button>
+
+    <div class="detalle" id="detalleReducido"></div>
   </div>
 
   <script>
+    const entregas = [
+      { nro: 101, fecha: "12/07/2025", kgs: "23.400", especie: "Pera" },
+      { nro: 102, fecha: "14/07/2025", kgs: "18.200", especie: "Manzana" },
+      { nro: 103, fecha: "15/07/2025", kgs: "45.000", especie: "Pera" },
+      { nro: 104, fecha: "18/07/2025", kgs: "19.800", especie: "Manzana" }
+    ];
+
     function login() {
       document.getElementById('loginBox').style.display = 'none';
       document.getElementById('entregasBox').style.display = 'block';
@@ -117,13 +142,18 @@
     }
 
     function filtrar(tipo) {
-      // Aquí iría la lógica de filtrado por especie
-      // Por ahora simplemente simula que va a mostrar algo
-      console.log("Filtrar por: " + tipo);
+      const contenedor = document.getElementById("detalleReducido");
+      contenedor.style.display = 'block';
+      contenedor.innerHTML = "";
+
+      const filtrado = tipo === "Todas" ? entregas : entregas.filter(e => e.especie === tipo);
+      filtrado.forEach(e => {
+        contenedor.innerHTML += `<p>📦 Nro: ${e.nro} | 📅 Fecha: ${e.fecha} | ⚖️ ${e.kgs} kg</p>`;
+      });
     }
 
     function verDetalles() {
-      window.location.href = "index.html";
+      // desactiva redirección, se puede agregar función futura
     }
   </script>
 
