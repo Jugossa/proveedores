@@ -64,8 +64,8 @@
     <input type="date" id="hasta" />
     <select id="especie">
       <option value="">Todas</option>
-      <option value="Pera">Pera</option>
-      <option value="Manzana">Manzana</option>
+      <option value="pera">Pera</option>
+      <option value="manzana">Manzana</option>
     </select>
     <button onclick="aplicarFiltros()">Filtrar</button>
   </div>
@@ -102,8 +102,8 @@
       const sumKg = arr => arr.reduce((s, e) => s + parseFloat(e.KgsD || 0), 0)
                             .toLocaleString("es-AR", {minimumFractionDigits:2});
 
-      const pera = data.filter(e => e.Especie === "Pera");
-      const manzana = data.filter(e => e.Especie === "Manzana");
+      const pera = data.filter(e => e.Especie.toLowerCase() === "pera");
+      const manzana = data.filter(e => e.Especie.toLowerCase() === "manzana");
 
       document.getElementById("kgPera").textContent = sumKg(pera) + " kg";
       document.getElementById("kgManzana").textContent = sumKg(manzana) + " kg";
@@ -145,7 +145,7 @@
         const f = new Date((e.Fecha - 25569) * 86400 * 1000);
         return (!isNaN(desde) ? f >= desde : true) &&
                (!isNaN(hasta) ? f <= hasta : true) &&
-               (especie ? e.Especie === especie : true);
+               (especie ? e.Especie.toLowerCase() === especie.toLowerCase() : true);
       });
 
       renderTabla(data);
