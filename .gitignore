@@ -1,0 +1,20 @@
+# 📁 node_modules
+node_modules/
+
+# 🗃️ Archivos temporales y de sistema
+.DS_Store
+Thumbs.db
+
+# 🧪 Logs y temporales
+logs/
+*.log
+*.tmp
+*.bak
+
+# 🔐 Archivos secretos locales
+secrets.txt
+actualizar-*.bat
+convertir*.bat
+
+# 📂 Datos que no querés subir (si aplica)
+# data/*.json
