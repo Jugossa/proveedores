@@ -1,0 +1,13 @@
+# Ignorar todo por defecto
+*
+
+# ❗️EXCEPCIONES: permitir solo estos archivos específicos
+!data/proveedores.json
+!data/ProFru.json
+!data/lastUpdate.json
+!data/webho0k.txt
+!secrets.txt
+!subir-jsons.bat
+!.gitignore
+!secrets.txt
+
