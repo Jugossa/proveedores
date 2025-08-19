@@ -1,24 +1,22 @@
-@echo off
-cd /d C:\Temp\proveedores
+for /f "delims=" %%L in ('node convertirproveedores.js') do (
+  echo %%L
+  echo %%L | find "Sin cambios" >nul
+  if not errorlevel 1 set SKIP=1
+)
 
-echo === 🔄 Ejecutando conversión de proveedores.xlsx a JSON...
-node convertirproveedores.js
+if "%SKIP%"=="1" (
+  echo === ✅ Nada para subir. Saltando Git y deploy...
+  goto :END
+)
 
 echo === 📤 Subiendo cambios a GitHub...
 git add data\proveedores.json
-git commit -m "Actualización proveedores desde PC de Naty"
+git commit -m "Actualización proveedores desde PC de Marcos"
 git push --force
 
-echo === 🚀 Forzando deploy en Render desde secrets.txt ===
-for /f "tokens=1,2 delims==" %%A in (secrets.txt) do (
-    if "%%A"=="RENDER_TOKEN" set TOKEN=%%B
-    if "%%A"=="RENDER_SERVICE" set SERVICE=%%B
-)
-curl -X POST https://api.render.com/v1/services/%SERVICE%/deploys ^
- -H "Authorization: Bearer %TOKEN%" ^
- -H "Accept: application/json" ^
- -d ""
+echo === 🚀 Forzando deploy en Render...
+rem (tu bloque de curl)
 
+:END
 echo 🌐 Abriendo portal en el navegador...
 start https://proveedores-y0xr.onrender.com/
-
