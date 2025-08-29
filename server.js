@@ -6,7 +6,7 @@ const https = require("https");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Detección robusta del entorno Render
+// Detecta entorno Render
 const isRender = process.env.RENDER || process.env.RENDER_EXTERNAL_URL || process.env.PORT;
 const baseDir = isRender
   ? path.join(__dirname, "data")
@@ -17,12 +17,12 @@ let proFru = [];
 let lastUpdate = { fecha: "Desconocida" };
 let webhookURL = "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
-// === NUEVO: Rutas/archivos para Pauta ===
+// === Pauta ===
 const pautaDir = path.join(baseDir, "pauta");
 const pautaPdfPath = path.join(pautaDir, "Pauta.pdf");
 const pautaJsonPath = path.join(pautaDir, "pauta_aceptada.json");
 
-// Cargar archivos de manera segura
+// Cargar archivos
 try {
   proveedores = JSON.parse(fs.readFileSync(path.join(baseDir, "proveedores.json"), "utf8"));
   console.log(`✔ Cargado proveedores.json (${proveedores.length} registros)`);
@@ -46,7 +46,6 @@ try {
 
 console.log("✔ Webhook cargado correctamente");
 
-// Middleware
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -56,56 +55,38 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Página para celular
+// Página móvil
 app.get("/index-celu.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index-celu.html"));
 });
 
-// Endpoint de login
+// Login
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
-  const cuiLimpio = cui.replace(/[^0-9]/g, "");
+  const cuiLimpio = String(cui || "").replace(/[^0-9]/g, "");
 
   const proveedor = proveedores.find(p =>
-    p.cui.replace(/[^0-9]/g, "") === cuiLimpio &&
-    p.clave.trim() === password.trim()
+    String(p.cui || "").replace(/[^0-9]/g, "") === cuiLimpio &&
+    String(p.clave || "").trim() === String(password || "").trim()
   );
 
   if (!proveedor) {
     return res.status(401).send("CUIT o clave incorrectos");
   }
 
-  // Enviar log de acceso a Google Sheets
+  // Log de acceso a Google Sheets
   if (webhookURL) {
-    const postData = JSON.stringify({
-      nombre: proveedor.nombre,
-      cuit: cuiLimpio
-    });
-
-    console.log("🔄 Enviando al webhook:", postData);
-    console.log("📤 Webhook URL:", webhookURL);
-
+    const postData = JSON.stringify({ nombre: proveedor.nombre, cuit: cuiLimpio });
     const reqGS = https.request(webhookURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Content-Length": Buffer.byteLength(postData),
       },
-    }, resGS => {
-      console.log(`🟢 Google respondió: ${resGS.statusCode}`);
-      resGS.on("data", chunk => {
-        console.log("🟢 Respuesta completa:", chunk.toString());
-      });
-    });
-
-    reqGS.on("error", (err) => {
-      console.error("❌ Error al conectar con Google Sheets:", err.message);
-    });
-
+    }, resGS => console.log(`🟢 Google respondió: ${resGS.statusCode}`));
+    reqGS.on("error", (err) => console.error("❌ Error webhook Sheets:", err.message));
     reqGS.write(postData);
     reqGS.end();
-  } else {
-    console.warn("⚠ Webhook no disponible, no se registró el acceso.");
   }
 
   const entregas = proFru.filter(e => e.ProveedorT === proveedor.nombre);
@@ -119,11 +100,7 @@ app.post("/login", (req, res) => {
   });
 });
 
-// =======================
-// === SECCIÓN: PAUTA  ===
-// =======================
-
-// Utilidades JSON de firmas
+// === Utilidades JSON de firmas de Pauta ===
 function loadPautaAceptada() {
   try {
     return fs.existsSync(pautaJsonPath)
@@ -135,7 +112,6 @@ function loadPautaAceptada() {
 }
 function savePautaAceptada(map) {
   try {
-    // asegurar carpeta
     if (!fs.existsSync(pautaDir)) fs.mkdirSync(pautaDir, { recursive: true });
     fs.writeFileSync(pautaJsonPath, JSON.stringify(map, null, 2));
   } catch (e) {
@@ -143,12 +119,18 @@ function savePautaAceptada(map) {
   }
 }
 
-// Visor HTML + formulario “Leí y acepto” (no usa sesión; valida por CUIT/empresa)
+// === /pauta (prefill empresa/cuit) ===
 app.get("/pauta", (req, res) => {
   const aceptadas = loadPautaAceptada();
-  // si se pasa ?cuit=... en la URL, mostramos estado inmediato
-  const cuitURL = (req.query.cuit || "").replace(/[^0-9]/g, "");
-  const ya = cuitURL ? aceptadas[cuitURL] : null;
+
+  // Prefill desde querystring
+  const cuitQS = String(req.query.cuit || "").replace(/[^0-9]/g, "");
+  const prov = proveedores.find(p => String(p.cui || "").replace(/[^0-9]/g, "") === cuitQS);
+  const empresaPrefill = prov ? prov.nombre : String(req.query.empresa || "");
+
+  const ya = cuitQS ? aceptadas[cuitQS] : null;
+
+  const esc = s => String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
 
   res.type("html").send(`<!doctype html>
 <meta charset="utf-8"><title>Pauta</title>
@@ -169,17 +151,25 @@ button{padding:10px 16px;border:0;border-radius:10px;box-shadow:0 1px 2px rgba(0
   <iframe src="/pauta/pdf" title="Pauta PDF"></iframe>
 
   ${ya ? `
-    <p class="ok">✅ Pauta firmada por <b>${ya.nombre_persona}</b> (${ya.puesto}) para <b>${ya.empresa}</b> (CUIT ${cuitURL}) el <b>${new Date(ya.fecha).toLocaleString()}</b>.</p>
+    <p class="ok">✅ Pauta firmada por <b>${esc(ya.nombre_persona)}</b> (${esc(ya.puesto)}) para <b>${esc(ya.empresa)}</b> (CUIT ${esc(cuitQS)}) el <b>${new Date(ya.fecha).toLocaleString()}</b>.</p>
     <button class="disabled" disabled>Firmar (ya firmado)</button>
   ` : `
     <h3>Confirmación</h3>
     <div class="row">
-      <label>Empresa (exacta como figura): <input id="inEmpresa" type="text" placeholder="Nombre del proveedor"></label>
-      <label>CUIT: <input id="inCuit" type="text" placeholder="Solo números"></label>
+      <label>Empresa (exacta como figura):
+        <input id="inEmpresa" type="text" placeholder="Nombre del proveedor" value="${esc(empresaPrefill)}">
+      </label>
+      <label>CUIT:
+        <input id="inCuit" type="text" placeholder="Solo números" value="${esc(cuitQS)}">
+      </label>
     </div>
     <div class="row">
-      <label>Nombre y apellido del firmante: <input id="inNombre" type="text" placeholder="Nombre y apellido"></label>
-      <label>Puesto: <input id="inPuesto" type="text" placeholder="Ej.: Encargado de campo"></label>
+      <label>Nombre y apellido del firmante:
+        <input id="inNombre" type="text" placeholder="Nombre y apellido">
+      </label>
+      <label>Puesto:
+        <input id="inPuesto" type="text" placeholder="Ej.: Encargado de campo">
+      </label>
     </div>
     <p><label><input id="chOk" type="checkbox"> Declaro que leí y acepto la Pauta.</label></p>
     <button id="btnFirmar" class="primary">Firmar</button>
@@ -217,9 +207,9 @@ app.get("/pauta/pdf", (req, res) => {
   res.sendFile(pautaPdfPath);
 });
 
-// Estado para pintar “check” desde otras pantallas (recibe ?cuit=)
+// Estado para pintar “check” (usa ?cuit=)
 app.get("/pauta/status", (req, res) => {
-  const cuit = (req.query.cuit || "").replace(/[^0-9]/g, "");
+  const cuit = String(req.query.cuit || "").replace(/[^0-9]/g, "");
   const ya = loadPautaAceptada()[cuit];
   res.json({
     firmado: !!ya,
@@ -230,14 +220,14 @@ app.get("/pauta/status", (req, res) => {
   });
 });
 
-// Registrar firma (valida que CUIT exista y que empresa coincida)
+// Registrar firma y loguear en Google Sheets (incluye fecha/hora)
 app.post("/pauta/firmar", (req, res) => {
   const { empresa, cuit, nombre_persona, puesto } = req.body || {};
   if (!empresa || !cuit || !nombre_persona || !puesto) {
     return res.status(400).send("Faltan datos");
   }
   const cuiLimpio = String(cuit).replace(/[^0-9]/g, "");
-  const prov = proveedores.find(p => p.cui.replace(/[^0-9]/g, "") === cuiLimpio);
+  const prov = proveedores.find(p => String(p.cui || "").replace(/[^0-9]/g, "") === cuiLimpio);
   if (!prov) return res.status(400).send("CUIT no registrado");
   if ((prov.nombre || "").trim() !== empresa.trim()) {
     return res.status(400).send("La empresa no coincide con el CUIT");
@@ -250,7 +240,7 @@ app.post("/pauta/firmar", (req, res) => {
       cuit: cuiLimpio,
       nombre_persona,
       puesto,
-      fecha: new Date().toISOString(),
+      fecha: new Date().toISOString(), // <- fecha/hora exacta
       ip: (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").toString(),
       ua: req.headers["user-agent"] || "",
       documento: "NT 504 Rev. 08-25"
@@ -258,7 +248,6 @@ app.post("/pauta/firmar", (req, res) => {
     aceptadas[cuiLimpio] = registro;
     savePautaAceptada(aceptadas);
 
-    // Log a Google Sheets (mismo webhook que usás en /login)
     if (webhookURL) {
       const postData = JSON.stringify({ tipo: "pauta_firmada", ...registro });
       const reqGS = https.request(webhookURL, {
@@ -267,9 +256,7 @@ app.post("/pauta/firmar", (req, res) => {
           "Content-Type": "application/json",
           "Content-Length": Buffer.byteLength(postData),
         },
-      }, resGS => {
-        console.log(`🟢 Sheets (pauta_firmada): ${resGS.statusCode}`);
-      });
+      }, resGS => console.log(`🟢 Sheets (pauta_firmada): ${resGS.statusCode}`));
       reqGS.on("error", (err) => console.error("❌ Webhook pauta:", err.message));
       reqGS.write(postData);
       reqGS.end();
