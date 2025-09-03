@@ -37,12 +37,14 @@ try {
     process.exit(1);
   }
 
-  // Soporte de encabezados "cui" o "cuit"
-  const proveedores = data.map((row) => ({
-    nombre: String(row["nombre"] || "").trim(),
-    cui: String(row["cui"] ?? row["cuit"] ?? "").trim(),
-    clave: String(row["clave"] || "").trim(),
-  }));
+  // Soporte de encabezados "cui" o "cuit", más campo "org"
+const proveedores = data.map((row) => ({
+  nombre: String(row["nombre"] || "").trim(),
+  cui: String(row["cui"] ?? row["cuit"] ?? "").trim(),
+  clave: String(row["clave"] || "").trim(),
+  org: String(row["org"] || "").trim().toLowerCase()  // "x" si es orgánico
+}));
+
 
   // Validación mínima
   const vacios = proveedores.filter(p => !p.nombre || !p.cui);
