@@ -26,6 +26,10 @@ let proFru = [];
 let lastUpdate = { fecha: "Desconocida" };
 let webhookURL = "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
+// === NUEVO: WebApp de Google para Aceptaciones de Pauta ===
+// Podés moverlo a variable de entorno GAS_PAUTA_URL si preferís.
+const GAS_PAUTA_URL = "https://script.google.com/macros/s/AKfycbwsk73HmLipucNrJw4L3VfoQ_t1oGfTpelb-89YlxhJBwdR7E8LkzYqbFlc1cxf-rEd/exec";
+
 // Cargar archivos de manera segura
 try {
   proveedores = JSON.parse(fs.readFileSync(path.join(baseDir, "proveedores.json"), "utf8"));
@@ -68,7 +72,7 @@ app.get("/index-celu.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index-celu.html"));
 });
 
-// Endpoint de login
+// Endpoint de login (mantiene tu webhook de Accesos)
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
   const cuiLimpio = (cui || "").replace(/[^0-9]/g, "");
@@ -82,15 +86,12 @@ app.post("/login", (req, res) => {
     return res.status(401).send("CUIT o clave incorrectos");
   }
 
-  // Enviar log de acceso a Google Sheets
+  // Enviar log de acceso a Google Sheets (Accesos)
   if (webhookURL) {
     const postData = JSON.stringify({
       nombre: proveedor.nombre,
       cuit: cuiLimpio
     });
-
-    console.log("🔄 Enviando al webhook:", postData);
-    console.log("📤 Webhook URL:", webhookURL);
 
     const reqGS = https.request(webhookURL, {
       method: "POST",
@@ -99,14 +100,12 @@ app.post("/login", (req, res) => {
         "Content-Length": Buffer.byteLength(postData),
       },
     }, resGS => {
-      console.log(`🟢 Google respondió: ${resGS.statusCode}`);
-      resGS.on("data", chunk => {
-        console.log("🟢 Respuesta completa:", chunk.toString());
-      });
+      // opcional: logs
+      resGS.on("data", () => {});
     });
 
     reqGS.on("error", (err) => {
-      console.error("❌ Error al conectar con Google Sheets:", err.message);
+      console.error("❌ Error al conectar con Google Sheets (Accesos):", err.message);
     });
 
     reqGS.write(postData);
@@ -118,17 +117,17 @@ app.post("/login", (req, res) => {
   const entregas = proFru.filter(e => e.ProveedorT === proveedor.nombre);
   const totalKgs = entregas.reduce((suma, e) => suma + (parseFloat(e.KgsD) || 0), 0);
 
-  // ⬇️ NUEVO: incluir 'org' para que el front muestre Pauta Orgánica si corresponde
+  // incluir 'org' para que el front muestre Pauta Orgánica si corresponde
   res.json({
     proveedor: proveedor.nombre,
-    org: proveedor.org || "",     // NUEVO
+    org: proveedor.org || "",
     entregas,
     resumen: { totalKgs },
     ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida"
   });
 });
 
-// 👇 NUEVO: Estado de firma de pauta
+// ===== Estado de firma de pauta (lee JSON local)
 app.get("/api/pauta/estado", (req, res) => {
   const cuit = String(req.query.cuit || "").replace(/[^0-9]/g, "");
   if (!cuit) return res.status(400).json({ error: "CUIT requerido" });
@@ -153,7 +152,7 @@ app.get("/api/pauta/estado", (req, res) => {
   });
 });
 
-// 👇 NUEVO: Registrar firma de pauta
+// ===== Registrar firma de pauta (guarda JSON + manda a Sheets)
 app.post("/api/pauta/firmar", (req, res) => {
   try {
     const { tipo, acepta, responsable, cargo, proveedor, cuit, test } = req.body || {};
@@ -171,18 +170,91 @@ app.post("/api/pauta/firmar", (req, res) => {
       hour:"2-digit", minute:"2-digit"
     }).replace(",", "");
 
-    // Guardar en log (real o de pruebas)
+    // 1) Guardar en log (real o de pruebas)
     const file = test ? PAUTA_LOG_TEST : PAUTA_LOG;
     let arr = [];
     try { arr = JSON.parse(fs.readFileSync(file, "utf8")); } catch {}
     arr.push({ tipo, proveedor, cuit: cuitNum, responsable, cargo, fechaLocal, iso: new Date().toISOString() });
     fs.writeFileSync(file, JSON.stringify(arr, null, 2));
 
-    // (Opcional) Enviar a Google Sheets por webhook (cuando quieras lo agregamos)
+    // 2) Enviar a Google Sheets (omitido si test=1)
+    if (!test && GAS_PAUTA_URL) {
+      const payload = {
+        accion: "aceptacion_pauta",
+        modo: "registrar",
+        timestamp: new Date().toISOString(),
+        cuit: cuitNum,
+        nombre: proveedor,
+        tipo: (tipo === "pautaorganica") ? "pauta_organica" : "pauta",
+        responsable,
+        cargo,
+        userAgent: req.headers["user-agent"] || ""
+      };
+
+      const data = JSON.stringify(payload);
+      const u = new URL(GAS_PAUTA_URL);
+      const reqGS = https.request({
+        protocol: u.protocol,
+        hostname: u.hostname,
+        path: u.pathname + (u.search || ""),
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(data) }
+      }, r => { r.on("data", () => {}); });
+
+      reqGS.on("error", err => console.error("❌ Apps Script (registrar) error:", err.message));
+      reqGS.write(data);
+      reqGS.end();
+    }
+
     res.json({ ok: true, fechaLocal });
   } catch (e) {
     console.error("Error /api/pauta/firmar:", e);
     res.status(500).json({ error: "Error interno" });
+  }
+});
+
+// ===== Borrar última firma (por CUIT + tipo) para pruebas
+app.post("/api/pauta/borrar", (req, res) => {
+  try {
+    const { cuit, tipo, test } = req.body || {};
+    const cuitNum = String(cuit || "").replace(/[^0-9]/g, "");
+    if (!cuitNum || !["pauta","pautaorganica"].includes(tipo)) {
+      return res.status(400).json({ ok:false, error:"Parámetros inválidos" });
+    }
+
+    // 1) Borrar del JSON local (última coincidencia)
+    const file = test ? PAUTA_LOG_TEST : PAUTA_LOG;
+    let arr = [];
+    try { arr = JSON.parse(fs.readFileSync(file, "utf8")); } catch {}
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i].cuit === cuitNum && arr[i].tipo === tipo) { arr.splice(i, 1); break; }
+    }
+    fs.writeFileSync(file, JSON.stringify(arr, null, 2));
+
+    // 2) Pedir al Apps Script que borre en Sheets (omitido si test=1)
+    if (!test && GAS_PAUTA_URL) {
+      const payload = { accion:"aceptacion_pauta", modo:"borrar",
+        cuit: cuitNum, tipo: (tipo === "pautaorganica") ? "pauta_organica" : "pauta" };
+
+      const data = JSON.stringify(payload);
+      const u = new URL(GAS_PAUTA_URL);
+      const rq = https.request({
+        protocol: u.protocol,
+        hostname: u.hostname,
+        path: u.pathname + (u.search || ""),
+        method: "POST",
+        headers: { "Content-Type":"application/json", "Content-Length": Buffer.byteLength(data) }
+      }, r => { r.on("data", () => {}); });
+
+      rq.on("error", err => console.error("❌ Apps Script (borrar) error:", err.message));
+      rq.write(data);
+      rq.end();
+    }
+
+    res.json({ ok:true });
+  } catch (e) {
+    console.error("Error /api/pauta/borrar:", e);
+    res.status(500).json({ ok:false, error:"Error interno" });
   }
 });
 
