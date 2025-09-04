@@ -14,21 +14,24 @@
     th { background: #f0f0f0; }
     #error { color: red; margin-top: 10px; }
     #resumen { font-weight: bold; margin: 10px 0; }
-    #acciones { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* === Cambio 1: alineación estados + mantengo tu layout === */
+    #acciones { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     #acciones button { width: auto; max-width: 200px; padding: 8px 12px; }
+    .pauta-status{
+      margin-left: auto;            /* empuja los estados a la derecha */
+      display: flex;
+      gap: 24px;
+      color: #2e7d32;
+      font-size: 12px;
+      align-items: center;
+    }
+
     #bienvenida { margin: 20px 0 5px 0; font-size: 16px; color: green; font-weight: bold; display: none; }
     #aviso { font-size: 12px; color: black; margin-bottom: 15px; display: none; font-weight: normal; }
     #filtroEspecie { width: auto; }
-    td[col-id="KgsD"],td[col-id="CantBins"] {
-      text-align: right;
-    }
-    #filtroFechas {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
+    td[col-id="KgsD"],td[col-id="CantBins"] { text-align: right; }
+    #filtroFechas { display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
     #filtroFechas label { margin-right: 5px; }
   </style>
 
@@ -42,36 +45,10 @@
       border-radius:4px;
       cursor:pointer;
     }
-    .btn-mini:disabled {
-      color:#777;
-      background:#eee;
-      cursor:not-allowed;
-    }
-    .input-mini {
-      font-size:12px;
-      padding:6px 8px;
-      border:1px solid #ccc;
-      border-radius:4px;
-      min-width:160px;
-    }
-    #modalPauta {
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.45);
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-    }
-    #modalPauta .box {
-      background:#fff;
-      width:95%;
-      max-width:900px;
-      max-height:90%;
-      overflow:auto;
-      padding:12px;
-      border-radius:8px;
-    }
+    .btn-mini:disabled { color:#777; background:#eee; cursor:not-allowed; }
+    .input-mini { font-size:12px; padding:6px 8px; border:1px solid #ccc; border-radius:4px; min-width:160px; }
+    #modalPauta { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); align-items:center; justify-content:center; z-index:9999; }
+    #modalPauta .box { background:#fff; width:95%; max-width:900px; max-height:90%; overflow:auto; padding:12px; border-radius:8px; }
   </style>
 </head>
 
@@ -109,15 +86,19 @@
 
     <div id="resumen"></div>
     <div id="acciones">
-      <button onclick="descargarExcel()">📄 Descargar Excel</button> 
-      <button onclick="window.print()">📅 Descargar PDF</button>
+      <!-- ids agregados para poder ocultarlos si no hay datos -->
+      <button id="btnExcel" onclick="descargarExcel()">📄 Descargar Excel</button> 
+      <button id="btnPDF" onclick="window.print()">📅 Descargar PDF</button>
 
       <!-- ✅ Botones de Pauta -->
       <button id="btnPauta" class="btn-mini">Firmar Pauta</button>
       <button id="btnPautaOrg" class="btn-mini" style="display:none;">Firmar Pauta Orgánica</button>
 
-      <div id="pauta-estado" style="font-size:12px;color:#2e7d32;margin-top:6px;"></div>
-      <div id="pautaorg-estado" style="font-size:12px;color:#2e7d32;"></div>
+      <!-- === Cambio 1: contenedor de estados a la derecha === -->
+      <div class="pauta-status">
+        <span id="pauta-estado"></span>
+        <span id="pautaorg-estado"></span>
+      </div>
     </div>
   </div>
 
@@ -181,23 +162,15 @@
         const result = await res.json();
         const data = result.entregas || [];
 
-        // ⬇️ GUARDO datos del usuario para Pauta / Pauta Orgánica
+        // Datos para Pauta / Pauta Orgánica
         window.USER = {
           proveedor: result.proveedor || "",
           cuit: (cui || "").replace(/[^0-9]/g, ""),
           org: result.org || ""
         };
-
-        // ⬇️ MOSTRAR/OCULTAR botón Pauta Orgánica según org = "x" / "X"
         renderPautaButtons(window.USER);
 
-        if (!data.length) {
-          tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
-          return;
-        }
-
-        entregasOriginal = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
-
+        // Mostrar encabezado y contenedor SIEMPRE (haya o no datos)
         document.getElementById("login").style.display = "none";
         const nombre = result.proveedor || "Proveedor";
         bienvenidaDiv.innerHTML = `✅ Bienvenido <strong>${nombre}</strong><br><span style="font-size: 13px; color: gray;">Última actualización: ${result.ultimaActualizacion}</span>`;
@@ -205,6 +178,28 @@
         avisoDiv.style.display = "block";
         document.getElementById("avisoCuit").style.display = "none";
 
+        // === Cambio 2: permitir firmar aunque no haya entregas ===
+        if (!data.length) {
+          tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
+
+          // mostramos el contenedor para ver #acciones (botones de pauta)
+          filtrosDiv.style.display = "block";
+
+          // ocultamos la fila de filtros (primera fila)
+          const filaFiltros = filtrosDiv.firstElementChild;
+          if (filaFiltros) filaFiltros.style.display = "none";
+
+          // ocultamos exportaciones (no hay datos)
+          const bExcel = document.getElementById('btnExcel');
+          const bPDF   = document.getElementById('btnPDF');
+          if (bExcel) bExcel.style.display = 'none';
+          if (bPDF)   bPDF.style.display   = 'none';
+
+          return; // dejamos visibles los botones de pauta
+        }
+
+        // Caso con entregas (igual que antes)
+        entregasOriginal = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
         mostrarFiltrosYTabla(entregasOriginal);
       } catch (err) {
         errorDiv.textContent = "❌ Error de red.";
@@ -217,9 +212,7 @@
       const select = document.getElementById("filtroEspecie");
 
       select.innerHTML = `<option value="TODAS">Todas las especies</option>`;
-      especies.forEach(v => {
-        select.innerHTML += `<option value="${v}">${v}</option>`;
-      });
+      especies.forEach(v => { select.innerHTML += `<option value="${v}">${v}</option>`; });
 
       document.getElementById("filtros").style.display = "block";
       filtrarEspecie();
@@ -413,7 +406,7 @@
               document.getElementById('pautaorg-estado').textContent = 'Pauta Orgánica firmada el ' + j.fechaLocal;
             }
           } else {
-            alert('No se pudo registrar la firma' + (j?.error?': '+j.error:''));
+            alert('No se pudo registrar la firma' + (j?.error?': '+j.error:'')); 
           }
         } catch(e){
           alert('No se pudo conectar para registrar la firma.');
@@ -435,11 +428,10 @@
     // Ejecutar una vez (cuando ya suele estar el CUIT cargado). No rompe si no hay login aún.
     setTimeout(cargarEstado, 300);
 
-    // ✅ FUNCION FALTANTE: llamada desde login()
+    // llamada desde login()
     window.renderPautaButtons = function(user){
-      // nos aseguramos de tener user y setear visibilidad del botón orgánico
       try { if (user) window.USER = user; } catch(_) {}
-      showOrgIfNeeded(); // muestra/oculta “Firmar Pauta Orgánica” según org = 'x'/'X'
+      showOrgIfNeeded();
     };
   })();
   </script>
