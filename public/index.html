@@ -19,12 +19,15 @@
     #acciones { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     #acciones button { width: auto; max-width: 200px; padding: 8px 12px; }
     .pauta-status{
-      margin-left: auto;            /* empuja los estados a la derecha */
-      display: flex;
-      gap: 24px;
-      color: #2e7d32;
-      font-size: 12px;
-      align-items: center;
+     /* antes tenía: margin-left: auto;  -> lo quitamos */
+  margin-left: 12px;          /* queda pegado a los botones */
+  display: flex;
+  gap: 18px;
+  color: #2e7d32;
+  font-size: 12px;
+  align-items: center;
+  flex: 0 1 auto;             /* no se estira, respeta el contenido */
+  flex-wrap: wrap;            /* si no entra, baja a la linea siguiente */
     }
 
     #bienvenida { margin: 20px 0 5px 0; font-size: 16px; color: green; font-weight: bold; display: none; }
