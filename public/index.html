@@ -111,8 +111,11 @@
     <div id="acciones">
       <button onclick="descargarExcel()">📄 Descargar Excel</button> 
       <button onclick="window.print()">📅 Descargar PDF</button>
+
+      <!-- ✅ Botones de Pauta -->
       <button id="btnPauta" class="btn-mini">Firmar Pauta</button>
       <button id="btnPautaOrg" class="btn-mini" style="display:none;">Firmar Pauta Orgánica</button>
+
       <div id="pauta-estado" style="font-size:12px;color:#2e7d32;margin-top:6px;"></div>
       <div id="pautaorg-estado" style="font-size:12px;color:#2e7d32;"></div>
     </div>
@@ -163,32 +166,35 @@
         return;
       }
 
-     try {
-  const res = await fetch("/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cui, password })
-  });
+      try {
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cui, password })
+        });
 
-  if (res.status === 401) {
-    errorDiv.textContent = "❌ CUIT o contraseña incorrectos.";
-    return;
-  }
+        if (res.status === 401) {
+          errorDiv.textContent = "❌ CUIT o contraseña incorrectos.";
+          return;
+        }
 
-  const result = await res.json();
-  const data = result.entregas || [];
+        const result = await res.json();
+        const data = result.entregas || [];
 
-  // ⬇️ NUEVO: guardo datos para los botones de Pauta
-  window.USER = {
-    proveedor: result.proveedor || "",
-    cuit: (cui || "").replace(/[^0-9]/g, ""),
-    org: result.org || ""  // si el server no manda 'org', queda ""
-  };
+        // ⬇️ GUARDO datos del usuario para Pauta / Pauta Orgánica
+        window.USER = {
+          proveedor: result.proveedor || "",
+          cuit: (cui || "").replace(/[^0-9]/g, ""),
+          org: result.org || ""
+        };
 
-  if (!data.length) {
-    tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
-    return;
-  }
+        // ⬇️ MOSTRAR/OCULTAR botón Pauta Orgánica según org = "x" / "X"
+        renderPautaButtons(window.USER);
+
+        if (!data.length) {
+          tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
+          return;
+        }
 
         entregasOriginal = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
 
@@ -289,146 +295,154 @@
     }
   </script>
     
-    <!-- 👇 Bloque NUEVO del modal de Pauta -->
-    <div id="modalPauta">
-      <div class="box">
-        <h3 id="modalTitulo" style="margin:0 0 8px 0;font-size:16px;">Firmar Pauta</h3>
-        <iframe id="pdfFrame" src="" style="width:100%; height:55vh; border:1px solid #ddd;"></iframe>
+  <!-- 👇 Bloque del modal de Pauta -->
+  <div id="modalPauta">
+    <div class="box">
+      <h3 id="modalTitulo" style="margin:0 0 8px 0;font-size:16px;">Firmar Pauta</h3>
+      <iframe id="pdfFrame" src="" style="width:100%; height:55vh; border:1px solid #ddd;"></iframe>
 
-        <div style="margin-top:10px;">
-          <label><input type="checkbox" id="chkAcepto"> Acepto los términos de la pauta</label>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
-            <input id="inpResponsable" class="input-mini" placeholder="Responsable">
-            <input id="inpCargo" class="input-mini" placeholder="Cargo">
-            <input id="inpFecha" class="input-mini" placeholder="Fecha y hora" readonly>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
-            <button id="btnConfirmar" class="btn-mini" disabled>Confirmar firma</button>
-            <button id="btnCancelar" class="btn-mini">Cancelar</button>
-            <a id="btnDescargar" class="btn-mini" download>Descargar PDF</a>
-          </div>
+      <div style="margin-top:10px;">
+        <label><input type="checkbox" id="chkAcepto"> Acepto los términos de la pauta</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+          <input id="inpResponsable" class="input-mini" placeholder="Responsable">
+          <input id="inpCargo" class="input-mini" placeholder="Cargo">
+          <input id="inpFecha" class="input-mini" placeholder="Fecha y hora" readonly>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+          <button id="btnConfirmar" class="btn-mini" disabled>Confirmar firma</button>
+          <button id="btnCancelar" class="btn-mini">Cancelar</button>
+          <a id="btnDescargar" class="btn-mini" download>Descargar PDF</a>
         </div>
       </div>
     </div>
-    <!-- 👆 Fin del modal -->
-<script id="pauta-js">
-(function(){
-  // ===== Config / helpers =====
-  const qsTest = new URLSearchParams(location.search).get('test') === '1'; // modo prueba (?test=1)
+  </div>
+  <!-- 👆 Fin del modal -->
 
-  function getCuit(){
-    if (window.USER?.cuit) return window.USER.cuit;
-    const el = document.getElementById('cui') || document.querySelector('input[name="cui"]');
-    return el && el.value ? el.value.replace(/[^0-9]/g,'') : '';
-  }
-  function getProveedor(){
-    if (window.USER?.proveedor) return window.USER.proveedor;
-    const strong = document.querySelector('#bienvenida strong') || document.getElementById('bienvenido-nombre');
-    if (strong) return strong.textContent.trim();
-    const txt = document.getElementById('bienvenida')?.textContent || '';
-    const m = txt.match(/Bienvenido\s+(.+?)(?:\s+Última|$)/i);
-    return m ? m[1].trim() : '';
-  }
-  function showOrgIfNeeded(){
-    const bOrg = document.getElementById('btnPautaOrg');
-    const orgFlag = (window.USER?.org === 'x' || window.USER?.org === 'X');
-    if (bOrg) bOrg.style.display = orgFlag ? '' : 'none';
-  }
+  <script id="pauta-js">
+  (function(){
+    // ===== Config / helpers =====
+    const qsTest = new URLSearchParams(location.search).get('test') === '1'; // modo prueba (?test=1)
 
-  // ===== Pintar estado de botones (si ya firmó) =====
-  function pintarEstado(s){
+    function getCuit(){
+      if (window.USER?.cuit) return window.USER.cuit;
+      const el = document.getElementById('cui') || document.querySelector('input[name="cui"]');
+      return el && el.value ? el.value.replace(/[^0-9]/g,'') : '';
+    }
+    function getProveedor(){
+      if (window.USER?.proveedor) return window.USER.proveedor;
+      const strong = document.querySelector('#bienvenida strong') || document.getElementById('bienvenido-nombre');
+      if (strong) return strong.textContent.trim();
+      const txt = document.getElementById('bienvenida')?.textContent || '';
+      const m = txt.match(/Bienvenido\s+(.+?)(?:\s+Última|$)/i);
+      return m ? m[1].trim() : '';
+    }
+    function showOrgIfNeeded(){
+      const bOrg = document.getElementById('btnPautaOrg');
+      const orgFlag = (window.USER?.org === 'x' || window.USER?.org === 'X');
+      if (bOrg) bOrg.style.display = orgFlag ? '' : 'none';
+    }
+
+    // ===== Pintar estado de botones (si ya firmó) =====
+    function pintarEstado(s){
+      const bP = document.getElementById('btnPauta');
+      const bO = document.getElementById('btnPautaOrg');
+      const eP = document.getElementById('pauta-estado');
+      const eO = document.getElementById('pautaorg-estado');
+      if (s?.pauta?.firmado){ bP.textContent='Pauta firmada'; bP.disabled=true; eP.textContent='Pauta firmada el '+s.pauta.fechaLocal; }
+      if (s?.pautaorganica?.firmado){ bO.textContent='Pauta Orgánica firmada'; bO.disabled=true; eO.textContent='Pauta Orgánica firmada el '+s.pautaorganica.fechaLocal; }
+    }
+
+    // ===== Consultar estado al cargar =====
+    function cargarEstado(){
+      const cuit = getCuit();
+      if (!cuit) { showOrgIfNeeded(); return; }
+      fetch('/api/pauta/estado?cuit=' + encodeURIComponent(cuit))
+        .then(r => r.ok ? r.json() : null)
+        .then(s => { pintarEstado(s || {}); showOrgIfNeeded(); })
+        .catch(() => showOrgIfNeeded());
+    }
+
+    // ===== Abrir modal y confirmar =====
+    function abrir(tipo){
+      const titulo = document.getElementById('modalTitulo');
+      const frame  = document.getElementById('pdfFrame');
+      const aDesc  = document.getElementById('btnDescargar');
+      const chk    = document.getElementById('chkAcepto');
+      const inpR   = document.getElementById('inpResponsable');
+      const inpC   = document.getElementById('inpCargo');
+      const inpF   = document.getElementById('inpFecha');
+      const btnOK  = document.getElementById('btnConfirmar');
+      const btnCancel = document.getElementById('btnCancelar');
+
+      titulo.textContent = (tipo==='pauta'?'Firmar Pauta':'Firmar Pauta Orgánica');
+      const pdf = (tipo==='pauta') ? '/data/pauta/pauta.pdf' : '/data/pauta/pautaorganica.pdf';
+      frame.src = pdf; aDesc.href = pdf;
+
+      // reset
+      chk.checked = false; inpR.value=''; inpC.value='';
+      inpF.value = new Date().toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).replace(',', '');
+      btnOK.disabled = true;
+
+      // habilitar confirmar solo cuando todo esté OK
+      const validar = ()=> btnOK.disabled = !(chk.checked && inpR.value.trim() && inpC.value.trim());
+      chk.onchange = validar; inpR.oninput = validar; inpC.oninput = validar;
+
+      btnOK.onclick = async ()=>{
+        btnOK.disabled = true;
+        const body = {
+          tipo,
+          acepta: true,
+          responsable: inpR.value.trim(),
+          cargo: inpC.value.trim(),
+          proveedor: getProveedor(),
+          cuit: getCuit()
+        };
+        if (qsTest) body.test = 1; // modo prueba: guarda en pautaLog-test.json y NO toca Sheets
+
+        try{
+          const r = await fetch('/api/pauta/firmar', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+          const j = await r.json();
+          if (j?.ok){
+            if (tipo==='pauta'){
+              const b = document.getElementById('btnPauta');
+              b.textContent='Pauta firmada'; b.disabled=true;
+              document.getElementById('pauta-estado').textContent = 'Pauta firmada el ' + j.fechaLocal;
+            } else {
+              const b = document.getElementById('btnPautaOrg');
+              b.textContent='Pauta Orgánica firmada'; b.disabled=true;
+              document.getElementById('pautaorg-estado').textContent = 'Pauta Orgánica firmada el ' + j.fechaLocal;
+            }
+          } else {
+            alert('No se pudo registrar la firma' + (j?.error?': '+j.error:''));
+          }
+        } catch(e){
+          alert('No se pudo conectar para registrar la firma.');
+        } finally {
+          document.getElementById('modalPauta').style.display = 'none';
+        }
+      };
+
+      btnCancel.onclick = ()=>{ document.getElementById('modalPauta').style.display = 'none'; };
+      document.getElementById('modalPauta').style.display = 'flex';
+    }
+
+    // ===== Wire-up de los botones =====
     const bP = document.getElementById('btnPauta');
     const bO = document.getElementById('btnPautaOrg');
-    const eP = document.getElementById('pauta-estado');
-    const eO = document.getElementById('pautaorg-estado');
-    if (s?.pauta?.firmado){ bP.textContent='Pauta firmada'; bP.disabled=true; eP.textContent='Pauta firmada el '+s.pauta.fechaLocal; }
-    if (s?.pautaorganica?.firmado){ bO.textContent='Pauta Orgánica firmada'; bO.disabled=true; eO.textContent='Pauta Orgánica firmada el '+s.pautaorganica.fechaLocal; }
-  }
+    if (bP) bP.onclick = () => abrir('pauta');
+    if (bO) bO.onclick = () => abrir('pautaorganica');
 
-  // ===== Consultar estado al cargar =====
-  function cargarEstado(){
-    const cuit = getCuit();
-    if (!cuit) { showOrgIfNeeded(); return; }
-    fetch('/api/pauta/estado?cuit=' + encodeURIComponent(cuit))
-      .then(r => r.ok ? r.json() : null)
-      .then(s => { pintarEstado(s || {}); showOrgIfNeeded(); })
-      .catch(() => showOrgIfNeeded());
-  }
+    // Ejecutar una vez (cuando ya suele estar el CUIT cargado). No rompe si no hay login aún.
+    setTimeout(cargarEstado, 300);
 
-  // ===== Abrir modal y confirmar =====
-  function abrir(tipo){
-    const titulo = document.getElementById('modalTitulo');
-    const frame  = document.getElementById('pdfFrame');
-    const aDesc  = document.getElementById('btnDescargar');
-    const chk    = document.getElementById('chkAcepto');
-    const inpR   = document.getElementById('inpResponsable');
-    const inpC   = document.getElementById('inpCargo');
-    const inpF   = document.getElementById('inpFecha');
-    const btnOK  = document.getElementById('btnConfirmar');
-    const btnCancel = document.getElementById('btnCancelar');
-
-    titulo.textContent = (tipo==='pauta'?'Firmar Pauta':'Firmar Pauta Orgánica');
-    const pdf = (tipo==='pauta') ? '/data/pauta/pauta.pdf' : '/data/pauta/pautaorganica.pdf';
-    frame.src = pdf; aDesc.href = pdf;
-
-    // reset
-    chk.checked = false; inpR.value=''; inpC.value='';
-    inpF.value = new Date().toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).replace(',', '');
-    btnOK.disabled = true;
-
-    // habilitar confirmar solo cuando todo esté OK
-    const validar = ()=> btnOK.disabled = !(chk.checked && inpR.value.trim() && inpC.value.trim());
-    chk.onchange = validar; inpR.oninput = validar; inpC.oninput = validar;
-
-    btnOK.onclick = async ()=>{
-      btnOK.disabled = true;
-      const body = {
-        tipo,
-        acepta: true,
-        responsable: inpR.value.trim(),
-        cargo: inpC.value.trim(),
-        proveedor: getProveedor(),
-        cuit: getCuit()
-      };
-      if (qsTest) body.test = 1; // modo prueba: guarda en pautaLog-test.json y NO toca Sheets
-
-      try{
-        const r = await fetch('/api/pauta/firmar', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
-        const j = await r.json();
-        if (j?.ok){
-          if (tipo==='pauta'){
-            const b = document.getElementById('btnPauta');
-            b.textContent='Pauta firmada'; b.disabled=true;
-            document.getElementById('pauta-estado').textContent = 'Pauta firmada el ' + j.fechaLocal;
-          } else {
-            const b = document.getElementById('btnPautaOrg');
-            b.textContent='Pauta Orgánica firmada'; b.disabled=true;
-            document.getElementById('pautaorg-estado').textContent = 'Pauta Orgánica firmada el ' + j.fechaLocal;
-          }
-        } else {
-          alert('No se pudo registrar la firma' + (j?.error?': '+j.error:''));
-        }
-      } catch(e){
-        alert('No se pudo conectar para registrar la firma.');
-      } finally {
-        document.getElementById('modalPauta').style.display = 'none';
-      }
+    // ✅ FUNCION FALTANTE: llamada desde login()
+    window.renderPautaButtons = function(user){
+      // nos aseguramos de tener user y setear visibilidad del botón orgánico
+      try { if (user) window.USER = user; } catch(_) {}
+      showOrgIfNeeded(); // muestra/oculta “Firmar Pauta Orgánica” según org = 'x'/'X'
     };
-
-    btnCancel.onclick = ()=>{ document.getElementById('modalPauta').style.display = 'none'; };
-    document.getElementById('modalPauta').style.display = 'flex';
-  }
-
-  // ===== Wire-up de los botones =====
-  const bP = document.getElementById('btnPauta');
-  const bO = document.getElementById('btnPautaOrg');
-  if (bP) bP.onclick = () => abrir('pauta');
-  if (bO) bO.onclick = () => abrir('pautaorganica');
-
-  // Ejecutar una vez (cuando ya suele estar el CUIT cargado). No rompe si no hay login aún.
-  setTimeout(cargarEstado, 300);
-})();
-</script>
+  })();
+  </script>
 
   </body>
 </html>
