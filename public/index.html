@@ -15,19 +15,18 @@
     #error { color: red; margin-top: 10px; }
     #resumen { font-weight: bold; margin: 10px 0; }
 
-    /* === Cambio 1: alineación estados + mantengo tu layout === */
+    /* Alineación de estados al lado de los botones */
     #acciones { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     #acciones button { width: auto; max-width: 200px; padding: 8px 12px; }
     .pauta-status{
-     /* antes tenía: margin-left: auto;  -> lo quitamos */
-  margin-left: 12px;          /* queda pegado a los botones */
-  display: flex;
-  gap: 18px;
-  color: #2e7d32;
-  font-size: 12px;
-  align-items: center;
-  flex: 0 1 auto;             /* no se estira, respeta el contenido */
-  flex-wrap: wrap;            /* si no entra, baja a la linea siguiente */
+      margin-left: 12px;
+      display: flex;
+      gap: 18px;
+      color: #2e7d32;
+      font-size: 12px;
+      align-items: center;
+      flex: 0 1 auto;
+      flex-wrap: wrap;
     }
 
     #bienvenida { margin: 20px 0 5px 0; font-size: 16px; color: green; font-weight: bold; display: none; }
@@ -38,7 +37,7 @@
     #filtroFechas label { margin-right: 5px; }
   </style>
 
-  <!-- 👇 BLOQUE NUEVO PARA BOTONES MINI Y MODAL DE PAUTA -->
+  <!-- Botones mini y modal de Pauta -->
   <style id="pauta-css">
     .btn-mini {
       font-size:12px; line-height:1;
@@ -89,15 +88,14 @@
 
     <div id="resumen"></div>
     <div id="acciones">
-      <!-- ids agregados para poder ocultarlos si no hay datos -->
+      <!-- ids para poder ocultarlos si no hay datos -->
       <button id="btnExcel" onclick="descargarExcel()">📄 Descargar Excel</button> 
       <button id="btnPDF" onclick="window.print()">📅 Descargar PDF</button>
 
-      <!-- ✅ Botones de Pauta -->
+      <!-- Botones de Pauta -->
       <button id="btnPauta" class="btn-mini">Firmar Pauta</button>
       <button id="btnPautaOrg" class="btn-mini" style="display:none;">Firmar Pauta Orgánica</button>
 
-      <!-- === Cambio 1: contenedor de estados a la derecha === -->
       <div class="pauta-status">
         <span id="pauta-estado"></span>
         <span id="pautaorg-estado"></span>
@@ -181,24 +179,22 @@
         avisoDiv.style.display = "block";
         document.getElementById("avisoCuit").style.display = "none";
 
-        // === Cambio 2: permitir firmar aunque no haya entregas ===
+        // Permitir firmar aunque no haya entregas
         if (!data.length) {
           tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
-
-          // mostramos el contenedor para ver #acciones (botones de pauta)
           filtrosDiv.style.display = "block";
 
-          // ocultamos la fila de filtros (primera fila)
+          // oculto la fila de filtros (primera fila)
           const filaFiltros = filtrosDiv.firstElementChild;
           if (filaFiltros) filaFiltros.style.display = "none";
 
-          // ocultamos exportaciones (no hay datos)
+          // oculto exportaciones (no hay datos)
           const bExcel = document.getElementById('btnExcel');
           const bPDF   = document.getElementById('btnPDF');
           if (bExcel) bExcel.style.display = 'none';
           if (bPDF)   bPDF.style.display   = 'none';
 
-          return; // dejamos visibles los botones de pauta
+          return; // deja visibles los botones de pauta
         }
 
         // Caso con entregas (igual que antes)
@@ -291,7 +287,7 @@
     }
   </script>
     
-  <!-- 👇 Bloque del modal de Pauta -->
+  <!-- Modal de Pauta -->
   <div id="modalPauta">
     <div class="box">
       <h3 id="modalTitulo" style="margin:0 0 8px 0;font-size:16px;">Firmar Pauta</h3>
@@ -312,12 +308,10 @@
       </div>
     </div>
   </div>
-  <!-- 👆 Fin del modal -->
 
   <script id="pauta-js">
   (function(){
-    // ===== Config / helpers =====
-    const qsTest = new URLSearchParams(location.search).get('test') === '1'; // modo prueba (?test=1)
+    const qsTest = new URLSearchParams(location.search).get('test') === '1';
 
     function getCuit(){
       if (window.USER?.cuit) return window.USER.cuit;
@@ -338,7 +332,6 @@
       if (bOrg) bOrg.style.display = orgFlag ? '' : 'none';
     }
 
-    // ===== Pintar estado de botones (si ya firmó) =====
     function pintarEstado(s){
       const bP = document.getElementById('btnPauta');
       const bO = document.getElementById('btnPautaOrg');
@@ -348,7 +341,6 @@
       if (s?.pautaorganica?.firmado){ bO.textContent='Pauta Orgánica firmada'; bO.disabled=true; eO.textContent='Pauta Orgánica firmada el '+s.pautaorganica.fechaLocal; }
     }
 
-    // ===== Consultar estado al cargar =====
     function cargarEstado(){
       const cuit = getCuit();
       if (!cuit) { showOrgIfNeeded(); return; }
@@ -358,7 +350,27 @@
         .catch(() => showOrgIfNeeded());
     }
 
-    // ===== Abrir modal y confirmar =====
+    // Pre-chequeo antes de abrir modal (evita re-firma)
+    async function precheckYabrir(tipo){
+      const cuit = (getCuit() || '').replace(/[^0-9]/g,'');
+      if (!cuit) return abrir(tipo); // fallback
+      try{
+        const r = await fetch('/api/pauta/estado?cuit='+encodeURIComponent(cuit));
+        const s = await r.json();
+        const ya = (tipo==='pauta') ? s?.pauta?.firmado : s?.pautaorganica?.firmado;
+        if (ya){
+          const fecha = (tipo==='pauta') ? s.pauta.fechaLocal : s.pautaorganica.fechaLocal;
+          alert(`Ya registraste la ${tipo==='pauta'?'Pauta':'Pauta Orgánica'} el ${fecha}.`);
+          // pintar botón como firmado
+          if (tipo==='pauta'){ const b=document.getElementById('btnPauta'); if(b){ b.textContent='Pauta firmada'; b.disabled=true; } }
+          else { const b=document.getElementById('btnPautaOrg'); if(b){ b.textContent='Pauta Orgánica firmada'; b.disabled=true; } }
+          return;
+        }
+      }catch(_){}
+      abrir(tipo);
+    }
+
+    // Abrir modal y confirmar
     function abrir(tipo){
       const titulo = document.getElementById('modalTitulo');
       const frame  = document.getElementById('pdfFrame');
@@ -374,12 +386,10 @@
       const pdf = (tipo==='pauta') ? '/data/pauta/pauta.pdf' : '/data/pauta/pautaorganica.pdf';
       frame.src = pdf; aDesc.href = pdf;
 
-      // reset
       chk.checked = false; inpR.value=''; inpC.value='';
       inpF.value = new Date().toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).replace(',', '');
       btnOK.disabled = true;
 
-      // habilitar confirmar solo cuando todo esté OK
       const validar = ()=> btnOK.disabled = !(chk.checked && inpR.value.trim() && inpC.value.trim());
       chk.onchange = validar; inpR.oninput = validar; inpC.oninput = validar;
 
@@ -393,11 +403,20 @@
           proveedor: getProveedor(),
           cuit: getCuit()
         };
-        if (qsTest) body.test = 1; // modo prueba: guarda en pautaLog-test.json y NO toca Sheets
+        if (qsTest) body.test = 1;
 
         try{
           const r = await fetch('/api/pauta/firmar', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
           const j = await r.json();
+
+          if (r.status === 409 || j?.error === 'ya_firmada'){
+            const fecha = j?.fechaLocal || '';
+            alert(`Ya estaba firmada (${fecha}).`);
+            if (tipo==='pauta'){ const b=document.getElementById('btnPauta'); if(b){ b.textContent='Pauta firmada'; b.disabled=true; document.getElementById('pauta-estado').textContent = 'Pauta firmada el ' + fecha; } }
+            else { const b=document.getElementById('btnPautaOrg'); if(b){ b.textContent='Pauta Orgánica firmada'; b.disabled=true; document.getElementById('pautaorg-estado').textContent = 'Pauta Orgánica firmada el ' + fecha; } }
+            return;
+          }
+
           if (j?.ok){
             if (tipo==='pauta'){
               const b = document.getElementById('btnPauta');
@@ -422,13 +441,13 @@
       document.getElementById('modalPauta').style.display = 'flex';
     }
 
-    // ===== Wire-up de los botones =====
+    // Wire-up de los botones (con prechequeo)
     const bP = document.getElementById('btnPauta');
     const bO = document.getElementById('btnPautaOrg');
-    if (bP) bP.onclick = () => abrir('pauta');
-    if (bO) bO.onclick = () => abrir('pautaorganica');
+    if (bP) bP.onclick = () => precheckYabrir('pauta');
+    if (bO) bO.onclick = () => precheckYabrir('pautaorganica');
 
-    // Ejecutar una vez (cuando ya suele estar el CUIT cargado). No rompe si no hay login aún.
+    // Ejecutar una vez (cuando ya suele estar el CUIT cargado)
     setTimeout(cargarEstado, 300);
 
     // llamada desde login()

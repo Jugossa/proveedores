@@ -1,3 +1,4 @@
+// server.js
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -26,13 +27,13 @@ let proveedores = [];
 let proFru = [];
 let lastUpdate = { fecha: "Desconocida" };
 
-// Webhook ACTUAL para “Accesos” del login (dejalo como está)
+// Webhook ACTUAL para “Accesos” del login (mantener)
 let webhookURL = "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
-// NUEVO: WebApp para “AceptacionesPauta”
+// WebApp para Aceptaciones de Pauta (registrar/borrar/estado)
 const GAS_PAUTA_URL = "https://script.google.com/macros/s/AKfycbwsk73HmLipucNrJw4L3VfoQ_t1oGfTpelb-89YlxhJBwdR7E8LkzYqbFlc1cxf-rEd/exec";
 
-// helpers
+/* ========= HELPERS ========= */
 function safeReadArray(file){ try { return JSON.parse(fs.readFileSync(file,"utf8")); } catch { return []; } }
 function safeWriteArray(file, arr){ try { fs.writeFileSync(file, JSON.stringify(arr,null,2)); } catch {} }
 function postJSON(urlStr, payload){
@@ -47,7 +48,33 @@ function postJSON(urlStr, payload){
     req.on("error", reject); req.write(data); req.end();
   });
 }
+async function getEstadoFirma(cuitNum){
+  // 1) JSON local
+  const arr = safeReadArray(PAUTA_LOG);
+  const ultimo = (tipo) => {
+    for (let i = arr.length - 1; i >= 0; i--) {
+      const r = arr[i];
+      if (r.cuit === cuitNum && r.tipo === tipo) return r;
+    }
+    return null;
+  };
+  const pLoc = ultimo("pauta");
+  const oLoc = ultimo("pautaorganica");
+  if (pLoc || oLoc) {
+    return {
+      pauta:         pLoc ? { firmado:true,  fechaLocal:pLoc.fechaLocal } : { firmado:false },
+      pautaorganica: oLoc ? { firmado:true,  fechaLocal:oLoc.fechaLocal } : { firmado:false }
+    };
+  }
+  // 2) Sheets (fuente de verdad)
+  try {
+    const r = await postJSON(GAS_PAUTA_URL, { accion:"aceptacion_pauta", modo:"estado", cuit:cuitNum });
+    if (r && (r.pauta || r.pautaorganica)) return r;
+  } catch(_) {}
+  return { pauta:{firmado:false}, pautaorganica:{firmado:false} };
+}
 
+/* ========= CARGA DE ARCHIVOS ========= */
 try {
   proveedores = JSON.parse(fs.readFileSync(path.join(baseDir, "proveedores.json"), "utf8"));
   console.log(`✔ Cargado proveedores.json (${proveedores.length} registros)`);
@@ -63,7 +90,7 @@ try {
   console.log(`✔ Cargado lastUpdate.json: ${lastUpdate.fecha}`);
 } catch (err) { console.error("❌ Error al leer lastUpdate.json:", err.message); }
 
-/* ========= STATIC ========= */
+/* ========= STATIC & MIDDLEWARE ========= */
 app.use('/data', express.static(path.join(__dirname, 'data'))); // PDFs de pauta
 app.use(express.static("public"));
 app.use(express.json());
@@ -85,7 +112,7 @@ app.post("/login", (req, res) => {
 
   if (!proveedor) return res.status(401).send("CUIT o clave incorrectos");
 
-  // Log de acceso → hoja “Accesos” (tu webhook de siempre)
+  // Log de acceso → hoja “Accesos”
   if (webhookURL) {
     const postData = JSON.stringify({ nombre: proveedor.nombre, cuit: cuiLimpio });
     const reqGS = https.request(webhookURL, {
@@ -108,46 +135,15 @@ app.post("/login", (req, res) => {
   });
 });
 
-/* ========= ESTADO: primero JSON local; si no, consulta a Sheets ========= */
-async function estadoDesdeSheets(cuitNum){
-  try {
-    const resp = await postJSON(GAS_PAUTA_URL, { accion:"aceptacion_pauta", modo:"estado", cuit:cuitNum });
-    if (resp && (resp.pauta || resp.pautaorganica)) return resp;
-  } catch(e){ console.warn("Sheets estado error:", e?.message || e); }
-  return null;
-}
-
+/* ========= ESTADO (lee JSON y si no hay, Sheets) ========= */
 app.get("/api/pauta/estado", async (req, res) => {
   const cuit = String(req.query.cuit || "").replace(/[^0-9]/g, "");
   if (!cuit) return res.status(400).json({ error: "CUIT requerido" });
-
-  let arr = safeReadArray(PAUTA_LOG);
-  const ultimo = (tipo) => {
-    for (let i = arr.length - 1; i >= 0; i--) {
-      const r = arr[i];
-      if (r.cuit === cuit && r.tipo === tipo) return r;
-    }
-    return null;
-  };
-  const pLoc = ultimo("pauta");
-  const oLoc = ultimo("pautaorganica");
-
-  // si tenemos algo local, devolvemos; si no, preguntamos a Sheets
-  if (pLoc || oLoc) {
-    return res.json({
-      pauta:         pLoc ? { firmado:true, fechaLocal:pLoc.fechaLocal } : { firmado:false },
-      pautaorganica: oLoc ? { firmado:true, fechaLocal:oLoc.fechaLocal } : { firmado:false }
-    });
-  }
-
-  const s = await estadoDesdeSheets(cuit);
-  if (s) return res.json(s);
-
-  // fallback vacío
-  res.json({ pauta:{ firmado:false }, pautaorganica:{ firmado:false } });
+  const s = await getEstadoFirma(cuit);
+  res.json(s);
 });
 
-/* ========= REGISTRAR FIRMA (JSON + Google Sheet) ========= */
+/* ========= REGISTRAR FIRMA (anti-doble + JSON + Sheets) ========= */
 app.post("/api/pauta/firmar", async (req, res) => {
   try {
     const { tipo, acepta, responsable, cargo, proveedor, cuit, test } = req.body || {};
@@ -158,6 +154,17 @@ app.post("/api/pauta/firmar", async (req, res) => {
     const cuitNum = String(cuit || "").replace(/[^0-9]/g, "");
     if (!cuitNum || !proveedor || !responsable || !cargo) {
       return res.status(400).json({ error: "Datos incompletos" });
+    }
+
+    // ⛔️ si ya está firmada, no duplicar
+    const estado = await getEstadoFirma(cuitNum);
+    const ya = (tipo === "pauta") ? estado.pauta.firmado : estado.pautaorganica.firmado;
+    if (ya) {
+      return res.status(409).json({
+        ok:false,
+        error:"ya_firmada",
+        fechaLocal: (tipo === "pauta") ? estado.pauta.fechaLocal : estado.pautaorganica.fechaLocal
+      });
     }
 
     const ahora = new Date();
@@ -178,8 +185,7 @@ app.post("/api/pauta/firmar", async (req, res) => {
         modo: "registrar",
         timestamp: ahora.toISOString(),
         cuit: cuitNum,
-        // enviamos ambas claves por compatibilidad
-        nombre: proveedor,
+        nombre: proveedor,          // enviamos ambas por compatibilidad
         proveedor: proveedor,
         tipo: (tipo === "pautaorganica") ? "pauta_organica" : "pauta",
         responsable,
@@ -197,7 +203,7 @@ app.post("/api/pauta/firmar", async (req, res) => {
   }
 });
 
-/* ========= BORRAR ÚLTIMA FIRMA (para pruebas) ========= */
+/* ========= BORRAR ÚLTIMA FIRMA (pruebas) ========= */
 app.post("/api/pauta/borrar", async (req, res) => {
   try {
     const { cuit, tipo, test } = req.body || {};
@@ -206,7 +212,7 @@ app.post("/api/pauta/borrar", async (req, res) => {
       return res.status(400).json({ ok:false, error:"Parámetros inválidos" });
     }
 
-    // 1) JSON local: eliminar última coincidencia
+    // 1) JSON local
     const file = test ? PAUTA_LOG_TEST : PAUTA_LOG;
     const arr = safeReadArray(file);
     for (let i = arr.length - 1; i >= 0; i--) {
