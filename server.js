@@ -33,8 +33,8 @@ let webhookURL = "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95
 
 // WebApp para Aceptaciones (registrar/borrar/estado)
 const GAS_PAUTA_URL = "https://script.google.com/macros/s/AKfycbwsk73HmLipucNrJw4L3VfoQ_t1oGfTpelb-89YlxhJBwdR7E8LkzYqbFlc1cxf-rEd/exec";
-// WebApp para LIMPIEZA inmediata (?accion=limpiarAceptaciones)
-const GAS_CLEAN_URL = "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec?accion=limpiarAceptaciones";
+// WebApp para LIMPIEZA inmediata: usar el MISMO deployment que GAS_PAUTA_URL
+const GAS_CLEAN_URL = `${GAS_PAUTA_URL}?accion=limpiarAceptaciones`;
 
 /* ========= HELPERS ========= */
 function safeReadArray(file){ try { return JSON.parse(fs.readFileSync(file,"utf8")); } catch { return []; } }
