@@ -33,7 +33,7 @@ let webhookURL = "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95
 
 // WebApp para Aceptaciones (registrar/borrar/estado)
 const GAS_PAUTA_URL = "https://script.google.com/macros/s/AKfycbwsk73HmLipucNrJw4L3VfoQ_t1oGfTpelb-89YlxhJBwdR7E8LkzYqbFlc1cxf-rEd/exec";
-// WebApp para LIMPIEZA inmediata (tu URL con ?accion=limpiarAceptaciones)
+// WebApp para LIMPIEZA inmediata (?accion=limpiarAceptaciones)
 const GAS_CLEAN_URL = "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec?accion=limpiarAceptaciones";
 
 /* ========= HELPERS ========= */
@@ -237,9 +237,9 @@ app.post("/api/pauta/firmar", async (req, res) => {
         // no cortamos el flujo al usuario
       }
 
-      // 🔥 Limpieza inmediata (borra filas con Proveedor vacío)
+      // 🔥 Limpieza inmediata (borra filas con Proveedor vacío) vía GET
       try {
-        await postJSON(GAS_CLEAN_URL, {}); // doGet sin payload
+        await postJSON(GAS_CLEAN_URL); // GET (doGet)
       } catch (e) {
         console.warn("⚠️ No se pudo ejecutar limpieza en Sheets:", String(e));
       }
@@ -278,8 +278,8 @@ app.post("/api/pauta/borrar", async (req, res) => {
         if (!gs?.ok) console.warn("❌ Apps Script (borrar) error:", gs);
       } catch(e){ console.warn("❌ Apps Script (borrar) error:", String(e)); }
 
-      // limpieza
-      try { await postJSON(GAS_CLEAN_URL, {}); } catch {}
+      // limpieza (GET)
+      try { await postJSON(GAS_CLEAN_URL); } catch {}
     }
 
     res.json({ ok:true });
