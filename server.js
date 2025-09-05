@@ -15,6 +15,7 @@ const PAUTA_LOG_TEST = path.join(DATA_DIR, "pautaLog-test.json");
 for (const f of [PAUTA_LOG, PAUTA_LOG_TEST]) {
   try { if (!fs.existsSync(f)) fs.writeFileSync(f, "[]"); } catch {}
 }
+console.log("PAUTA_LOG path:", PAUTA_LOG); // ayuda a ubicar el archivo en disco
 
 /* ========= DONDE ESTÁN TUS DATOS ========= */
 const isRender = process.env.RENDER || process.env.RENDER_EXTERNAL_URL || process.env.PORT;
@@ -30,12 +31,13 @@ let lastUpdate = { fecha: "Desconocida" };
 // Webhook ACTUAL para “Accesos” del login (mantener)
 let webhookURL = "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
-// WebApp para Aceptaciones de Pauta (registrar/borrar/estado)
+// WebApp para Aceptaciones de Pauta (registrar/borrar/estado/limpiar)
 const GAS_PAUTA_URL = "https://script.google.com/macros/s/AKfycbwsk73HmLipucNrJw4L3VfoQ_t1oGfTpelb-89YlxhJBwdR7E8LkzYqbFlc1cxf-rEd/exec";
 
 /* ========= HELPERS ========= */
 function safeReadArray(file){ try { return JSON.parse(fs.readFileSync(file,"utf8")); } catch { return []; } }
 function safeWriteArray(file, arr){ try { fs.writeFileSync(file, JSON.stringify(arr,null,2)); } catch {} }
+
 function postJSON(urlStr, payload){
   return new Promise((resolve,reject)=>{
     if(!urlStr) return resolve({ ok:false, skipped:true });
@@ -48,6 +50,7 @@ function postJSON(urlStr, payload){
     req.on("error", reject); req.write(data); req.end();
   });
 }
+
 async function getEstadoFirma(cuitNum){
   // 1) JSON local
   const arr = safeReadArray(PAUTA_LOG);
@@ -135,6 +138,16 @@ app.post("/login", (req, res) => {
   });
 });
 
+/* ========= HEALTHCHECK GAS (verifica que pegamos al deployment correcto) ========= */
+app.get("/api/pauta/health", async (req, res) => {
+  try {
+    const r = await postJSON(GAS_PAUTA_URL + "?modo=ping", {}); // doGet soporta ping en tu script final
+    res.json({ ok:true, gas_url:GAS_PAUTA_URL, resp:r });
+  } catch (e) {
+    res.status(502).json({ ok:false, error:String(e) });
+  }
+});
+
 /* ========= ESTADO (lee JSON y si no hay, Sheets) ========= */
 app.get("/api/pauta/estado", async (req, res) => {
   const cuit = String(req.query.cuit || "").replace(/[^0-9]/g, "");
@@ -143,15 +156,20 @@ app.get("/api/pauta/estado", async (req, res) => {
   res.json(s);
 });
 
-/* ========= REGISTRAR FIRMA (anti-doble + JSON + Sheets) ========= */
+/* ========= REGISTRAR FIRMA (anti-doble + JSON + Sheets + limpieza) ========= */
 app.post("/api/pauta/firmar", async (req, res) => {
   try {
-    const { tipo, acepta, responsable, cargo, proveedor, cuit, test } = req.body || {};
+    const raw = req.body || {};
+    const tipo = String(raw.tipo || "").trim();
+    const acepta = !!raw.acepta;
+    const proveedor = String(raw.proveedor || raw.nombre || "").trim();
+    const responsable = String(raw.responsable || "").trim();
+    const cargo = String(raw.cargo || "").trim();
+    const cuitNum = String(raw.cuit || "").replace(/[^0-9]/g, "");
+    const test = !!raw.test;
 
     if (!["pauta","pautaorganica"].includes(tipo)) return res.status(400).json({ error: "tipo inválido" });
     if (!acepta) return res.status(400).json({ error: "Debe aceptar la pauta" });
-
-    const cuitNum = String(cuit || "").replace(/[^0-9]/g, "");
     if (!cuitNum || !proveedor || !responsable || !cargo) {
       return res.status(400).json({ error: "Datos incompletos" });
     }
@@ -185,7 +203,7 @@ app.post("/api/pauta/firmar", async (req, res) => {
         modo: "registrar",
         timestamp: ahora.toISOString(),
         cuit: cuitNum,
-        nombre: proveedor,          // enviamos ambas por compatibilidad
+        nombre: proveedor,
         proveedor: proveedor,
         tipo: (tipo === "pautaorganica") ? "pauta_organica" : "pauta",
         responsable,
@@ -193,7 +211,19 @@ app.post("/api/pauta/firmar", async (req, res) => {
         userAgent: req.headers["user-agent"] || ""
       };
       const gs = await postJSON(GAS_PAUTA_URL, payload);
-      if (!gs?.ok) console.warn("❌ Apps Script (registrar) error:", gs);
+
+      // Si el Apps Script dice que el payload es incompleto/no válido, lo devuelvo al front.
+      if (!gs?.ok) {
+        console.warn("❌ Apps Script (registrar) error:", gs);
+        return res.status(502).json({ ok:false, error:"fallo_al_registrar_en_sheets" });
+      }
+
+      // 🔥 Limpieza inmediata (borra filas con Proveedor vacío)
+      try {
+        await postJSON(GAS_PAUTA_URL, { accion:"aceptacion_pauta", modo:"limpiar" });
+      } catch (e) {
+        console.warn("⚠️ Limpieza Sheets falló:", String(e));
+      }
     }
 
     res.json({ ok: true, fechaLocal });
@@ -226,6 +256,7 @@ app.post("/api/pauta/borrar", async (req, res) => {
         cuit: cuitNum, tipo: (tipo === "pautaorganica") ? "pauta_organica" : "pauta" };
       const gs = await postJSON(GAS_PAUTA_URL, payload);
       if (!gs?.ok) console.warn("❌ Apps Script (borrar) error:", gs);
+      try { await postJSON(GAS_PAUTA_URL, { accion:"aceptacion_pauta", modo:"limpiar" }); } catch {}
     }
 
     res.json({ ok:true });
