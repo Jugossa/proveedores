@@ -31,10 +31,8 @@ let lastUpdate = { fecha: "Desconocida" };
 // Webhook ACTUAL para “Accesos” del login (mantener)
 let webhookURL = "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
-// WebApp para Aceptaciones (registrar/borrar/estado)
+// WebApp para Aceptaciones (registrar/borrar/estado) — usa doPost
 const GAS_PAUTA_URL = "https://script.google.com/macros/s/AKfycbwsk73HmLipucNrJw4L3VfoQ_t1oGfTpelb-89YlxhJBwdR7E8LkzYqbFlc1cxf-rEd/exec";
-// WebApp para LIMPIEZA inmediata: usar el MISMO deployment que GAS_PAUTA_URL
-const GAS_CLEAN_URL = `${GAS_PAUTA_URL}?accion=limpiarAceptaciones`;
 
 /* ========= HELPERS ========= */
 function safeReadArray(file){ try { return JSON.parse(fs.readFileSync(file,"utf8")); } catch { return []; } }
@@ -228,18 +226,15 @@ app.post("/api/pauta/firmar", async (req, res) => {
       try {
         const gs = await postJSON(GAS_PAUTA_URL, payload);
         const okSheets = (gs && (gs.ok === true || gs.status === "OK"));
-        if (!okSheets) {
-          console.warn("⚠️ Apps Script registrar devolvió algo no estándar:", gs);
-          // no cortamos el flujo al usuario
-        }
+        if (!okSheets) console.warn("⚠️ Apps Script registrar devolvió algo no estándar:", gs);
       } catch (e) {
         console.warn("⚠️ Error comunicando con Apps Script (registrar):", String(e));
-        // no cortamos el flujo al usuario
       }
 
-      // 🔥 Limpieza inmediata (borra filas con Proveedor vacío) vía GET
+      // 🔥 Limpieza inmediata por POST (tu WebApp no tiene doGet)
       try {
-        await postJSON(GAS_CLEAN_URL); // GET (doGet)
+        const cleanResp = await postJSON(GAS_PAUTA_URL, { accion: "limpiarAceptaciones" });
+        if (!cleanResp?.ok) console.warn("⚠️ Limpieza devolvió:", cleanResp);
       } catch (e) {
         console.warn("⚠️ No se pudo ejecutar limpieza en Sheets:", String(e));
       }
@@ -278,8 +273,11 @@ app.post("/api/pauta/borrar", async (req, res) => {
         if (!gs?.ok) console.warn("❌ Apps Script (borrar) error:", gs);
       } catch(e){ console.warn("❌ Apps Script (borrar) error:", String(e)); }
 
-      // limpieza (GET)
-      try { await postJSON(GAS_CLEAN_URL); } catch {}
+      // Limpieza por POST
+      try {
+        const cleanResp = await postJSON(GAS_PAUTA_URL, { accion: "limpiarAceptaciones" });
+        if (!cleanResp?.ok) console.warn("⚠️ Limpieza devolvió:", cleanResp);
+      } catch {}
     }
 
     res.json({ ok:true });
