@@ -92,6 +92,9 @@
       <button id="btnExcel" onclick="descargarExcel()">📄 Descargar Excel</button> 
       <button id="btnPDF" onclick="window.print()">📅 Descargar PDF</button>
 
+      <!-- NUEVO: botón Histórico (se muestra solo tras login OK) -->
+      <button id="btnHistorico" style="display:none;">Histórico</button>
+
       <!-- Botones de Pauta -->
       <button id="btnPauta" class="btn-mini">Firmar Pauta</button>
       <button id="btnPautaOrg" class="btn-mini" style="display:none;">Firmar Pauta Orgánica</button>
@@ -108,6 +111,21 @@
   <script>
     let entregasOriginal = [];
     let entregasFiltradas = [];
+
+    /* === NUEVO: mostrar y configurar el botón Histórico === */
+    function mostrarBotonHistorico() {
+      const btn = document.getElementById('btnHistorico');
+      if (!btn) return;
+      btn.style.display = 'inline-block';
+      btn.onclick = function () {
+        const prov = localStorage.getItem('provNombre');
+        if (prov) {
+          window.location.href = 'liquidadas.html?prov=' + encodeURIComponent(prov);
+        } else {
+          window.location.href = 'liquidadas.html';
+        }
+      };
+    }
 
     function convertirFecha(excelNumber) {
       const baseDate = new Date(1899, 11, 30);
@@ -169,6 +187,10 @@
           cuit: (cui || "").replace(/[^0-9]/g, ""),
           org: result.org || ""
         };
+        // NUEVO: guardar proveedor para liquidadas.html
+        if (result.proveedor) {
+          localStorage.setItem('provNombre', result.proveedor);
+        }
         renderPautaButtons(window.USER);
 
         // Mostrar encabezado y contenedor SIEMPRE (haya o no datos)
@@ -178,6 +200,9 @@
         bienvenidaDiv.style.display = "block";
         avisoDiv.style.display = "block";
         document.getElementById("avisoCuit").style.display = "none";
+
+        // NUEVO: mostrar botón Histórico tras login OK
+        mostrarBotonHistorico();
 
         // Permitir firmar aunque no haya entregas
         if (!data.length) {
@@ -223,7 +248,7 @@
       const hasta = document.getElementById("hasta").value;
 
       entregasFiltradas = entregasOriginal.filter(e => {
-        const coincideEspecie = especie === "TODAS" || e.Especie === especie;
+        const coincideEspecie = especie === "TODAS" || e.Es pecie === especie;
         const enRango = fechaDentroDeRango(e.FechaStr, desde, hasta);
         return coincideEspecie && enRango;
       });
@@ -362,8 +387,8 @@
           const fecha = (tipo==='pauta') ? s.pauta.fechaLocal : s.pautaorganica.fechaLocal;
           alert(`Ya registraste la ${tipo==='pauta'?'Pauta':'Pauta Orgánica'} el ${fecha}.`);
           // pintar botón como firmado
-          if (tipo==='pauta'){ const b=document.getElementById('btnPauta'); if(b){ b.textContent='Pauta firmada'; b.disabled=true; } }
-          else { const b=document.getElementById('btnPautaOrg'); if(b){ b.textContent='Pauta Orgánica firmada'; b.disabled=true; } }
+          if (tipo==='pauta'){ const b=document.getElementById('btnPauta'); if(b){ b.textContent='Pauta firmada'; b.disabled=true; document.getElementById('pauta-estado').textContent = 'Pauta firmada el ' + fecha; } }
+          else { const b=document.getElementById('btnPautaOrg'); if(b){ b.textContent='Pauta Orgánica firmada'; b.disabled=true; document.getElementById('pautaorg-estado').textContent = 'Pauta Orgánica firmada el ' + fecha; } }
           return;
         }
       }catch(_){}
