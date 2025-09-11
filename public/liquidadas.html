@@ -29,6 +29,8 @@
     .right { text-align:right; }
     .section { margin-top:14px; }
     .section h2 { font-size:18px; margin:0 0 6px; }
+    #filtroDetalle { display:none; align-items:center; gap:8px; margin:4px 0 0 0; }
+    #selEspecie { padding:6px 10px; }
   </style>
 </head>
 <body>
@@ -51,6 +53,16 @@
         <button class="btn-big" id="btnAgrupado">📊 Agrupado</button>
         <button class="btn-big secondary" id="btnDetalle">📋 Detalle</button>
         <button class="btn-big secondary" id="btnExcel">⬇️ Descargar Excel</button>
+      </div>
+
+      <!-- Filtro SOLO para Detalle -->
+      <div id="filtroDetalle" class="row">
+        <label for="selEspecie">Especie:</label>
+        <select id="selEspecie">
+          <option value="TODAS">Todas</option>
+          <option value="pera">Pera</option>
+          <option value="manza">Manzana</option>
+        </select>
       </div>
 
       <div id="resumen" class="totals"></div>
@@ -86,6 +98,7 @@
       if (typeof v==='number' && !isNaN(v)) return new Date(Date.UTC(1899,11,30)).getTime()+v*86400000;
       const d=new Date(v); return d.getTime();
     };
+    const especieKey = (v)=>{ v=String(v||'').toLowerCase(); return v.includes('manza')?'manza': v.includes('pera')?'pera':'otros'; };
 
     // Estado global mínimo para exportar
     let __datosProv = [];
@@ -151,12 +164,23 @@
       setMode('agrupado');
     }
 
-    // === DETALLE ===
+    // === DETALLE (con filtro de especie) ===
     function renderDetallado(datosProv){
+      const sel = $('#selEspecie');
+      const wanted = sel ? sel.value : 'TODAS';
+      let rows = datosProv;
+      if (wanted !== 'TODAS') rows = rows.filter(r => especieKey(r.Especie) === wanted);
+
       // Ordenar por Fecha Ingr. (campo Fecha) DESC
-      const rows = [...datosProv].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha));
+      rows = [...rows].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha));
       const tot = rows.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
       $('#resumen').textContent = `${rows.length} registros · ${fmtInt(tot)} kg`;
+
+      if (!rows.length){
+        $('#tablaWrap').innerHTML = `<p style="margin:8px 0;color:#666;">No hay registros para la especie seleccionada.</p>`;
+        setMode('detalle');
+        return;
+      }
 
       let html = `<table><thead><tr>`+
         `<th>NroLiq</th><th>FechaLiq</th>`+
@@ -179,14 +203,29 @@
       setMode('detalle');
     }
 
-    function setMode(m){ __mode = m; const bAgr = $('#btnAgrupado'), bDet = $('#btnDetalle'); if(m==='detalle'){ bAgr.classList.add('secondary'); bDet.classList.remove('secondary'); } else { bDet.classList.add('secondary'); bAgr.classList.remove('secondary'); } }
+    function setMode(m){
+      __mode = m;
+      const bAgr = $('#btnAgrupado'), bDet = $('#btnDetalle');
+      const fd = $('#filtroDetalle');
+      if(m==='detalle'){
+        bAgr.classList.add('secondary'); bDet.classList.remove('secondary');
+        if (fd) fd.style.display = 'flex';
+      } else {
+        bDet.classList.add('secondary'); bAgr.classList.remove('secondary');
+        if (fd) fd.style.display = 'none';
+      }
+    }
 
-    // === Exportar a Excel (según vista actual) ===
+    // === Exportar a Excel (según vista actual y filtro) ===
     function descargarExcel(){
       if (!window.XLSX){ alert('No se pudo cargar el generador de Excel.'); return; }
       const prov = $('#provNombre').textContent || 'proveedor';
       if (__mode === 'detalle'){
-        const rows = [...__datosProv].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha));
+        const sel = $('#selEspecie');
+        const wanted = sel ? sel.value : 'TODAS';
+        let rows = __datosProv;
+        if (wanted !== 'TODAS') rows = rows.filter(r => especieKey(r.Especie) === wanted);
+        rows = [...rows].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha));
         const out = rows.map(r => ({
           NroLiq: r.NroLiq||'',
           FechaLiq: excelSerialToStr(r.FechaLiq),
@@ -236,6 +275,8 @@
         $('#btnAgrupado').onclick = ()=> renderAgrupado(__datosProv);
         $('#btnDetalle').onclick  = ()=> renderDetallado(__datosProv);
         $('#btnExcel').onclick    = descargarExcel;
+        const sel = $('#selEspecie');
+        if (sel) sel.onchange = ()=> { if(__mode==='detalle') renderDetallado(__datosProv); };
       }catch(e){
         alert('No se pudieron cargar las liquidaciones.');
       }
