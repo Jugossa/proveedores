@@ -115,6 +115,9 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/index-celu.html", (req, res) => res.sendFile(path.join(__dirname, "public", "index-celu.html")));
 
+/* === NUEVO: acceso corto a la vista de liquidadas (no rompe nada) === */
+app.get("/liquidadas", (req, res) => res.sendFile(path.join(__dirname, "public", "liquidadas.html")));
+
 /* ========= LOGIN ========= */
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
