@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fruta Liquidada - Portal Proveedores</title>
+  <style>
+    :root { --bg:#f7f7f8; --card:#fff; --ink:#222; --muted:#666; --brand:#0a7cff; --shadow:0 8px 24px rgba(0,0,0,.08); }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width:1100px; margin:24px auto; padding: 0 16px; }
+    .card { background:var(--card); border-radius:14px; box-shadow:var(--shadow); padding:16px; }
+    h1 { font-size:22px; margin:0 0 8px; }
+    .muted { color:var(--muted); font-size:14px; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    button { padding:10px 12px; font-size:15px; border:0; border-radius:10px; background:var(--brand); color:#fff; cursor:pointer; }
+    button.secondary { background:#e5e7eb; color:#111; }
+    button.ghost { background:transparent; color:var(--brand); border:1px solid var(--brand); }
+    .grid-btns { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 4px; }
+    .btn-big { font-size:16px; padding:12px 16px; border-radius:12px; }
+    table { width:100%; border-collapse: collapse; margin-top:8px; background:#fff; }
+    th, td { border-bottom:1px solid #eee; padding:8px; text-align:left; font-size:14px; white-space:nowrap; }
+    th { background:#fafafa; position:sticky; top:0; z-index:1; }
+    .badge { display:inline-block; padding:2px 8px; font-size:12px; border-radius:999px; background:#eef2ff; color:#3730a3; }
+    .totals { margin-top:6px; font-weight:600; }
+    .pill { display:inline-block; background:#f1f5f9; color:#0f172a; padding:4px 8px; border-radius:999px; font-size:12px; }
+    .spacer { height:8px; }
+    .right { text-align:right; }
+    .section { margin-top:14px; }
+    .section h2 { font-size:18px; margin:0 0 6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="row" style="justify-content:space-between; align-items:flex-start;">
+        <div>
+          <h1>Fruta liquidada</h1>
+          <div class="muted">Proveedor: <span id="provNombre" class="pill"></span></div>
+          <div class="muted">Última actualización: <span id="stamp"></span> · Registros: <span id="stampCnt"></span></div>
+        </div>
+        <div class="row">
+          <button class="ghost" onclick="location.href='index.html'">Volver</button>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="grid-btns">
+        <button class="btn-big" id="btnAgrupado">📊 Agrupado</button>
+        <button class="btn-big secondary" id="btnDetalle">📋 Detalle</button>
+      </div>
+
+      <div id="resumen" class="totals"></div>
+      <div id="tablaWrap"></div>
+    </div>
+  </div>
+
+  <script>
+    const PATH_LIQ = 'data/profruLiq.json';
+    const PATH_STAMP_LIQ = 'data/lastUpdateLiq.json';
+    const $ = s => document.querySelector(s);
+
+    // --- utilidades de fecha/numero ---
+    const excelSerialToStr = (v) => {
+      if (typeof v === 'number' && !isNaN(v)) {
+        const epoch = new Date(Date.UTC(1899, 11, 30));
+        const ms = v * 86400000;
+        const d = new Date(epoch.getTime() + ms);
+        return toDDMMYYYY(d);
+      }
+      const d = new Date(v);
+      if (!isNaN(d.getTime())) return toDDMMYYYY(d);
+      return v || '';
+    };
+    const toDDMMYYYY = (d) => {
+      const dd = String(d.getUTCDate()).padStart(2,'0');
+      const mm = String(d.getUTCMonth()+1).padStart(2,'0');
+      const yyyy = d.getUTCFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    };
+    const fmtInt = (n) => (Number(n)||0).toLocaleString('es-AR',{maximumFractionDigits:0});
+    const toMillis = (v) => {
+      if (typeof v==='number' && !isNaN(v)) return new Date(Date.UTC(1899,11,30)).getTime()+v*86400000;
+      const d=new Date(v); return d.getTime();
+    };
+
+    // --- proveedor desde URL o localStorage ---
+    function getProv(){
+      const qs = new URLSearchParams(location.search);
+      const p = qs.get('prov');
+      if (p && p.trim()) return decodeURIComponent(p).trim();
+      try {
+        const ls = localStorage.getItem('provNombre');
+        if (ls && ls.trim()) return ls.trim();
+      } catch(_){}
+      return '';
+    }
+    function especieKey(v){ v=String(v||'').toLowerCase(); return v.includes('manza')?'manza': v.includes('pera')?'pera':'otros'; }
+    function normalizarProveedor(v){ return String(v||'').trim(); }
+
+    async function fetchJSON(url){
+      const r = await fetch(url, { cache:'no-store' });
+      if(!r.ok) throw new Error('No se pudo leer '+url);
+      return r.json();
+    }
+
+    // --- render agrupado ---
+    function agruparPorEspecieYNroLiq(rows){
+      const out = { pera:new Map(), manza:new Map() };
+      for(const r of rows){
+        const esp = especieKey(r.Especie);
+        if(esp!=='pera' && esp!=='manza') continue;
+        const nro = String(r.NroLiq ?? '-');
+        const m = out[esp];
+        if(!m.has(nro)) m.set(nro, { NroLiq:nro, kgs:0, cant:0, fechas:[] });
+        const o = m.get(nro);
+        o.cant += 1;
+        o.kgs += Number(r.KgsD)||0;
+        if(r.FechaLiq!==undefined && r.FechaLiq!==null && r.FechaLiq!=='') o.fechas.push(r.FechaLiq);
+      }
+      const pack = (m) => Array.from(m.values()).map(o=>({
+        NroLiq:o.NroLiq,
+        FechaLiq: pickMaxFecha(o.fechas),
+        cant:o.cant, kgs:o.kgs
+      })).sort((a,b)=> String(a.NroLiq).localeCompare(String(b.NroLiq), undefined, { numeric:true }));
+      return { pera:pack(out.pera), manza:pack(out.manza) };
+    }
+    function pickMaxFecha(arr){ if(!arr.length) return ''; let best=-Infinity; for(const v of arr){ const ms=toMillis(v); if(ms>best) best=ms; } return toDDMMYYYY(new Date(best)); }
+
+    function renderAgrupado(rows){
+      const tot = rows.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
+      $('#resumen').textContent = `${rows.length} registros · ${fmtInt(tot)} kg`;
+      const g = agruparPorEspecieYNroLiq(rows);
+
+      const sec = (titulo, arr) => {
+        if(!arr.length) return '';
+        let html = `<div class="section"><h2>${titulo}</h2><table><thead><tr>`+
+          `<th>NroLiq</th><th>FechaLiq</th><th class='right'>Cant reg.</th><th class='right'>Kgs totales</th>`+
+          `</tr></thead><tbody>`;
+        for(const it of arr){
+          html += `<tr><td><span class='badge'>${it.NroLiq}</span></td><td>${it.FechaLiq}</td>`+
+                  `<td class='right'>${it.cant}</td><td class='right'>${fmtInt(it.kgs)}</td></tr>`;
+        }
+        html += `</tbody></table></div>`;
+        return html;
+      };
+      $('#tablaWrap').innerHTML = sec('Pera', g.pera) + sec('Manzana', g.manza);
+      setMode('agrupado');
+    }
+
+    // --- render detallado ---
+    function renderDetallado(rows){
+      rows = [...rows].sort((a,b)=>{
+        const aEsp = especieKey(a.Especie), bEsp = especieKey(b.Especie);
+        if(aEsp!==bEsp) return aEsp.localeCompare(bEsp);
+        const aL = String(a.NroLiq||''), bL = String(b.NroLiq||'');
+        if(aL!==bL) return aL.localeCompare(bL, undefined, { numeric:true });
+        return toMillis(a.FechaLiq||0) - toMillis(b.FechaLiq||0);
+      });
+      const tot = rows.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
+      $('#resumen').textContent = `${rows.length} registros · ${fmtInt(tot)} kg`;
+
+      let html = `<table><thead><tr>`+
+        `<th>Especie</th><th>NroLiq</th><th>FechaLiq</th>`+
+        `<th>Nro Jugos</th><th>Fecha</th><th>NomVariedad</th>`+
+        `<th class='right'>KgsD</th>`+
+        `</tr></thead><tbody>`;
+      for(const r of rows){
+        html += `<tr>`+
+          `<td>${r.Especie||''}</td>`+
+          `<td><span class='badge'>${r.NroLiq||'-'}</span></td>`+
+          `<td>${excelSerialToStr(r.FechaLiq)}</td>`+
+          `<td>${r['Nro Jugos']||''}</td>`+
+          `<td>${excelSerialToStr(r.Fecha)}</td>`+
+          `<td>${r.NomVariedad||''}</td>`+
+          `<td class='right'>${fmtInt(r.KgsD)}</td>`+
+        `</tr>`;
+      }
+      html += `</tbody></table>`;
+      $('#tablaWrap').innerHTML = html;
+      setMode('detalle');
+    }
+
+    function setMode(m){
+      const bAgr = $('#btnAgrupado'), bDet = $('#btnDetalle');
+      if(m==='detalle'){ bAgr.classList.add('secondary'); bDet.classList.remove('secondary'); }
+      else             { bDet.classList.add('secondary'); bAgr.classList.remove('secondary'); }
+    }
+
+    // --- init ---
+    async function init(){
+      const prov = getProv();
+      if(!prov){ location.href = 'index.html'; return; }
+      $('#provNombre').textContent = prov;
+
+      try{
+        const [rows, stamp] = await Promise.all([
+          fetchJSON(PATH_LIQ),
+          fetchJSON(PATH_STAMP_LIQ).catch(()=>({ fecha:'', registros:'' }))
+        ]);
+        const datosProv = rows.filter(r => (r.ProveedorT||'').trim() === prov.trim());
+        $('#stamp').textContent = stamp.fecha || '';
+        $('#stampCnt').textContent = String(stamp.registros || datosProv.length);
+
+        // default: agrupado
+        renderAgrupado(datosProv);
+
+        // botones
+        $('#btnAgrupado').onclick = ()=> renderAgrupado(datosProv);
+        $('#btnDetalle').onclick  = ()=> renderDetallado(datosProv);
+      }catch(e){
+        alert('No se pudieron cargar las liquidaciones.');
+      }
+    }
+    init();
+  </script>
+</body>
+</html>
