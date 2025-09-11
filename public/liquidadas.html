@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fruta Liquidada - Portal Proveedores</title>
+  <title>Fruta liquidada - Portal Proveedores</title>
   <style>
     :root { --bg:#f7f7f8; --card:#fff; --ink:#222; --muted:#666; --brand:#0a7cff; --shadow:0 8px 24px rgba(0,0,0,.08); }
     * { box-sizing: border-box; }
@@ -37,7 +37,7 @@
         <div>
           <h1>Fruta liquidada</h1>
           <div class="muted">Proveedor: <span id="provNombre" class="pill"></span></div>
-          <div class="muted">Última actualización: <span id="stamp"></span> · Registros: <span id="stampCnt"></span></div>
+          <div class="muted">Última actualización: <span id="stamp"></span></div>
         </div>
         <div class="row">
           <button class="ghost" onclick="location.href='index.html'">Volver</button>
@@ -61,7 +61,7 @@
     const PATH_STAMP_LIQ = 'data/lastUpdateLiq.json';
     const $ = s => document.querySelector(s);
 
-    // --- utilidades de fecha/numero ---
+    // === utilidades de fecha/numero ===
     const excelSerialToStr = (v) => {
       if (typeof v === 'number' && !isNaN(v)) {
         const epoch = new Date(Date.UTC(1899, 11, 30));
@@ -85,18 +85,14 @@
       const d=new Date(v); return d.getTime();
     };
 
-    // --- proveedor desde URL o localStorage ---
+    // === proveedor desde URL o localStorage ===
     function getProv(){
       const qs = new URLSearchParams(location.search);
       const p = qs.get('prov');
       if (p && p.trim()) return decodeURIComponent(p).trim();
-      try {
-        const ls = localStorage.getItem('provNombre');
-        if (ls && ls.trim()) return ls.trim();
-      } catch(_){}
+      try { const ls = localStorage.getItem('provNombre'); if (ls && ls.trim()) return ls.trim(); } catch(_){}
       return '';
     }
-    function especieKey(v){ v=String(v||'').toLowerCase(); return v.includes('manza')?'manza': v.includes('pera')?'pera':'otros'; }
     function normalizarProveedor(v){ return String(v||'').trim(); }
 
     async function fetchJSON(url){
@@ -105,74 +101,68 @@
       return r.json();
     }
 
-    // --- render agrupado ---
-    function agruparPorEspecieYNroLiq(rows){
-      const out = { pera:new Map(), manza:new Map() };
+    // === AGRUPADO: primero por NroLiq (suma todas las especies) ===
+    function agruparPorNroLiq(rows){
+      const m = new Map();
       for(const r of rows){
-        const esp = especieKey(r.Especie);
-        if(esp!=='pera' && esp!=='manza') continue;
         const nro = String(r.NroLiq ?? '-');
-        const m = out[esp];
         if(!m.has(nro)) m.set(nro, { NroLiq:nro, kgs:0, cant:0, fechas:[] });
         const o = m.get(nro);
         o.cant += 1;
         o.kgs += Number(r.KgsD)||0;
         if(r.FechaLiq!==undefined && r.FechaLiq!==null && r.FechaLiq!=='') o.fechas.push(r.FechaLiq);
       }
-      const pack = (m) => Array.from(m.values()).map(o=>({
+      const arr = Array.from(m.values()).map(o=>({
         NroLiq:o.NroLiq,
         FechaLiq: pickMaxFecha(o.fechas),
-        cant:o.cant, kgs:o.kgs
-      })).sort((a,b)=> String(a.NroLiq).localeCompare(String(b.NroLiq), undefined, { numeric:true }));
-      return { pera:pack(out.pera), manza:pack(out.manza) };
+        cant:o.cant,
+        kgs:o.kgs
+      }));
+      // ordenar por FechaLiq desc; si empata, por NroLiq asc (natural)
+      arr.sort((a,b)=> (toMillis(b.FechaLiq)-toMillis(a.FechaLiq)) || String(a.NroLiq).localeCompare(String(b.NroLiq), undefined, { numeric:true }));
+      return arr;
     }
     function pickMaxFecha(arr){ if(!arr.length) return ''; let best=-Infinity; for(const v of arr){ const ms=toMillis(v); if(ms>best) best=ms; } return toDDMMYYYY(new Date(best)); }
 
-    function renderAgrupado(rows){
-      const tot = rows.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
-      $('#resumen').textContent = `${rows.length} registros · ${fmtInt(tot)} kg`;
-      const g = agruparPorEspecieYNroLiq(rows);
+    function renderAgrupado(datosProv){
+      const tot = datosProv.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
+      $('#resumen').textContent = `${datosProv.length} registros · ${fmtInt(tot)} kg`;
+      const arr = agruparPorNroLiq(datosProv);
 
-      const sec = (titulo, arr) => {
-        if(!arr.length) return '';
-        let html = `<div class="section"><h2>${titulo}</h2><table><thead><tr>`+
-          `<th>NroLiq</th><th>FechaLiq</th><th class='right'>Cant reg.</th><th class='right'>Kgs totales</th>`+
-          `</tr></thead><tbody>`;
-        for(const it of arr){
-          html += `<tr><td><span class='badge'>${it.NroLiq}</span></td><td>${it.FechaLiq}</td>`+
-                  `<td class='right'>${it.cant}</td><td class='right'>${fmtInt(it.kgs)}</td></tr>`;
-        }
-        html += `</tbody></table></div>`;
-        return html;
-      };
-      $('#tablaWrap').innerHTML = sec('Pera', g.pera) + sec('Manzana', g.manza);
+      let html = `<table><thead><tr>`+
+        `<th>NroLiq</th><th>FechaLiq</th><th class='right'>Cant reg.</th><th class='right'>Kgs totales</th>`+
+        `</tr></thead><tbody>`;
+      for(const it of arr){
+        html += `<tr>`+
+          `<td><span class='badge'>${it.NroLiq}</span></td>`+
+          `<td>${it.FechaLiq}</td>`+
+          `<td class='right'>${it.cant}</td>`+
+          `<td class='right'>${fmtInt(it.kgs)}</td>`+
+        `</tr>`;
+      }
+      html += `</tbody></table>`;
+      $('#tablaWrap').innerHTML = html;
       setMode('agrupado');
     }
 
-    // --- render detallado ---
-    function renderDetallado(rows){
-      rows = [...rows].sort((a,b)=>{
-        const aEsp = especieKey(a.Especie), bEsp = especieKey(b.Especie);
-        if(aEsp!==bEsp) return aEsp.localeCompare(bEsp);
-        const aL = String(a.NroLiq||''), bL = String(b.NroLiq||'');
-        if(aL!==bL) return aL.localeCompare(bL, undefined, { numeric:true });
-        return toMillis(a.FechaLiq||0) - toMillis(b.FechaLiq||0);
-      });
+    // === DETALLE ===
+    function renderDetallado(datosProv){
+      const rows = [...datosProv].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha)); // Fecha Ingr. desc
       const tot = rows.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
       $('#resumen').textContent = `${rows.length} registros · ${fmtInt(tot)} kg`;
 
       let html = `<table><thead><tr>`+
-        `<th>Especie</th><th>NroLiq</th><th>FechaLiq</th>`+
-        `<th>Nro Jugos</th><th>Fecha</th><th>NomVariedad</th>`+
-        `<th class='right'>KgsD</th>`+
+        `<th>NroLiq</th><th>FechaLiq</th>`+
+        `<th>Nro Jugos</th><th>Fecha Ingr.</th><th>Remito</th>`+
+        `<th>NomVariedad</th><th class='right'>KgsD</th>`+
         `</tr></thead><tbody>`;
       for(const r of rows){
         html += `<tr>`+
-          `<td>${r.Especie||''}</td>`+
           `<td><span class='badge'>${r.NroLiq||'-'}</span></td>`+
           `<td>${excelSerialToStr(r.FechaLiq)}</td>`+
           `<td>${r['Nro Jugos']||''}</td>`+
           `<td>${excelSerialToStr(r.Fecha)}</td>`+
+          `<td>${r.Remito||''}</td>`+
           `<td>${r.NomVariedad||''}</td>`+
           `<td class='right'>${fmtInt(r.KgsD)}</td>`+
         `</tr>`;
@@ -188,7 +178,7 @@
       else             { bDet.classList.add('secondary'); bAgr.classList.remove('secondary'); }
     }
 
-    // --- init ---
+    // === init ===
     async function init(){
       const prov = getProv();
       if(!prov){ location.href = 'index.html'; return; }
@@ -197,13 +187,18 @@
       try{
         const [rows, stamp] = await Promise.all([
           fetchJSON(PATH_LIQ),
-          fetchJSON(PATH_STAMP_LIQ).catch(()=>({ fecha:'', registros:'' }))
+          fetchJSON(PATH_STAMP_LIQ).catch(()=>({ fecha:'' }))
         ]);
-        const datosProv = rows.filter(r => (r.ProveedorT||'').trim() === prov.trim());
+        const datosProv = rows.filter(r => normalizarProveedor(r.ProveedorT) === prov.trim());
         $('#stamp').textContent = stamp.fecha || '';
-        $('#stampCnt').textContent = String(stamp.registros || datosProv.length);
 
-        // default: agrupado
+        if (!datosProv.length){
+          $('#resumen').textContent = `0 registros · 0 kg`;
+          $('#tablaWrap').innerHTML = `<p style="margin:8px 0;color:#666;">No hay liquidaciones para este proveedor.</p>`;
+          setMode('agrupado');
+          return;
+        }
+        // por defecto: AGRUPADO
         renderAgrupado(datosProv);
 
         // botones
