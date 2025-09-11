@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fruta liquidada - Portal Proveedores</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     :root { --bg:#f7f7f8; --card:#fff; --ink:#222; --muted:#666; --brand:#0a7cff; --shadow:0 8px 24px rgba(0,0,0,.08); }
     * { box-sizing: border-box; }
@@ -49,6 +50,7 @@
       <div class="grid-btns">
         <button class="btn-big" id="btnAgrupado">📊 Agrupado</button>
         <button class="btn-big secondary" id="btnDetalle">📋 Detalle</button>
+        <button class="btn-big secondary" id="btnExcel">⬇️ Descargar Excel</button>
       </div>
 
       <div id="resumen" class="totals"></div>
@@ -84,6 +86,10 @@
       if (typeof v==='number' && !isNaN(v)) return new Date(Date.UTC(1899,11,30)).getTime()+v*86400000;
       const d=new Date(v); return d.getTime();
     };
+
+    // Estado global mínimo para exportar
+    let __datosProv = [];
+    let __mode = 'agrupado';
 
     // === proveedor desde URL o localStorage ===
     function getProv(){
@@ -147,7 +153,8 @@
 
     // === DETALLE ===
     function renderDetallado(datosProv){
-      const rows = [...datosProv].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha)); // Fecha Ingr. desc
+      // Ordenar por Fecha Ingr. (campo Fecha) DESC
+      const rows = [...datosProv].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha));
       const tot = rows.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
       $('#resumen').textContent = `${rows.length} registros · ${fmtInt(tot)} kg`;
 
@@ -172,10 +179,35 @@
       setMode('detalle');
     }
 
-    function setMode(m){
-      const bAgr = $('#btnAgrupado'), bDet = $('#btnDetalle');
-      if(m==='detalle'){ bAgr.classList.add('secondary'); bDet.classList.remove('secondary'); }
-      else             { bDet.classList.add('secondary'); bAgr.classList.remove('secondary'); }
+    function setMode(m){ __mode = m; const bAgr = $('#btnAgrupado'), bDet = $('#btnDetalle'); if(m==='detalle'){ bAgr.classList.add('secondary'); bDet.classList.remove('secondary'); } else { bDet.classList.add('secondary'); bAgr.classList.remove('secondary'); } }
+
+    // === Exportar a Excel (según vista actual) ===
+    function descargarExcel(){
+      if (!window.XLSX){ alert('No se pudo cargar el generador de Excel.'); return; }
+      const prov = $('#provNombre').textContent || 'proveedor';
+      if (__mode === 'detalle'){
+        const rows = [...__datosProv].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha));
+        const out = rows.map(r => ({
+          NroLiq: r.NroLiq||'',
+          FechaLiq: excelSerialToStr(r.FechaLiq),
+          'Nro Jugos': r['Nro Jugos']||'',
+          'Fecha Ingr.': excelSerialToStr(r.Fecha),
+          Remito: r.Remito||'',
+          NomVariedad: r.NomVariedad||'',
+          KgsD: Number(r.KgsD)||0
+        }));
+        const ws = XLSX.utils.json_to_sheet(out);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Detalle');
+        XLSX.writeFile(wb, `liquidadas_detalle_${prov}.xlsx`);
+      } else {
+        const arr = agruparPorNroLiq(__datosProv);
+        const out = arr.map(it => ({ NroLiq: it.NroLiq, FechaLiq: it.FechaLiq, 'Cant reg.': it.cant, 'Kgs totales': it.kgs }));
+        const ws = XLSX.utils.json_to_sheet(out);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Agrupado');
+        XLSX.writeFile(wb, `liquidadas_agrupado_${prov}.xlsx`);
+      }
     }
 
     // === init ===
@@ -189,21 +221,21 @@
           fetchJSON(PATH_LIQ),
           fetchJSON(PATH_STAMP_LIQ).catch(()=>({ fecha:'' }))
         ]);
-        const datosProv = rows.filter(r => normalizarProveedor(r.ProveedorT) === prov.trim());
+        __datosProv = rows.filter(r => normalizarProveedor(r.ProveedorT) === prov.trim());
         $('#stamp').textContent = stamp.fecha || '';
 
-        if (!datosProv.length){
+        if (!__datosProv.length){
           $('#resumen').textContent = `0 registros · 0 kg`;
-          $('#tablaWrap').innerHTML = `<p style="margin:8px 0;color:#666;">No hay liquidaciones para este proveedor.</p>`;
+          $('#tablaWrap').innerHTML = `<p style=\"margin:8px 0;color:#666;\">No hay liquidaciones para este proveedor.</p>`;
           setMode('agrupado');
-          return;
+        } else {
+          renderAgrupado(__datosProv); // por defecto
         }
-        // por defecto: AGRUPADO
-        renderAgrupado(datosProv);
 
         // botones
-        $('#btnAgrupado').onclick = ()=> renderAgrupado(datosProv);
-        $('#btnDetalle').onclick  = ()=> renderDetallado(datosProv);
+        $('#btnAgrupado').onclick = ()=> renderAgrupado(__datosProv);
+        $('#btnDetalle').onclick  = ()=> renderDetallado(__datosProv);
+        $('#btnExcel').onclick    = descargarExcel;
       }catch(e){
         alert('No se pudieron cargar las liquidaciones.');
       }
