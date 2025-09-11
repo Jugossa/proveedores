@@ -115,26 +115,19 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/index-celu.html", (req, res) => res.sendFile(path.join(__dirname, "public", "index-celu.html")));
 
-/* === acceso corto a la vista de liquidadas (deja todo lo demás igual) === */
-app.get("/liquidadas", (req, res) => res.sendFile(path.join(__dirname, "public", "liquidadas.html")));
-
 /* ========= LOGIN ========= */
 app.post("/login", (req, res) => {
-  // Acepta 'cui' o 'cuit' desde el front
-  const rawCuit = req.body.cui || req.body.cuit || "";
-  const password = String(req.body.password || "").trim();
-  const cuiLimpio = String(rawCuit).replace(/[^0-9]/g, "");
+  const { cui, password } = req.body;
+  const cuiLimpio = (cui || "").replace(/[^0-9]/g, "");
 
-  // Compara contra p.cuit o p.cui en proveedores.json
-  const proveedor = proveedores.find(p => {
-    const pcuit = String(p.cuit ?? p.cui ?? "").replace(/[^0-9]/g, "");
-    const ppass = String(p.clave || "").trim();
-    return pcuit === cuiLimpio && ppass === password;
-  });
+  const proveedor = proveedores.find(p =>
+    String(p.cui || "").replace(/[^0-9]/g, "") === cuiLimpio &&
+    String(p.clave || "").trim() === String(password || "").trim()
+  );
 
   if (!proveedor) return res.status(401).send("CUIT o clave incorrectos");
 
-  // Log de acceso (se mantiene)
+  // Log de acceso
   if (webhookURL) {
     const postData = JSON.stringify({ nombre: proveedor.nombre, cuit: cuiLimpio });
     const reqGS = https.request(webhookURL, {
@@ -145,7 +138,6 @@ app.post("/login", (req, res) => {
     reqGS.write(postData); reqGS.end();
   }
 
-  // Entregas SIN liquidar (lo existente)
   const entregas = proFru.filter(e => e.ProveedorT === proveedor.nombre);
   const totalKgs = entregas.reduce((suma, e) => suma + (parseFloat(e.KgsD) || 0), 0);
 
