@@ -57,7 +57,7 @@
 
       <!-- Filtro SOLO para Detalle -->
       <div id="filtroDetalle" class="row">
-        <label for="selEspecie">Especie:</label>
+        <label for="selEspecie">Especie:</nlabel>
         <select id="selEspecie">
           <option value="TODAS">Todas</option>
           <option value="pera">Pera</option>
@@ -93,7 +93,12 @@
       const yyyy = d.getUTCFullYear();
       return `${dd}/${mm}/${yyyy}`;
     };
-    const fmtInt = (n) => (Number(n)||0).toLocaleString('es-AR',{maximumFractionDigits:0});
+    // NUEVO: kilos con 2 decimales solo si hay parte decimal
+    const fmtKg = (n) => {
+      const x = Number(n)||0;
+      const frac = Math.abs(x - Math.trunc(x));
+      return x.toLocaleString('es-AR', frac>0 ? {minimumFractionDigits:2, maximumFractionDigits:2} : {maximumFractionDigits:0});
+    };
     const toMillis = (v) => {
       if (typeof v==='number' && !isNaN(v)) return new Date(Date.UTC(1899,11,30)).getTime()+v*86400000;
       const d=new Date(v); return d.getTime();
@@ -145,7 +150,7 @@
 
     function renderAgrupado(datosProv){
       const tot = datosProv.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
-      $('#resumen').textContent = `${datosProv.length} registros · ${fmtInt(tot)} kg`;
+      $('#resumen').textContent = `${datosProv.length} registros · ${fmtKg(tot)} kg`;
       const arr = agruparPorNroLiq(datosProv);
 
       let html = `<table><thead><tr>`+
@@ -156,7 +161,7 @@
           `<td><span class='badge'>${it.NroLiq}</span></td>`+
           `<td>${it.FechaLiq}</td>`+
           `<td class='right'>${it.cant}</td>`+
-          `<td class='right'>${fmtInt(it.kgs)}</td>`+
+          `<td class='right'>${fmtKg(it.kgs)}</td>`+
         `</tr>`;
       }
       html += `</tbody></table>`;
@@ -174,7 +179,7 @@
       // Ordenar por Fecha Ingr. (campo Fecha) DESC
       rows = [...rows].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha));
       const tot = rows.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
-      $('#resumen').textContent = `${rows.length} registros · ${fmtInt(tot)} kg`;
+      $('#resumen').textContent = `${rows.length} registros · ${fmtKg(tot)} kg`;
 
       if (!rows.length){
         $('#tablaWrap').innerHTML = `<p style="margin:8px 0;color:#666;">No hay registros para la especie seleccionada.</p>`;
@@ -195,7 +200,7 @@
           `<td>${excelSerialToStr(r.Fecha)}</td>`+
           `<td>${r.Remito||''}</td>`+
           `<td>${r.NomVariedad||''}</td>`+
-          `<td class='right'>${fmtInt(r.KgsD)}</td>`+
+          `<td class='right'>${fmtKg(r.KgsD)}</td>`+
         `</tr>`;
       }
       html += `</tbody></table>`;
