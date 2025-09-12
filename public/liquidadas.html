@@ -94,16 +94,16 @@
       return `${dd}/${mm}/${yyyy}`;
     };
 
-    // --- formatos de KGs ---
-    // Celda: muestra decimales si existen (1 a 3). Si es entero, sin decimales.
+    // === formatos de KGs ===
+    // Celda: muestra decimales si existen (1–3). Si es entero, sin decimales.
     const fmtKgCell = (n) => {
       const x = Number(n) || 0;
-      const s = x.toFixed(3)
-        .replace(/\.0{1,3}$/, '')
-        .replace(/\.(\d*?)0+$/, '.$1');
-      return s;
+      return x
+        .toFixed(3)               // hasta 3 decimales
+        .replace(/\.0{1,3}$/, '') // quita .0 / .00 / .000
+        .replace(/\.(\d*?)0+$/, '.$1'); // quita ceros finales
     };
-    // Total: SIEMPRE con 2 decimales y miles en es-AR
+    // Total: SIEMPRE con 2 decimales y miles es-AR
     const fmtKgTotal = (n) => {
       const x = Number(n) || 0;
       return x.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -119,11 +119,12 @@
     let __datosProv = [];
     let __mode = 'agrupado';
 
+    // === proveedor desde URL o localStorage ===
     function getProv(){
       const qs = new URLSearchParams(location.search);
       const p = qs.get('prov');
       if (p && p.trim()) return decodeURIComponent(p).trim();
-      try { const ls = localStorage.getItem('provNombre'); if (ls && ls.trim()) return ls.trim(); } catch(_){} 
+      try { const ls = localStorage.getItem('provNombre'); if (ls && ls.trim()) return ls.trim(); } catch(_){}
       return '';
     }
     function normalizarProveedor(v){ return String(v||'').trim(); }
@@ -134,7 +135,7 @@
       return r.json();
     }
 
-    // === AGRUPADO: primero por NroLiq ===
+    // === AGRUPADO: primero por NroLiq (suma todas las especies) ===
     function agruparPorNroLiq(rows){
       const m = new Map();
       for(const r of rows){
@@ -151,6 +152,7 @@
         cant:o.cant,
         kgs:o.kgs
       }));
+      // ordenar por FechaLiq desc; si empata, por NroLiq asc (natural)
       arr.sort((a,b)=> (toMillis(b.FechaLiq)-toMillis(a.FechaLiq)) || String(a.NroLiq).localeCompare(String(b.NroLiq), undefined, { numeric:true }));
       return arr;
     }
@@ -177,13 +179,14 @@
       setMode('agrupado');
     }
 
-    // === DETALLE (con filtro especie) ===
+    // === DETALLE (con filtro de especie) ===
     function renderDetallado(datosProv){
       const sel = $('#selEspecie');
       const wanted = sel ? sel.value : 'TODAS';
       let rows = datosProv;
       if (wanted !== 'TODAS') rows = rows.filter(r => especieKey(r.Especie) === wanted);
 
+      // Ordenar por Fecha Ingr. (campo Fecha) DESC
       rows = [...rows].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha));
       const tot = rows.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
       $('#resumen').textContent = `${rows.length} registros · ${fmtKgTotal(tot)} kg`;
@@ -217,7 +220,7 @@
 
     function setMode(m){
       __mode = m;
-      const bAgr = $('#btnAgrupado'), bDet = $('#btnDetalle'];
+      const bAgr = $('#btnAgrupado'), bDet = $('#btnDetalle');
       const fd = $('#filtroDetalle');
       if(m==='detalle'){
         bAgr.classList.add('secondary'); bDet.classList.remove('secondary');
@@ -228,7 +231,7 @@
       }
     }
 
-    // === Exportar a Excel ===
+    // === Exportar a Excel (según vista actual y filtro) ===
     function descargarExcel(){
       if (!window.XLSX){ alert('No se pudo cargar el generador de Excel.'); return; }
       const prov = $('#provNombre').textContent || 'proveedor';
@@ -276,13 +279,14 @@
         $('#stamp').textContent = stamp.fecha || '';
 
         if (!__datosProv.length){
-          $('#resumen').textContent = `0 registros · 0,00 kg`;
-          $('#tablaWrap').innerHTML = `<p style=\\"margin:8px 0;color:#666;\\">No hay liquidaciones para este proveedor.</p>`;
+          $('#resumen').textContent = `0 registros · 0 kg`;
+          $('#tablaWrap').innerHTML = `<p style=\"margin:8px 0;color:#666;\">No hay liquidaciones para este proveedor.</p>`;
           setMode('agrupado');
         } else {
-          renderAgrupado(__datosProv);
+          renderAgrupado(__datosProv); // por defecto
         }
 
+        // botones
         $('#btnAgrupado').onclick = ()=> renderAgrupado(__datosProv);
         $('#btnDetalle').onclick  = ()=> renderDetallado(__datosProv);
         $('#btnExcel').onclick    = descargarExcel;
