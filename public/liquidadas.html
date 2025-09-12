@@ -27,6 +27,8 @@
     .pill { display:inline-block; background:#f1f5f9; color:#0f172a; padding:4px 8px; border-radius:999px; font-size:12px; }
     .spacer { height:8px; }
     .right { text-align:right; }
+    .section { margin-top:14px; }
+    .section h2 { font-size:18px; margin:0 0 6px; }
     #filtroDetalle { display:none; align-items:center; gap:8px; margin:4px 0 0 0; }
     #selEspecie { padding:6px 10px; }
   </style>
@@ -55,7 +57,7 @@
 
       <!-- Filtro SOLO para Detalle -->
       <div id="filtroDetalle" class="row">
-        <label for="selEspecie">Especie:</label>
+        <label for="selEspecie">Especie:</nlabel>
         <select id="selEspecie">
           <option value="TODAS">Todas</option>
           <option value="pera">Pera</option>
@@ -91,27 +93,28 @@
       const yyyy = d.getUTCFullYear();
       return `${dd}/${mm}/${yyyy}`;
     };
-    // kilos con 2 decimales solo si realmente los hay (evita falsos decimales por flotante)
-    const fmtKg = (n) => {
-      const x = Number(n) || 0;
-      const eps = 0.005; // ~5 gramos al redondear a 2 decimales
-      const diffFromNearestInt = Math.abs(x - Math.round(x));
-      const hasDecimals = diffFromNearestInt >= eps;
-      const opts = hasDecimals
-        ? { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-        : { maximumFractionDigits: 0 };
-      return x.toLocaleString('es-AR', opts);
-    };
+    // NUEVO: kilos con 2 decimales solo si hay parte decimal
+   // Kilos con 2 decimales solo si realmente los hay (con epsilon para evitar flotantes)
+const fmtKg = (n) => {
+  const x = Number(n) || 0;
+  const eps = 0.005; // ~5 gramos al redondear a 2 decimales
+  const hasDec = Math.abs(x - Math.round(x)) >= eps;
+  const opts = hasDec
+    ? { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+    : { maximumFractionDigits: 0 };
+  return x.toLocaleString('es-AR', opts);
+};;
     const toMillis = (v) => {
       if (typeof v==='number' && !isNaN(v)) return new Date(Date.UTC(1899,11,30)).getTime()+v*86400000;
       const d=new Date(v); return d.getTime();
     };
     const especieKey = (v)=>{ v=String(v||'').toLowerCase(); return v.includes('manza')?'manza': v.includes('pera')?'pera':'otros'; };
 
-    // Estado global
+    // Estado global mínimo para exportar
     let __datosProv = [];
     let __mode = 'agrupado';
 
+    // === proveedor desde URL o localStorage ===
     function getProv(){
       const qs = new URLSearchParams(location.search);
       const p = qs.get('prov');
@@ -127,7 +130,7 @@
       return r.json();
     }
 
-    // === AGRUPADO: primero por NroLiq (sin cortar por especie) ===
+    // === AGRUPADO: primero por NroLiq (suma todas las especies) ===
     function agruparPorNroLiq(rows){
       const m = new Map();
       for(const r of rows){
@@ -144,15 +147,16 @@
         cant:o.cant,
         kgs:o.kgs
       }));
+      // ordenar por FechaLiq desc; si empata, por NroLiq asc (natural)
       arr.sort((a,b)=> (toMillis(b.FechaLiq)-toMillis(a.FechaLiq)) || String(a.NroLiq).localeCompare(String(b.NroLiq), undefined, { numeric:true }));
       return arr;
     }
     function pickMaxFecha(arr){ if(!arr.length) return ''; let best=-Infinity; for(const v of arr){ const ms=toMillis(v); if(ms>best) best=ms; } return toDDMMYYYY(new Date(best)); }
 
-    function renderAgrupado(datosProv){
-      const tot = datosProv.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
-      $('#resumen').textContent = `${datosProv.length} registros · ${fmtKg(tot)} kg`;
+   function renderAgrupado(datosProv){
       const arr = agruparPorNroLiq(datosProv);
+      const tot = Math.round(arr.reduce((a,b)=>a+(Number(b.kgs)||0),0)*100)/100; // total estable a 2 decimales
+      $('#resumen').textContent = `${datosProv.length} registros · ${fmtKg(tot)} kg`;
 
       let html = `<table><thead><tr>`+
         `<th>NroLiq</th><th>FechaLiq</th><th class='right'>Cant reg.</th><th class='right'>Kgs totales</th>`+
@@ -170,13 +174,14 @@
       setMode('agrupado');
     }
 
-    // === DETALLE (con filtro de especie) ===
+    // === DETALLEE (con filtro de especie) ===
     function renderDetallado(datosProv){
       const sel = $('#selEspecie');
       const wanted = sel ? sel.value : 'TODAS';
       let rows = datosProv;
       if (wanted !== 'TODAS') rows = rows.filter(r => especieKey(r.Especie) === wanted);
 
+      // Ordenar por Fecha Ingr. (campo Fecha) DESC
       rows = [...rows].sort((a,b)=> toMillis(b.Fecha) - toMillis(a.Fecha));
       const tot = rows.reduce((a,b)=>a+(Number(b.KgsD)||0),0);
       $('#resumen').textContent = `${rows.length} registros · ${fmtKg(tot)} kg`;
@@ -221,7 +226,7 @@
       }
     }
 
-    // === Exportar a Excel
+    // === Exportar a Excel (según vista actual y filtro) ===
     function descargarExcel(){
       if (!window.XLSX){ alert('No se pudo cargar el generador de Excel.'); return; }
       const prov = $('#provNombre').textContent || 'proveedor';
@@ -246,7 +251,7 @@
         XLSX.writeFile(wb, `liquidadas_detalle_${prov}.xlsx`);
       } else {
         const arr = agruparPorNroLiq(__datosProv);
-        const out = arr.map(it => ({ NroLiq: it.NroLiq, FechaLiq: it.FechaLiq, 'Cant reg.': it.cant, 'Kgs totales': Number(it.kgs)||0 }));
+        const out = arr.map(it => ({ NroLiq: it.NroLiq, FechaLiq: it.FechaLiq, 'Cant reg.': it.cant, 'Kgs totales': it.kgs }));
         const ws = XLSX.utils.json_to_sheet(out);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Agrupado');
@@ -273,9 +278,10 @@
           $('#tablaWrap').innerHTML = `<p style=\"margin:8px 0;color:#666;\">No hay liquidaciones para este proveedor.</p>`;
           setMode('agrupado');
         } else {
-          renderAgrupado(__datosProv);
+          renderAgrupado(__datosProv); // por defecto
         }
 
+        // botones
         $('#btnAgrupado').onclick = ()=> renderAgrupado(__datosProv);
         $('#btnDetalle').onclick  = ()=> renderDetallado(__datosProv);
         $('#btnExcel').onclick    = descargarExcel;
