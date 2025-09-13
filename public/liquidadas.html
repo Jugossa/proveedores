@@ -34,13 +34,13 @@
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="row" style="justify-content:space-between; align-items:flex-start;">
+      <div class="row">
         <div>
           <h1>Fruta liquidada</h1>
-          <div class="muted">Proveedor: <span id="provNombre" class="pill"></span></div>
-          <div class="muted">Última actualización: <span id="stamp"></span></div>
+          <div class="muted">Proveedor: <span id="provNombre"></span></div>
+          <div class="muted">Última actualización: <span id="stampLiq"></span></div>
         </div>
-        <div class="row">
+        <div class="row" style="margin-left:auto">
           <button class="ghost" onclick="location.href='index.html'">Volver</button>
         </div>
       </div>
@@ -55,15 +55,16 @@
 
       <!-- Filtro SOLO para Detalle -->
       <div id="filtroDetalle" class="row">
-        <label for="selEspecie">Especie:</label>
+        <span class="muted">Filtrar especie:</span>
         <select id="selEspecie">
           <option value="TODAS">Todas</option>
-          <option value="pera">Pera</option>
-          <option value="manza">Manzana</option>
+          <option value="PERA">Pera</option>
+          <option value="MANZANA">Manzana</option>
         </select>
       </div>
 
       <div id="resumen" class="totals"></div>
+
       <div id="tablaWrap"></div>
     </div>
   </div>
@@ -84,18 +85,21 @@
         const d = new Date(epoch.getTime() + v * 86400000);
         return toDDMMYYYY(d);
       }
-      const d = new Date(v);
-      return isNaN(d) ? (v || '') : toDDMMYYYY(d);
+      if (v instanceof Date) return toDDMMYYYY(v);
+      return '';
     };
-    const toDDMMYYYY = (d) => {
+
+    function toDDMMYYYY(d){
       const dd = String(d.getUTCDate()).padStart(2,'0');
       const mm = String(d.getUTCMonth()+1).padStart(2,'0');
-      const yyyy = d.getUTCFullYear();
-      return `${dd}/${mm}/${yyyy}`;
-    };
-    const toMillisExcelOrDMY = (v) => {
+      const yy = d.getUTCFullYear();
+      return `${dd}/${mm}/${yy}`;
+    }
+
+    function toMillisExcelOrDMY(v){
       if (typeof v === 'number' && !isNaN(v)) {
-        return Date.UTC(1899, 11, 30) + v * 86400000;
+        const epoch = new Date(Date.UTC(1899, 11, 30));
+        return epoch.getTime() + v * 86400000;
       }
       if (typeof v === 'string') {
         const m = v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
@@ -128,30 +132,23 @@
         maximumFractionDigits: hasDec ? 2 : 0
       });
     };
-    // resumen: siempre 2 decimales
-    const fmtKgTotal = (n) => {
-      const x = Math.round(parseKg(n) * 100) / 100;
-      return x.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const fmtKgTotal = (n) => (Math.round(parseKg(n))).toLocaleString('es-AR', {
+      maximumFractionDigits: 0
+    });
+
+    // ---------- Utils ----------
+    const especieKey = (s) => {
+      s = (s||'').toString().trim().toLowerCase();
+      if (s.startsWith('manz')) return 'MANZANA';
+      if (s.startsWith('pera')) return 'PERA';
+      return 'OTRA';
     };
-
-    const especieKey = (v)=>{ v=String(v||'').toLowerCase(); return v.includes('manza')?'manza': v.includes('pera')?'pera':'otros'; };
-
-    let __datosProv = [];
-    let __mode = 'agrupado';
-
-    function getProv(){
-      const qs = new URLSearchParams(location.search);
-      const p = qs.get('prov');
-      if (p && p.trim()) return decodeURIComponent(p).trim();
-      try { const ls = localStorage.getItem('provNombre'); if (ls && ls.trim()) return ls.trim(); } catch(_){}
-      return '';
-    }
-    function normalizarProveedor(v){ return String(v||'').trim(); }
+    const normalizarProveedor = s => (s||'').toString().trim().toUpperCase();
 
     async function fetchJSON(url){
-      const r = await fetch(url, { cache:'no-store' });
-      if(!r.ok) throw new Error('No se pudo leer '+url);
-      return r.json();
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP '+r.status);
+      return await r.json();
     }
 
     // ---------- AGRUPADO ----------
@@ -160,18 +157,23 @@
       for(const r of rows){
         const nro = String(r.NroLiq ?? '-');
         let o = m.get(nro);
-        if(!o){ o = { NroLiq:nro, kgs:0, cant:0, ms:NaN }; m.set(nro, o); }
+        if(!o){ o = { NroLiq:nro, kgs:0, cant:0, ms:NaN, Factura:'' }; m.set(nro, o); }
         o.cant += 1;
         o.kgs += parseKg(r.KgsD);
         const ms = toMillisExcelOrDMY(r.FechaLiq);
         if(!isNaN(ms) && (isNaN(o.ms) || ms > o.ms)) o.ms = ms;
+
+        // tomar una factura representativa: la primera no vacía
+        const fac = (r.Factura ?? '').toString();
+        if (!o.Factura && fac.trim() !== '') o.Factura = fac;
       }
       const arr = Array.from(m.values()).map(o => ({
         NroLiq: o.NroLiq,
         FechaLiq: isNaN(o.ms) ? '' : toDDMMYYYY(new Date(o.ms)),
         cant: o.cant,
         kgs: o.kgs,
-        ms: o.ms
+        ms: o.ms,
+        Factura: o.Factura || ''
       }));
       arr.sort((a,b)=> ((isNaN(b.ms)?-Infinity:b.ms) - (isNaN(a.ms)?-Infinity:a.ms)) ||
                        a.NroLiq.localeCompare(b.NroLiq, undefined, { numeric:true }));
@@ -184,12 +186,13 @@
       $('#resumen').textContent = `${datosProv.length} registros - ${fmtKgTotal(tot)} kg`;
 
       let html = `<table><thead><tr>`+
-        `<th>NroLiq</th><th>FechaLiq</th><th class='right'>Cant reg.</th><th class='right'>Kgs totales</th>`+
+        `<th>NroLiq</th><th>FechaLiq</th><th>Fact. Proveedor</th><th class='right'>Cant reg.</th><th class='right'>Kgs totales</th>`+
         `</tr></thead><tbody>`;
       for(const it of arr){
         html += `<tr>`+
           `<td><span class='badge'>${it.NroLiq}</span></td>`+
           `<td>${it.FechaLiq}</td>`+
+          `<td>${it.Factura || ''}</td>`+
           `<td class='right'>${it.cant}</td>`+
           `<td class='right'>${fmtKgCell(it.kgs)}</td>`+
         `</tr>`;
@@ -199,7 +202,6 @@
       setMode('agrupado');
     }
 
-    // ---------- DETALLE ----------
     function renderDetallado(datosProv){
       const sel = $('#selEspecie');
       const wanted = sel ? sel.value : 'TODAS';
@@ -281,6 +283,7 @@
         const out = arr.map(it => ({
           NroLiq: it.NroLiq,
           FechaLiq: it.FechaLiq,
+          'Fact. Proveedor': it.Factura || '',
           'Cant reg.': it.cant,
           'Kgs totales': parseKg(it.kgs)
         }));
@@ -303,7 +306,12 @@
           fetchJSON(PATH_STAMP_LIQ).catch(()=>({ fecha:'' }))
         ]);
         __datosProv = rows.filter(r => normalizarProveedor(r.ProveedorT) === prov.trim());
-        $('#stamp').textContent = stamp.fecha || '';
+
+        if (stamp && stamp.fecha){
+          $('#stampLiq').textContent = stamp.fecha;
+        }else{
+          $('#stampLiq').textContent = '';
+        }
 
         if (!__datosProv.length){
           $('#resumen').textContent = `0 registros - ${fmtKgTotal(0)} kg`;
@@ -322,6 +330,14 @@
         alert('No se pudieron cargar las liquidaciones.');
         console.error(e);
       }
+    }
+    // Estado global simple
+    let __mode = 'agrupado';
+    let __datosProv = [];
+    function getProv(){
+      const u = new URL(location.href);
+      const p = u.searchParams.get('prov') || '';
+      return p.toString().trim().toUpperCase();
     }
     init();
   </script>
