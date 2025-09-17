@@ -115,6 +115,19 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/index-celu.html", (req, res) => res.sendFile(path.join(__dirname, "public", "index-celu.html")));
 
+/* ========= (NUEVO) ENDPOINT INDICADOR.JSON ========= */
+/* Busca indicador.json primero en baseDir y, si no, en I:\Pagina\proveedores\data */
+app.get("/api/admin/indicadores", (req, res) => {
+  const candidatos = [
+    path.join(baseDir, "indicador.json"),
+    path.join("I:", "Pagina", "proveedores", "data", "indicador.json"),
+  ];
+  const file = candidatos.find(p => { try { return fs.existsSync(p); } catch { return false; } });
+  if (!file) return res.status(404).json({ ok:false, error:"indicador.json no encontrado" });
+  res.set("Cache-Control", "no-store");
+  res.sendFile(file);
+});
+
 /* ========= LOGIN ========= */
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
@@ -127,7 +140,7 @@ app.post("/login", (req, res) => {
 
   if (!proveedor) return res.status(401).send("CUIT o clave incorrectos");
 
-  // Log de acceso
+  // Log de acceso (mantener)
   if (webhookURL) {
     const postData = JSON.stringify({ nombre: proveedor.nombre, cuit: cuiLimpio });
     const reqGS = https.request(webhookURL, {
@@ -141,12 +154,16 @@ app.post("/login", (req, res) => {
   const entregas = proFru.filter(e => e.ProveedorT === proveedor.nombre);
   const totalKgs = entregas.reduce((suma, e) => suma + (parseFloat(e.KgsD) || 0), 0);
 
+  // === (NUEVO) si el nombre del proveedor es exactamente "administrador", sugerimos redirección
+  const esAdmin = String(proveedor.nombre || "").trim().toLowerCase() === "administrador";
+
   res.json({
     proveedor: proveedor.nombre,
     org: proveedor.org || "",
     entregas,
     resumen: { totalKgs },
-    ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida"
+    ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
+    ...(esAdmin ? { redirect: "/admin/indicador.html" } : {}) // <-- clave para enviar al tablero
   });
 });
 
