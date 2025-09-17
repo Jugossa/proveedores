@@ -38,7 +38,7 @@
         <div>
           <h1>Fruta liquidada</h1>
           <div class="muted">Proveedor: <span id="provNombre"></span></div>
-          <div class="muted">Última actualización: <span id="stampLiq"></span></div>
+          <!-- (Se quitó el horario de actualización) -->
         </div>
         <div class="row" style="margin-left:auto">
           <button class="ghost" onclick="location.href='index.html'">Volver</button>
@@ -71,7 +71,6 @@
 
   <script>
     const PATH_LIQ = 'data/profruLiq.json';
-    const PATH_STAMP_LIQ = 'data/lastUpdateLiq.json';
     const $ = s => document.querySelector(s);
 
     // ---------- Fechas ----------
@@ -163,7 +162,6 @@
         const ms = toMillisExcelOrDMY(r.FechaLiq);
         if(!isNaN(ms) && (isNaN(o.ms) || ms > o.ms)) o.ms = ms;
 
-        // tomar una factura representativa: la primera no vacía
         const fac = (r.Factura ?? '').toString();
         if (!o.Factura && fac.trim() !== '') o.Factura = fac;
       }
@@ -301,17 +299,8 @@
       $('#provNombre').textContent = prov;
 
       try{
-        const [rows, stamp] = await Promise.all([
-          fetchJSON(PATH_LIQ),
-          fetchJSON(PATH_STAMP_LIQ).catch(()=>({ fecha:'' }))
-        ]);
+        const rows = await fetchJSON(PATH_LIQ);
         __datosProv = rows.filter(r => normalizarProveedor(r.ProveedorT) === prov.trim());
-
-        if (stamp && stamp.fecha){
-          $('#stampLiq').textContent = stamp.fecha;
-        }else{
-          $('#stampLiq').textContent = '';
-        }
 
         if (!__datosProv.length){
           $('#resumen').textContent = `0 registros - ${fmtKgTotal(0)} kg`;
