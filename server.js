@@ -3,6 +3,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const crypto = require("crypto"); // <-- NUEVO
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -107,17 +108,81 @@ try {
 
 /* ========= STATIC & MIDDLEWARE ========= */
 app.use('/data', express.static(path.join(__dirname, 'data')));
-app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+/* ========= PROTECCIÓN ADMIN (cookie firmada) ========= */
+// Config
+const ADMIN_SECRET = process.env.ADMIN_SECRET || "cambia-esto-en-render";
+const COOKIE_NAME = "adm";
+const COOKIE_MAX_AGE_S = 12 * 60 * 60; // 12h
+
+function parseCookies(req){
+  const hdr = req.headers.cookie || "";
+  const out = {};
+  hdr.split(";").forEach(p => {
+    const i = p.indexOf("=");
+    if (i > -1) out[p.slice(0,i).trim()] = decodeURIComponent(p.slice(i+1));
+  });
+  return out;
+}
+function sign(dataB64){
+  return crypto.createHmac("sha256", ADMIN_SECRET).update(dataB64).digest("base64url");
+}
+function makeToken(payload){
+  const data = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const sig  = sign(data);
+  return `${data}.${sig}`;
+}
+function verifyToken(tok){
+  if (!tok || !tok.includes(".")) return null;
+  const [data, sig] = tok.split(".");
+  if (sign(data) !== sig) return null;
+  try { return JSON.parse(Buffer.from(data, "base64url").toString("utf8")); }
+  catch { return null; }
+}
+function setAdminCookie(res, cui){
+  const token = makeToken({ cui, ts: Date.now() });
+  const attrs = [
+    `${COOKIE_NAME}=${token}`,
+    "Path=/",
+    "HttpOnly",
+    "SameSite=Lax",
+    `Max-Age=${COOKIE_MAX_AGE_S}`
+  ];
+  if (isRender) attrs.push("Secure");
+  res.setHeader("Set-Cookie", attrs.join("; "));
+}
+function clearAdminCookie(res){
+  const attrs = [`${COOKIE_NAME}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax`];
+  if (isRender) attrs.push("Secure");
+  res.setHeader("Set-Cookie", attrs.join("; "));
+}
+
+function requireAdmin(req, res, next){
+  const tok = parseCookies(req)[COOKIE_NAME];
+  const payload = verifyToken(tok);
+  if (!payload?.cui) return res.status(401).send("No autorizado");
+  // Debe existir en proveedores.json con nombre exactamente "administrador"
+  const cuiLimpio = String(payload.cui).replace(/[^0-9]/g, "");
+  const p = proveedores.find(x =>
+    String(x.nombre || "").trim().toLowerCase() === "administrador" &&
+    String(x.cui || "").replace(/[^0-9]/g, "") === cuiLimpio
+  );
+  if (!p) return res.status(401).send("No autorizado");
+  return next();
+}
 
 /* ========= PÁGINAS ========= */
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/index-celu.html", (req, res) => res.sendFile(path.join(__dirname, "public", "index-celu.html")));
 
-/* ========= (NUEVO) ENDPOINT INDICADOR.JSON ========= */
-/* Busca indicador.json primero en baseDir y, si no, en I:\Pagina\proveedores\data */
-app.get("/api/admin/indicadores", (req, res) => {
+/* ========= CONTENIDO ADMIN PROTEGIDO ========= */
+// /admin/* solo se sirve si hay cookie válida
+app.use("/admin", requireAdmin, express.static(path.join(__dirname, "public", "admin")));
+
+/* ========= (NUEVO) ENDPOINT INDICADOR.JSON (protegido) ========= */
+app.get("/api/admin/indicadores", requireAdmin, (req, res) => {
   const candidatos = [
     path.join(baseDir, "indicador.json"),
     path.join("I:", "Pagina", "proveedores", "data", "indicador.json"),
@@ -127,6 +192,9 @@ app.get("/api/admin/indicadores", (req, res) => {
   res.set("Cache-Control", "no-store");
   res.sendFile(file);
 });
+
+/* ========= STATIC PUBLICO (al final, para no pisar /admin protegido) ========= */
+app.use(express.static("public"));
 
 /* ========= LOGIN ========= */
 app.post("/login", (req, res) => {
@@ -154,8 +222,13 @@ app.post("/login", (req, res) => {
   const entregas = proFru.filter(e => e.ProveedorT === proveedor.nombre);
   const totalKgs = entregas.reduce((suma, e) => suma + (parseFloat(e.KgsD) || 0), 0);
 
-  // === (NUEVO) si el nombre del proveedor es exactamente "administrador", sugerimos redirección
+  // Si es "administrador", setea cookie y devuelve redirect
   const esAdmin = String(proveedor.nombre || "").trim().toLowerCase() === "administrador";
+  if (esAdmin) {
+    setAdminCookie(res, cuiLimpio);
+  } else {
+    clearAdminCookie(res);
+  }
 
   res.json({
     proveedor: proveedor.nombre,
@@ -163,7 +236,7 @@ app.post("/login", (req, res) => {
     entregas,
     resumen: { totalKgs },
     ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
-    ...(esAdmin ? { redirect: "/admin/indicador.html" } : {}) // <-- clave para enviar al tablero
+    ...(esAdmin ? { redirect: "/admin/indicador.html" } : {})
   });
 });
 
