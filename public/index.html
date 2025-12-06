@@ -14,26 +14,51 @@
     th { background: #f0f0f0; }
     #error { color: red; margin-top: 10px; }
     #resumen { font-weight: bold; margin: 10px 0; }
-    #acciones { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
-    #acciones button { width: auto; max-width: 200px; padding: 8px 12px; }
+
+    #acciones { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    #acciones button { width: auto; max-width: 220px; padding: 8px 12px; }
+
     #bienvenida { margin: 20px 0 5px 0; font-size: 16px; color: green; font-weight: bold; display: none; }
     #aviso { font-size: 12px; color: black; margin-bottom: 15px; display: none; font-weight: normal; }
     #filtroEspecie { width: auto; }
-    td[col-id="KgsD"],td[col-id="CantBins"] {
-      text-align: right;
+    td[col-id="KgsD"], td[col-id="CantBins"] { text-align: right; }
+    #filtroFechas { display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+    #filtroFechas label { margin-right: 5px; }
+
+    #infoCert {
+      margin: 8px 0 0 0;
+      font-size: 13px;
+      color: #006400;
+      display: none;
     }
-    #filtroFechas {
+
+    .btn-mini {
+      font-size: 12px;
+      line-height: 1;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      background: #f7f7f7;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-mini:disabled { color:#777; background:#eee; cursor:not-allowed; }
+    .input-mini { font-size:12px; padding:6px 8px; border:1px solid #ccc; border-radius:4px; min-width:160px; }
+    #modalPauta { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); align-items:center; justify-content:center; z-index:9999; }
+    #modalPauta .box { background:#fff; width:95%; max-width:900px; max-height:90%; overflow:auto; padding:12px; border-radius:8px; }
+
+    .pauta-status {
+      margin-left: 12px;
       display: flex;
-      gap: 10px;
+      gap: 18px;
+      color: #2e7d32;
+      font-size: 12px;
       align-items: center;
-      margin-top: 10px;
+      flex: 0 1 auto;
       flex-wrap: wrap;
     }
-    #filtroFechas label { margin-right: 5px; }
   </style>
 </head>
 <body>
-
   <div id="titulo" style="text-align: center; margin-bottom: 10px;">
     <img src="img/logo.png" alt="Logo Jugos SA" style="height: 60px;" />
     <h2 style="margin: 10px 0;">🔐 Ingreso de Proveedores</h2>
@@ -52,6 +77,7 @@
   <div id="error"></div>
   <div id="bienvenida"></div>
   <div id="aviso">Cualquier consulta comunicarse con la administración de Jugos SA.</div>
+  <div id="infoCert"></div>
 
   <div id="filtros" style="display:none;">
     <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px;">
@@ -66,8 +92,17 @@
 
     <div id="resumen"></div>
     <div id="acciones">
-      <button onclick="descargarExcel()">📄 Descargar Excel</button> 
-      <button onclick="window.print()">📅 Descargar PDF</button>
+      <button id="btnExcel" onclick="descargarExcel()">📄 Descargar Excel</button>
+      <button id="btnPDF" onclick="window.print()">📅 Descargar PDF</button>
+      <button id="btnHistorico" style="display:none;">Histórico</button>
+
+      <button id="btnPauta" class="btn-mini">Firmar Pauta</button>
+      <button id="btnPautaOrg" class="btn-mini" style="display:none;">Firmar Pauta Orgánica</button>
+
+      <div class="pauta-status">
+        <span id="pauta-estado"></span>
+        <span id="pautaorg-estado"></span>
+      </div>
     </div>
   </div>
 
@@ -76,6 +111,21 @@
   <script>
     let entregasOriginal = [];
     let entregasFiltradas = [];
+
+    function mostrarBotonHistorico() {
+      const btn = document.getElementById('btnHistorico');
+      if (!btn) return;
+      btn.style.display = 'inline-block';
+      btn.onclick = function () {
+        let prov = '';
+        try { prov = localStorage.getItem('provNombre') || ''; } catch(_){}
+        if (prov) {
+          location.href = 'liquidadas.html?prov=' + encodeURIComponent(prov);
+        } else {
+          location.href = 'liquidadas.html';
+        }
+      };
+    }
 
     function convertirFecha(excelNumber) {
       const baseDate = new Date(1899, 11, 30);
@@ -129,14 +179,20 @@
         }
 
         const result = await res.json();
-        const data = result.entregas || [];
 
-        if (!data.length) {
-          tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
+        if (result.tipo === "admin") {
+          window.location.href = "/admin/ingresos";
           return;
         }
 
-        entregasOriginal = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
+        const data = result.entregas || [];
+
+        window.USER = {
+          proveedor: result.proveedor || "",
+          cuit: (cui || "").replace(/[^0-9]/g, ""),
+          org: result.org || ""
+        };
+        renderPautaButtons(window.USER);
 
         document.getElementById("login").style.display = "none";
         const nombre = result.proveedor || "Proveedor";
@@ -145,6 +201,64 @@
         avisoDiv.style.display = "block";
         document.getElementById("avisoCuit").style.display = "none";
 
+        const infoCertDiv = document.getElementById("infoCert");
+        if (result.certificado && result.certificado.fecha) {
+          const fechaSerial = result.certificado.fecha;
+          const fechaCert = convertirFecha(fechaSerial);
+          const ibr = (result.certificado.ibr || "").trim();
+          const via = (result.certificado.via || "").trim();
+
+          const partesOrg = [];
+          if (ibr) partesOrg.push(ibr);
+          if (via) partesOrg.push(via);
+          const orgLabel = partesOrg.length ? ` (${partesOrg.join("-")})` : "";
+
+          let color = "gray";
+          let diffDias = null;
+          const dias = parseInt(fechaSerial);
+          if (!isNaN(dias)) {
+            const baseDate = new Date(1899, 11, 30);
+            const fechaVto = new Date(baseDate.getTime() + dias * 86400000);
+            const hoy = new Date();
+            hoy.setHours(0,0,0,0);
+            fechaVto.setHours(0,0,0,0);
+            diffDias = Math.round((fechaVto - hoy) / 86400000);
+
+            if (diffDias < 0)      color = "red";
+            else if (diffDias <= 60) color = "orange";
+            else                   color = "green";
+          }
+
+          infoCertDiv.style.display = "block";
+          infoCertDiv.style.color = color;
+          if (diffDias !== null && diffDias < 0) {
+            infoCertDiv.textContent = `⚠ CERTIFICADO VENCIDO EL: ${fechaCert}${orgLabel}`;
+          } else {
+            infoCertDiv.textContent = `Certificado orgánico vigente hasta: ${fechaCert}${orgLabel}`;
+          }
+        } else if (infoCertDiv) {
+          infoCertDiv.style.display = "none";
+        }
+
+        try { if (result.proveedor) localStorage.setItem('provNombre', result.proveedor); } catch(_){}
+        mostrarBotonHistorico();
+
+        if (!data.length) {
+          tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
+          filtrosDiv.style.display = "block";
+
+          const filaFiltros = filtrosDiv.firstElementChild;
+          if (filaFiltros) filaFiltros.style.display = "none";
+
+          const bExcel = document.getElementById('btnExcel');
+          const bPDF   = document.getElementById('btnPDF');
+          if (bExcel) bExcel.style.display = 'none';
+          if (bPDF)   bPDF.style.display   = 'none';
+
+          return;
+        }
+
+        entregasOriginal = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
         mostrarFiltrosYTabla(entregasOriginal);
       } catch (err) {
         errorDiv.textContent = "❌ Error de red.";
@@ -157,9 +271,7 @@
       const select = document.getElementById("filtroEspecie");
 
       select.innerHTML = `<option value="TODAS">Todas las especies</option>`;
-      especies.forEach(v => {
-        select.innerHTML += `<option value="${v}">${v}</option>`;
-      });
+      especies.forEach(v => { select.innerHTML += `<option value="${v}">${v}</option>`; });
 
       document.getElementById("filtros").style.display = "block";
       filtrarEspecie();
@@ -233,6 +345,170 @@
       XLSX.utils.book_append_sheet(workbook, worksheet, "Entregas");
       XLSX.writeFile(workbook, "entregas.xlsx");
     }
+  </script>
+
+  <div id="modalPauta">
+    <div class="box">
+      <h3 id="modalTitulo" style="margin:0 0 8px 0;font-size:16px;">Firmar Pauta</h3>
+      <iframe id="pdfFrame" src="" style="width:100%; height:55vh; border:1px solid #ddd;"></iframe>
+
+      <div style="margin-top:10px;">
+        <label><input type="checkbox" id="chkAcepto"> Acepto los términos de la pauta</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+          <input id="inpResponsable" class="input-mini" placeholder="Responsable">
+          <input id="inpCargo" class="input-mini" placeholder="Cargo">
+          <input id="inpFecha" class="input-mini" placeholder="Fecha y hora" readonly>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+          <button id="btnConfirmar" class="btn-mini" disabled>Confirmar firma</button>
+          <button id="btnCancelar" class="btn-mini">Cancelar</button>
+          <a id="btnDescargar" class="btn-mini" download>Descargar PDF</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    const qsTest = new URLSearchParams(location.search).get('test') === '1';
+
+    function getCuit(){
+      if (window.USER?.cuit) return window.USER.cuit;
+      const el = document.getElementById('cui') || document.querySelector('input[name="cui"]');
+      return el && el.value ? el.value.replace(/[^0-9]/g,'') : '';
+    }
+    function getProveedor(){
+      if (window.USER?.proveedor) return window.USER.proveedor;
+      const strong = document.querySelector('#bienvenida strong') || document.getElementById('bienvenido-nombre');
+      if (strong) return strong.textContent.trim();
+      const txt = document.getElementById('bienvenida')?.textContent || '';
+      const m = txt.match(/Bienvenido\s+(.+?)(?:\s+Última|$)/i);
+      return m ? m[1].trim() : '';
+    }
+    function showOrgIfNeeded(){
+      const bOrg = document.getElementById('btnPautaOrg');
+      const orgFlag = (window.USER?.org === 'x' || window.USER?.org === 'X');
+      if (bOrg) bOrg.style.display = orgFlag ? '' : 'none';
+    }
+
+    function pintarEstado(s){
+      const bP = document.getElementById('btnPauta');
+      const bO = document.getElementById('btnPautaOrg');
+      const eP = document.getElementById('pauta-estado');
+      const eO = document.getElementById('pautaorg-estado');
+      if (s?.pauta?.firmado){ bP.textContent='Pauta firmada'; bP.disabled=true; eP.textContent='Pauta firmada el '+s.pauta.fechaLocal; }
+      if (s?.pautaorganica?.firmado){ bO.textContent='Pauta Orgánica firmada'; bO.disabled=true; eO.textContent='Pauta Orgánica firmada el '+s.pautaorganica.fechaLocal; }
+    }
+
+    function cargarEstado(){
+      const cuit = getCuit();
+      if (!cuit) { showOrgIfNeeded(); return; }
+      fetch('/api/pauta/estado?cuit=' + encodeURIComponent(cuit))
+        .then(r => r.ok ? r.json() : null)
+        .then(s => { pintarEstado(s || {}); showOrgIfNeeded(); })
+        .catch(() => showOrgIfNeeded());
+    }
+
+    async function precheckYabrir(tipo){
+      const cuit = (getCuit() || '').replace(/[^0-9]/g,'');
+      if (!cuit) return abrir(tipo);
+      try{
+        const r = await fetch('/api/pauta/estado?cuit='+encodeURIComponent(cuit));
+        const s = await r.json();
+        const ya = (tipo==='pauta') ? s?.pauta?.firmado : s?.pautaorganica?.firmado;
+        if (ya){
+          const fecha = (tipo==='pauta') ? s.pauta.fechaLocal : s.pautaorganica.fechaLocal;
+          alert(`Ya registraste la ${tipo==='pauta'?'Pauta':'Pauta Orgánica'} el ${fecha}.`);
+          if (tipo==='pauta'){ const b=document.getElementById('btnPauta'); if(b){ b.textContent='Pauta firmada'; b.disabled=true; document.getElementById('pauta-estado').textContent = 'Pauta firmada el ' + fecha; } }
+          else { const b=document.getElementById('btnPautaOrg'); if(b){ b.textContent='Pauta Orgánica firmada'; b.disabled=true; document.getElementById('pautaorg-estado').textContent = 'Pauta Orgánica firmada el ' + fecha; } }
+          return;
+        }
+      }catch(_){}
+      abrir(tipo);
+    }
+
+    function abrir(tipo){
+      const titulo = document.getElementById('modalTitulo');
+      const frame  = document.getElementById('pdfFrame');
+      const aDesc  = document.getElementById('btnDescargar');
+      const chk    = document.getElementById('chkAcepto');
+      const inpR   = document.getElementById('inpResponsable');
+      const inpC   = document.getElementById('inpCargo');
+      const inpF   = document.getElementById('inpFecha');
+      const btnOK  = document.getElementById('btnConfirmar');
+      const btnCancel = document.getElementById('btnCancelar');
+
+      titulo.textContent = (tipo==='pauta'?'Firmar Pauta':'Firmar Pauta Orgánica');
+      const pdf = (tipo==='pauta') ? '/data/pauta/pauta.pdf' : '/data/pauta/pautaorganica.pdf';
+      frame.src = pdf; aDesc.href = pdf;
+
+      chk.checked = false; inpR.value=''; inpC.value='';
+      inpF.value = new Date().toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).replace(',', '');
+      btnOK.disabled = true;
+
+      const validar = ()=> btnOK.disabled = !(chk.checked && inpR.value.trim() && inpC.value.trim());
+      chk.onchange = validar; inpR.oninput = validar; inpC.oninput = validar;
+
+      btnOK.onclick = async ()=>{
+        btnOK.disabled = true;
+        const body = {
+          tipo,
+          acepta: true,
+          responsable: inpR.value.trim(),
+          cargo: inpC.value.trim(),
+          proveedor: getProveedor(),
+          cuit: getCuit()
+        };
+        if (qsTest) body.test = 1;
+
+        try{
+          const r = await fetch('/api/pauta/firmar', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+          const j = await r.json();
+
+          if (r.status === 409 || j?.error === 'ya_firmada'){
+            const fecha = j?.fechaLocal || '';
+            alert(`Ya estaba firmada (${fecha}).`);
+            if (tipo==='pauta'){ const b=document.getElementById('btnPauta'); if(b){ b.textContent='Pauta firmada'; b.disabled=true; document.getElementById('pauta-estado').textContent = 'Pauta firmada el ' + fecha; } }
+            else { const b=document.getElementById('btnPautaOrg'); if(b){ b.textContent='Pauta Orgánica firmada'; b.disabled=true; document.getElementById('pautaorg-estado').textContent = 'Pauta Orgánica firmada el ' + fecha; } }
+            return;
+          }
+
+          if (j?.ok){
+            if (tipo==='pauta'){
+              const b = document.getElementById('btnPauta');
+              b.textContent='Pauta firmada'; b.disabled=true;
+              document.getElementById('pauta-estado').textContent = 'Pauta firmada el ' + j.fechaLocal;
+            } else {
+              const b = document.getElementById('btnPautaOrg');
+              b.textContent='Pauta Orgánica firmada'; b.disabled=true;
+              document.getElementById('pautaorg-estado').textContent = 'Pauta Orgánica firmada el ' + j.fechaLocal;
+            }
+          } else {
+            alert('No se pudo registrar la firma' + (j?.error?': '+j.error:''));
+          }
+        } catch(e){
+          alert('No se pudo conectar para registrar la firma.');
+        } finally {
+          document.getElementById('modalPauta').style.display = 'none';
+        }
+      };
+
+      btnCancel.onclick = ()=>{ document.getElementById('modalPauta').style.display = 'none'; };
+      document.getElementById('modalPauta').style.display = 'flex';
+    }
+
+    const bP = document.getElementById('btnPauta');
+    const bO = document.getElementById('btnPautaOrg');
+    if (bP) bP.onclick = () => precheckYabrir('pauta');
+    if (bO) bO.onclick = () => precheckYabrir('pautaorganica');
+
+    setTimeout(cargarEstado, 300);
+
+    window.renderPautaButtons = function(user){
+      try { if (user) window.USER = user; } catch(_) {}
+      showOrgIfNeeded();
+    };
+  })();
   </script>
 </body>
 </html>
