@@ -129,20 +129,14 @@
         }
 
         const result = await res.json();
+        const data = result.entregas || [];
 
-        if (result.tipo === "admin") {
-          window.location.href = "/admin/ingresos";
+        if (!data.length) {
+          tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
           return;
         }
 
-        const data = result.entregas || [];
-
-        window.USER = {
-          proveedor: result.proveedor || "",
-          cuit: (cui || "").replace(/[^0-9]/g, ""),
-          org: result.org || ""
-        };
-        renderPautaButtons(window.USER);
+        entregasOriginal = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
 
         document.getElementById("login").style.display = "none";
         const nombre = result.proveedor || "Proveedor";
@@ -151,75 +145,12 @@
         avisoDiv.style.display = "block";
         document.getElementById("avisoCuit").style.display = "none";
 
-        const infoCertDiv = document.getElementById("infoCert");
-        if (result.certificado && result.certificado.fecha) {
-          const fechaSerial = result.certificado.fecha;
-          const fechaCert = convertirFecha(fechaSerial);
-          const ibr = (result.certificado.ibr || "").trim();
-          const via = (result.certificado.via || "").trim();
-
-          const partesOrg = [];
-          if (ibr) partesOrg.push(ibr);
-          if (via) partesOrg.push(via);
-          const orgLabel = partesOrg.length ? ` (${partesOrg.join("-")})` : "";
-
-          let color = "gray";
-          let diffDias = null;
-          const dias = parseInt(fechaSerial);
-          if (!isNaN(dias)) {
-            const baseDate = new Date(1899, 11, 30);
-            const fechaVto = new Date(baseDate.getTime() + dias * 86400000);
-            const hoy = new Date();
-            hoy.setHours(0,0,0,0);
-            fechaVto.setHours(0,0,0,0);
-            diffDias = Math.round((fechaVto - hoy) / 86400000);
-
-            if (diffDias < 0) {
-              color = "red";
-            } else if (diffDias <= 60) {
-              color = "orange";
-            } else {
-              color = "green";
-            }
-          }
-
-          infoCertDiv.style.display = "block";
-          infoCertDiv.style.color = color;
-          if (diffDias !== null && diffDias < 0) {
-            infoCertDiv.textContent = `⚠ CERTIFICADO VENCIDO EL: ${fechaCert}${orgLabel}`;
-          } else {
-            infoCertDiv.textContent = `Certificado orgánico vigente hasta: ${fechaCert}${orgLabel}`;
-          }
-        } else if (infoCertDiv) {
-          infoCertDiv.style.display = "none";
-        }
-
-        try { if (result.proveedor) localStorage.setItem('provNombre', result.proveedor); } catch(_){}
-        mostrarBotonHistorico();
-
-        if (!data.length) {
-          tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
-          filtrosDiv.style.display = "block";
-
-          const filaFiltros = filtrosDiv.firstElementChild;
-          if (filaFiltros) filaFiltros.style.display = "none";
-
-          const bExcel = document.getElementById('btnExcel');
-          const bPDF   = document.getElementById('btnPDF');
-          if (bExcel) bExcel.style.display = 'none';
-          if (bPDF)   bPDF.style.display   = 'none';
-
-          return;
-        }
-
-        entregasOriginal = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
         mostrarFiltrosYTabla(entregasOriginal);
       } catch (err) {
         errorDiv.textContent = "❌ Error de red.";
         console.error(err);
       }
     }
-}
 
     function mostrarFiltrosYTabla(data) {
       const especies = [...new Set(data.map(e => e.Especie).filter(Boolean))];
