@@ -124,7 +124,15 @@ app.post("/login", (req, res) => {
     reqGS.end();
   }
 
-  // Filtrar entregas
+  // 👇 Usuario administrador: redirigir al panel de ingresos diarios
+  if (cuiLimpio === "692018") {
+    return res.json({
+      tipo: "admin",
+      proveedor: proveedor.nombre,
+    });
+  }
+
+  // Filtrar entregas para proveedores normales
   const entregas = proFru.filter(e => e.ProveedorT === proveedor.nombre);
   const totalKgs = entregas.reduce((s, e) => s + (parseFloat(e.KgsD) || 0), 0);
 
