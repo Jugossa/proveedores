@@ -6,115 +6,159 @@ const https = require("https");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Detección robusta del entorno Render
-const isRender = process.env.RENDER || process.env.RENDER_EXTERNAL_URL || process.env.PORT;
+// Detección de entorno Render
+const isRender =
+  process.env.RENDER ||
+  process.env.RENDER_EXTERNAL_URL ||
+  process.env.PORT;
+
+// ⚠ Ruta local corregida → I:\Pagina\proveedores\data
 const baseDir = isRender
   ? path.join(__dirname, "data")
-  : path.join("C:", "Temp", "proveedores", "data");
+  : path.join("I:", "Pagina", "proveedores", "data");
 
+// Datos en memoria
 let proveedores = [];
 let proFru = [];
+let ingresosDiarios = [];
+let proCert = [];
 let lastUpdate = { fecha: "Desconocida" };
+
+// Webhook de Google Sheets
 let webhookURL = "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
-// Cargar archivos de manera segura
-try {
-  proveedores = JSON.parse(fs.readFileSync(path.join(baseDir, "proveedores.json"), "utf8"));
-  console.log(`✔ Cargado proveedores.json (${proveedores.length} registros)`);
-} catch (err) {
-  console.error("❌ Error al leer proveedores.json:", err.message);
+// ---- Carga genérica de JSON ----
+function cargarJSON(nombre, ref) {
+  const full = path.join(baseDir, nombre);
+  try {
+    const raw = fs.readFileSync(full, "utf8");
+    ref.data = JSON.parse(raw);
+    console.log(`✔ Cargado ${nombre} (${Array.isArray(ref.data) ? ref.data.length : "objeto"} registros)`);
+  } catch (err) {
+    console.error(`❌ Error al leer ${nombre}:`, err.message);
+    ref.data = Array.isArray(ref.data) ? [] : {};
+  }
 }
 
-try {
-  proFru = JSON.parse(fs.readFileSync(path.join(baseDir, "profru.json"), "utf8"));
-  console.log(`✔ Cargado profru.json (${proFru.length} registros)`);
-} catch (err) {
-  console.error("❌ Error al leer profru.json:", err.message);
-}
+const refProveedores = { data: proveedores };
+const refProFru = { data: proFru };
+const refIngresos = { data: ingresosDiarios };
+const refProCert = { data: proCert };
+const refLastUpdate = { data: lastUpdate };
 
-try {
-  lastUpdate = JSON.parse(fs.readFileSync(path.join(baseDir, "lastUpdate.json"), "utf8"));
-  console.log(`✔ Cargado lastUpdate.json: ${lastUpdate.fecha}`);
-} catch (err) {
-  console.error("❌ Error al leer lastUpdate.json:", err.message);
-}
+// Cargar JSON
+cargarJSON("proveedores.json", refProveedores);
+cargarJSON("profru.json", refProFru);
+cargarJSON("ingresosDiarios.json", refIngresos);
+cargarJSON("ProCert.json", refProCert);
+cargarJSON("lastUpdate.json", refLastUpdate);
+
+// reasignar variables
+proveedores = refProveedores.data;
+proFru = refProFru.data;
+ingresosDiarios = refIngresos.data;
+proCert = refProCert.data;
+lastUpdate = refLastUpdate.data || lastUpdate;
 
 console.log("✔ Webhook cargado correctamente");
 
-// Middleware
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// -------------------------------
+//     RUTAS PUBLICAS
+// -------------------------------
 
 // Página principal
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Página para celular
+// Página móvil
 app.get("/index-celu.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index-celu.html"));
 });
 
-// Endpoint de login
+// LOGIN proveedores
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
-  const cuiLimpio = cui.replace(/[^0-9]/g, "");
+  const cuiLimpio = (cui || "").replace(/[^0-9]/g, "");
 
   const proveedor = proveedores.find(p =>
-    p.cui.replace(/[^0-9]/g, "") === cuiLimpio &&
-    p.clave.trim() === password.trim()
+    (p.cui || "").replace(/[^0-9]/g, "") === cuiLimpio &&
+    String(p.clave || "").trim() === String(password || "").trim()
   );
 
   if (!proveedor) {
     return res.status(401).send("CUIT o clave incorrectos");
   }
 
-  // Enviar log de acceso a Google Sheets
+  // Enviar log a Google Sheets
   if (webhookURL) {
     const postData = JSON.stringify({
       nombre: proveedor.nombre,
-      cuit: cuiLimpio
+      cuit: cuiLimpio,
     });
 
-    console.log("🔄 Enviando al webhook:", postData);
-    console.log("📤 Webhook URL:", webhookURL);
-
-    const reqGS = https.request(webhookURL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Content-Length": Buffer.byteLength(postData),
+    const reqGS = https.request(
+      webhookURL,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(postData),
+        },
       },
-    }, resGS => {
-      console.log(`🟢 Google respondió: ${resGS.statusCode}`);
-      resGS.on("data", chunk => {
-        console.log("🟢 Respuesta completa:", chunk.toString());
-      });
-    });
+      (resGS) => {
+        console.log(`🟢 Google respondió: ${resGS.statusCode}`);
+        resGS.on("data", (chunk) => console.log("🟢 Respuesta:", chunk.toString()));
+      }
+    );
 
     reqGS.on("error", (err) => {
-      console.error("❌ Error al conectar con Google Sheets:", err.message);
+      console.error("❌ Error al enviar webhook:", err.message);
     });
 
     reqGS.write(postData);
     reqGS.end();
-  } else {
-    console.warn("⚠ Webhook no disponible, no se registró el acceso.");
   }
 
+  // Filtrar entregas
   const entregas = proFru.filter(e => e.ProveedorT === proveedor.nombre);
-  const totalKgs = entregas.reduce((suma, e) => suma + (parseFloat(e.KgsD) || 0), 0);
+  const totalKgs = entregas.reduce((s, e) => s + (parseFloat(e.KgsD) || 0), 0);
 
   res.json({
     proveedor: proveedor.nombre,
     entregas,
     resumen: { totalKgs },
-    ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida"
+    ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
   });
 });
 
-// Iniciar servidor
+// -------------------------------
+//     RUTAS ADMINISTRADOR
+// -------------------------------
+
+// Página admin
+app.get("/admin/ingresos", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "admin", "ingresos.html"));
+});
+
+// API ingresos diarios
+app.get("/api/admin/ingresos-diarios", (req, res) => {
+  res.json(ingresosDiarios || []);
+});
+
+// API ProCert (orgánicos)
+app.get("/api/admin/procert", (req, res) => {
+  res.json(proCert || []);
+});
+
+// -------------------------------
+//      INICIO DEL SERVIDOR
+// -------------------------------
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor funcionando en http://localhost:${PORT}`);
 });

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Indicador — Admin</title>
+  <style>
+    :root { --pad: 14px; --radius: 16px; --gap: 12px; --shadow: 0 2px 12px rgba(0,0,0,.08); }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans'; margin: 0; background:#f6f7f9; color:#111; }
+    header { position: sticky; top:0; background:#fff; padding: var(--pad); display:flex; align-items:center; justify-content:space-between; gap:10px; box-shadow: var(--shadow); z-index: 2; }
+    .title { font-weight: 900; font-size: 18px; letter-spacing: -.2px; }
+    .sub { font-size: 12px; color:#666; }
+    main { padding: var(--pad); display: grid; gap: var(--gap); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+    @media (max-width: 540px){ .row { grid-template-columns: 1fr; } }
+    .card { background:#fff; border-radius: var(--radius); padding: var(--pad); box-shadow: var(--shadow);} 
+    .kpi { display:flex; align-items: baseline; gap:10px; }
+    .kpi .val { font-weight: 900; font-size: 36px; letter-spacing: -0.5px; }
+    .kpi .unit { color:#666; font-size: 12px; }
+    .kpi .label { color:#666; font-size: 12px; margin-top: 2px; }
+    .muted { color:#666; font-size: 12px; }
+    .badge { display:inline-flex; align-items:center; gap:6px; font-size: 12px; font-weight:700; padding: 6px 10px; border-radius: 999px; }
+    .pera { background: #eefaf0; color:#0a7a30; }
+    .manza { background: #fff0f0; color:#b00020; }
+    .total { background: #eef3ff; color:#1b49a0; }
+    .barblock { display:flex; flex-direction:column; gap:12px; }
+    .barrow { display:flex; align-items:center; gap:10px; }
+    .barlabel { width:82px; font-weight:700; }
+    .barwrap { flex:1; height:26px; background:#f1f1f4; border-radius:999px; overflow:hidden; border:1px solid #e8e8ee; }
+    .bar { height:100%; border-radius:999px; transition: width .4s ease; }
+    .bar.pera { background: #39d353; }
+    .bar.manza { background: #ff6b6b; }
+    .rightval { width:124px; text-align:right; font-variant-numeric: tabular-nums; font-weight:800; }
+    .btn { appearance:none; border:1px solid #ddd; background:#fff; border-radius: 999px; padding:9px 14px; font-weight:700; box-shadow: var(--shadow); cursor:pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="title">Indicador — Admin</div>
+      <div class="sub">Desde hoy 07:00 (Pera / Manza) • solo administrador</div>
+    </div>
+    <div class="sub" id="lastupdate">—</div>
+  </header>
+
+  <main>
+    <section class="row">
+      <div class="card">
+        <div class="badge total">Total</div>
+        <div class="kpi" style="margin-top:6px;"><span class="val" id="kpi_total">0</span><span class="unit">kg</span></div>
+        <div class="muted" id="rango">—</div>
+      </div>
+      <div class="card">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div>
+            <div class="badge pera">🍐 Pera</div>
+            <div class="kpi" style="margin-top:6px;"><span class="val" id="kpi_pera">0</span><span class="unit">kg</span></div>
+          </div>
+          <div>
+            <div class="badge manza">🍎 Manza</div>
+            <div class="kpi" style="margin-top:6px;"><span class="val" id="kpi_manza">0</span><span class="unit">kg</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div style="font-weight:800; margin-bottom:10px;">Comparación visual</div>
+      <div class="barblock">
+        <div class="barrow">
+          <div class="barlabel">🍐 Pera</div>
+          <div class="barwrap"><div id="bar_pera" class="bar pera" style="width:0%"></div></div>
+          <div id="val_pera" class="rightval">0 kg</div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel">🍎 Manza</div>
+          <div class="barwrap"><div id="bar_manza" class="bar manza" style="width:0%"></div></div>
+          <div id="val_manza" class="rightval">0 kg</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div style="display:flex; gap:8px; align-items:center; justify-content:space-between;">
+        <div style="font-weight:800;">Acciones</div>
+        <button class="btn" id="btn_refresh">Actualizar</button>
+      </div>
+      <div class="muted" style="margin-top:8px;">Se actualiza automáticamente cada hora.</div>
+    </section>
+  </main>
+
+  <script>
+    const SOURCES = [
+      '/api/admin/indicadores',      // rápido (lee I:\ si está disponible en el server)
+      '/data/indicador.json'         // fallback (si lo versionás y servís estático)
+    ];
+    const REFRESH_MS = 60 * 60 * 1000; // 1 hora
+    const tz = 'America/Argentina/Buenos_Aires';
+
+    function fmtNum(n){ return Number(n||0).toLocaleString('es-AR'); }
+    function fmtISOtoLocal(iso){
+      if(!iso) return '—';
+      const d = new Date(iso);
+      if(isNaN(d)) return String(iso);
+      return new Intl.DateTimeFormat('es-AR', { dateStyle:'short', timeStyle:'short', hour12:false, timeZone: tz }).format(d);
+    }
+
+    async function fetchFirst(){
+      for(const u of SOURCES){
+        try{
+          const r = await fetch(u, { cache: 'no-store' });
+          if(r.ok){ const j = await r.json(); if(j) return j; }
+        }catch(e){}
+      }
+      throw new Error('No se pudo leer indicador.json');
+    }
+
+    function render(data){
+      const pera = Number(data.pera||0), manza = Number(data.manza||0), total = Number(data.total||pera+manza);
+      document.getElementById('kpi_total').textContent = fmtNum(total);
+      document.getElementById('kpi_pera').textContent = fmtNum(pera);
+      document.getElementById('kpi_manza').textContent = fmtNum(manza);
+
+      const denom = total > 0 ? total : 1;
+      const pP = Math.round((pera/denom)*100);
+      const pM = Math.round((manza/denom)*100);
+      document.getElementById('bar_pera').style.width = pP + '%';
+      document.getElementById('bar_manza').style.width = pM + '%';
+      document.getElementById('val_pera').textContent = `${fmtNum(pera)} kg (${pP}%)`;
+      document.getElementById('val_manza').textContent = `${fmtNum(manza)} kg (${pM}%)`;
+
+      const desde = fmtISOtoLocal(data.desde);
+      const hasta = fmtISOtoLocal(data.hasta);
+      document.getElementById('rango').textContent = `Rango: ${desde} → ${hasta}`;
+      document.getElementById('lastupdate').textContent = `Actualizado: ${fmtISOtoLocal(data.hasta)}`;
+    }
+
+    async function cargar(){
+      try{ const j = await fetchFirst(); render(j); }
+      catch(e){ alert(e.message); }
+    }
+
+    document.getElementById('btn_refresh').addEventListener('click', cargar);
+
+    cargar();
+    setInterval(cargar, REFRESH_MS);
+  </script>
+</body>
+</html>

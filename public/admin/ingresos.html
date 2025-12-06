@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ingresos diarios de fruta</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { margin-bottom: 10px; }
+    .filtros { margin-bottom: 10px; }
+    .filtros label { margin-right: 5px; }
+    table { border-collapse: collapse; width: 100%; max-width: 1400px; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 4px 6px; font-size: 13px; }
+    th { background:#f0f0f0; position: sticky; top: 0; }
+    td.num { text-align: right; }
+    .totales { margin-top: 5px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Ingresos diarios de fruta</h1>
+
+  <div class="filtros">
+    <label for="desde">Desde:</label>
+    <input type="date" id="desde">
+    <label for="hasta">Hasta:</label>
+    <input type="date" id="hasta">
+
+    <label for="agrupacion">Agrupar por:</label>
+    <select id="agrupacion">
+      <option value="ninguno">Sin agrupar (detalle)</option>
+      <option value="semana">Semana</option>
+      <option value="proveedor">Proveedor</option>
+      <option value="especie">Fruta (Especie)</option>
+    </select>
+
+    <button type="button" id="btn-aplicar">Aplicar</button>
+    <button type="button" id="btn-limpiar">Limpiar filtros</button>
+    <button type="button" id="btn-procert">Ver certificados orgánicos</button>
+  </div>
+
+  <div class="totales">
+    Total Kgs: <span id="total-kgs">0</span> |
+    Total Bins: <span id="total-bins">0</span> |
+    Registros: <span id="total-reg">0</span>
+  </div>
+
+  <table id="tabla">
+    <thead id="thead-main"></thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    let ingresos = [];
+    let ingresosFiltrados = [];
+
+    function formatKgs(n) {
+      return n.toLocaleString("es-AR", { maximumFractionDigits: 0 });
+    }
+    function formatBins(n) {
+      return n.toLocaleString("es-AR");
+    }
+
+    function excelSerialToDate(serial) {
+      const utcDays = serial - 25569;
+      const utcValue = utcDays * 86400;
+      return new Date(utcValue * 1000);
+    }
+
+    function fechaDDMMYYYYFromSerial(serial) {
+      if (!serial) return "";
+      const d = excelSerialToDate(Number(serial));
+      const dia = String(d.getDate()).padStart(2, "0");
+      const mes = String(d.getMonth() + 1).padStart(2, "0");
+      const anio = d.getFullYear();
+      return dia + "/" + mes + "/" + anio;
+    }
+
+    // NUEVO: días desde hoy hasta un serial de Excel (positivo = falta, negativo = vencido)
+    function diasHastaHoyDesdeSerial(serial) {
+      if (!serial) return null;
+      const d = excelSerialToDate(Number(serial));
+      if (!(d instanceof Date) || isNaN(d.getTime())) return null;
+      const hoy = new Date();
+      hoy.setHours(0,0,0,0);
+      const fecha = new Date(d.getTime());
+      fecha.setHours(0,0,0,0);
+      const diffMs = fecha - hoy;
+      return Math.round(diffMs / 86400000);
+    }
+
+    function semanaISO(dateObj) {
+      const d = new Date(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()));
+      const dayNum = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      const weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+      return d.getUTCFullYear() + "-W" + String(weekNo).padStart(2, "0");
+    }
+
+    function toInputDateString(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const d = String(dateObj.getDate()).padStart(2, "0");
+      return y + "-" + m + "-" + d;
+    }
+
+    function inputDateToExcelSerial(str) {
+      if (!str) return null;
+      const parts = str.split("-");
+      const y = Number(parts[0]);
+      const m = Number(parts[1]);
+      const d = Number(parts[2]);
+      const dateUTC = new Date(Date.UTC(y, m - 1, d));
+      return dateUTC.getTime() / 86400000 + 25569;
+    }
+
+    function cargarDatos() {
+      fetch("/api/admin/ingresos-diarios")
+        .then(r => {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.json();
+        })
+        .then(data => {
+          ingresos = Array.isArray(data) ? data : (data.data || []);
+          ingresosFiltrados = ingresos.slice();
+
+          if (ingresos.length > 0) {
+            let maxSerial = null;
+            ingresos.forEach(row => {
+              const s = Number(row.Fecha);
+              if (!isNaN(s)) {
+                if (maxSerial === null || s > maxSerial) maxSerial = s;
+              }
+            });
+            if (maxSerial !== null) {
+              const lastDate = excelSerialToDate(maxSerial);
+              const desdeDate = new Date(lastDate);
+              desdeDate.setDate(desdeDate.getDate() - 6);
+              document.getElementById("desde").value = toInputDateString(desdeDate);
+              document.getElementById("hasta").value = toInputDateString(lastDate);
+              aplicarFiltros();
+              return;
+            }
+          }
+          renderTabla();
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error cargando ingresos diarios");
+        });
+    }
+
+    function aplicarFiltros() {
+      const desdeStr = document.getElementById("desde").value;
+      const hastaStr = document.getElementById("hasta").value;
+      const agr = document.getElementById("agrupacion").value;
+
+      const desdeSerial = desdeStr ? inputDateToExcelSerial(desdeStr) : null;
+      const hastaSerial = hastaStr ? inputDateToExcelSerial(hastaStr) + 1 : null;
+
+      let tmp = ingresos.filter(row => {
+        const serial = Number(row.Fecha);
+        if (!serial) return false;
+        if (desdeSerial !== null && serial < desdeSerial) return false;
+        if (hastaSerial !== null && serial >= hastaSerial) return false;
+        return true;
+      });
+
+      if (agr === "ninguno") {
+        ingresosFiltrados = tmp;
+      } else {
+        const grupos = {};
+        tmp.forEach(row => {
+          const serial = Number(row.Fecha);
+          const d = excelSerialToDate(serial);
+          const semana = semanaISO(d);
+          const proveedor = row.ProveedorT || "";
+          const especie = row.Especie || "";
+
+          let clave = "";
+          if (agr === "semana") clave = semana;
+          else if (agr === "proveedor") clave = proveedor || "(sin proveedor)";
+          else if (agr === "especie") clave = especie || "(sin especie)";
+
+          if (!grupos[clave]) {
+            grupos[clave] = {
+              Semana: semana,
+              ProveedorT: proveedor,
+              Especie: especie,
+              CantBins: 0,
+              KgsD: 0
+            };
+            if (agr === "proveedor") {
+              grupos[clave].KgsManza = 0;
+              grupos[clave].KgsPera = 0;
+            }
+          }
+          const kgsVal = Number(row.KgsD || 0);
+          grupos[clave].CantBins += Number(row.CantBins || 0);
+          grupos[clave].KgsD += kgsVal;
+          if (agr === "proveedor") {
+            const espLower = (especie || "").toLowerCase();
+            if (espLower.includes("manz")) {
+              grupos[clave].KgsManza += kgsVal;
+            } else if (espLower.includes("per")) {
+              grupos[clave].KgsPera += kgsVal;
+            }
+          }
+        });
+        ingresosFiltrados = Object.values(grupos);
+
+        // Ordenar por kilos desc cuando agrupamos por proveedor
+        if (agr === "proveedor") {
+          ingresosFiltrados.sort((a, b) => b.KgsD - a.KgsD);
+        }
+      }
+
+      renderTabla();
+    }
+
+    function limpiarFiltros() {
+      document.getElementById("desde").value = "";
+      document.getElementById("hasta").value = "";
+      document.getElementById("agrupacion").value = "ninguno";
+      ingresosFiltrados = ingresos.slice();
+      renderTabla();
+    }
+
+    function renderTabla() {
+      const agr = document.getElementById("agrupacion").value;
+      const thead = document.getElementById("thead-main");
+      const tbody = document.querySelector("#tabla tbody");
+      thead.innerHTML = "";
+      tbody.innerHTML = "";
+
+      let columnas;
+      if (agr === "ninguno") {
+        columnas = [
+          { key: "FechaStr", label: "Fecha" },
+          { key: "SemanaStr", label: "Semana" },
+          { key: "ProveedorT", label: "Proveedor" },
+          { key: "Origen", label: "Origen" },
+          { key: "Especie", label: "Especie" },
+          { key: "NomVariedad", label: "Variedad" },
+          { key: "Nro Jugos", label: "Nro Jugos" },
+          { key: "Remito", label: "Remito" },
+          { key: "CantBins", label: "Bins", num: true },
+          { key: "KgsD", label: "KgsD", num: true }
+        ];
+      } else if (agr === "semana") {
+        columnas = [
+          { key: "SemanaStr", label: "Semana" },
+          { key: "CantBins", label: "Bins", num: true },
+          { key: "KgsD", label: "KgsD", num: true }
+        ];
+      } else if (agr === "proveedor") {
+        columnas = [
+          { key: "SemanaStr", label: "Semana" },
+          { key: "ProveedorT", label: "Proveedor" },
+          { key: "CantBins", label: "Bins", num: true },
+          { key: "KgsManza", label: "Kgs Manzana", num: true },
+          { key: "KgsPera", label: "Kgs Pera", num: true },
+          { key: "KgsD", label: "Total KgsD", num: true }
+        ];
+      } else if (agr === "especie") {
+        columnas = [
+          { key: "SemanaStr", label: "Semana" },
+          { key: "Especie", label: "Especie" },
+          { key: "CantBins", label: "Bins", num: true },
+          { key: "KgsD", label: "KgsD", num: true }
+        ];
+      }
+
+      const trHead = document.createElement("tr");
+      columnas.forEach(col => {
+        const th = document.createElement("th");
+        th.textContent = col.label;
+        trHead.appendChild(th);
+      });
+      thead.appendChild(trHead);
+
+      let totalKgs = 0;
+      let totalBins = 0;
+
+      ingresosFiltrados.forEach(row => {
+        const tr = document.createElement("tr");
+
+        let fechaStr = "";
+        let semanaStr = "";
+
+        if (row.Fecha) {
+          const serial = Number(row.Fecha);
+          const d = excelSerialToDate(serial);
+          fechaStr = fechaDDMMYYYYFromSerial(serial);
+          semanaStr = semanaISO(d);
+        } else if (row.Semana) {
+          semanaStr = row.Semana;
+        }
+
+        const bins = Number(row.CantBins || 0);
+        const kgs = Number(row.KgsD || 0);
+        totalBins += bins;
+        totalKgs += kgs;
+
+        columnas.forEach(col => {
+          let val = "";
+          if (col.key === "FechaStr") {
+            val = fechaStr;
+          } else if (col.key === "SemanaStr") {
+            val = semanaStr;
+          } else {
+            val = row[col.key] || "";
+          }
+
+          const td = document.createElement("td");
+          if (col.num) {
+            td.className = "num";
+            if (col.key === "CantBins") {
+              td.textContent = bins ? formatBins(bins) : "";
+            } else if (col.key === "KgsD") {
+              td.textContent = kgs ? formatKgs(kgs) : "";
+            } else {
+              const numVal = Number(val || 0);
+              td.textContent = numVal ? formatKgs(numVal) : "";
+            }
+          } else {
+            td.textContent = val;
+          }
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById("total-kgs").textContent = formatKgs(totalKgs);
+      document.getElementById("total-bins").textContent = formatBins(totalBins);
+      document.getElementById("total-reg").textContent = ingresosFiltrados.length.toLocaleString("es-AR");
+    }
+
+    document.getElementById("btn-aplicar").addEventListener("click", aplicarFiltros);
+    document.getElementById("btn-limpiar").addEventListener("click", limpiarFiltros);
+
+    cargarDatos();
+
+    // ProCert: listado de certificados orgánicos para el administrador
+    const btnProCert = document.getElementById("btn-procert");
+    if (btnProCert) {
+      btnProCert.addEventListener("click", cargarProCert);
+    }
+
+    function cargarProCert() {
+      fetch("/api/admin/procert")
+        .then(r => {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.json();
+        })
+        .then(lista => {
+          const cont = document.getElementById("procert-contenedor");
+          if (!cont) return;
+          if (!Array.isArray(lista) || !lista.length) {
+            cont.innerHTML = "<p>No hay certificados orgánicos cargados.</p>";
+            return;
+          }
+          let html = "<h2>Certificados orgánicos (ProCert)</h2>";
+          html += "<table><thead><tr><th>Nro</th><th>Proveedor</th><th>Vencimiento</th><th>Certificado</th></tr></thead><tbody>";
+          lista.forEach(c => {
+            const fecha = c.ApcFecha ? fechaDDMMYYYYFromSerial(c.ApcFecha) : "";
+            const dias = c.ApcFecha ? diasHastaHoyDesdeSerial(c.ApcFecha) : null;
+
+            const partes = [];
+            if (c.Ibr) partes.push(c.Ibr);
+            if (c.Via) partes.push(c.Via);
+            const etiqueta = partes.length ? `(${partes.join("-")})` : "";
+
+            let color = "gray";
+            if (dias !== null) {
+              if (dias < 0)      color = "red";     // vencido
+              else if (dias <= 60) color = "orange"; // menos de 60 días
+              else               color = "green";   // más de 60 días
+            }
+
+            html += `<tr><td>${c.Nro}</td><td>${c.Nom}</td><td>${fecha}</td><td style="color:${color};">${etiqueta}</td></tr>`;
+          });
+          html += "</tbody></table>";
+          cont.innerHTML = html;
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error cargando ProCert");
+        });
+    }
+  </script>
+  <div id="procert-contenedor" style="margin-top:20px;"></div>
+
+</body>
+</html>
