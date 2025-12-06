@@ -129,6 +129,13 @@
         }
 
         const result = await res.json();
+
+        // 👇 Si el backend indica que es administrador, lo mandamos al panel de ingresos
+        if (result.tipo === "admin") {
+          window.location.href = "/admin/ingresos";
+          return;
+        }
+
         const data = result.entregas || [];
 
         if (!data.length) {
