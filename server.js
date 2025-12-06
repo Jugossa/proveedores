@@ -62,7 +62,12 @@ lastUpdate = refLastUpdate.data || lastUpdate;
 
 console.log("✔ Webhook cargado correctamente");
 
-app.use(express.static("public"));
+// Archivos estáticos
+app.use(express.static(path.join(__dirname, "public")));
+
+// 👉 Servir la carpeta /data (PDFs de pauta, JSON, etc.)
+app.use("/data", express.static(path.join(__dirname, "data")));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -124,15 +129,7 @@ app.post("/login", (req, res) => {
     reqGS.end();
   }
 
-  // Usuario administrador: redirigir al panel de ingresos diarios
-  if (cuiLimpio === "692018") {
-    return res.json({
-      tipo: "admin",
-      proveedor: proveedor.nombre,
-    });
-  }
-
-  // Filtrar entregas para proveedores normales
+  // Filtrar entregas
   const entregas = proFru.filter(e => e.ProveedorT === proveedor.nombre);
   const totalKgs = entregas.reduce((s, e) => s + (parseFloat(e.KgsD) || 0), 0);
 
