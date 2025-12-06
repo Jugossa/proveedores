@@ -124,7 +124,7 @@ app.post("/login", (req, res) => {
     reqGS.end();
   }
 
-  // 👇 Usuario administrador: redirigir al panel de ingresos diarios
+  // Usuario administrador: redirigir al panel de ingresos diarios
   if (cuiLimpio === "692018") {
     return res.json({
       tipo: "admin",
