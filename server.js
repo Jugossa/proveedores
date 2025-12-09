@@ -24,9 +24,19 @@ let ingresosDiarios = [];
 let proCert = [];
 let lastUpdate = { fecha: "Desconocida" };
 
-// Webhook de Google Sheets (la misma URL que tenías cuando andaba)
-let webhookURL =
+/**
+ * WEBHOOKS
+ *  - webhookAccesosURL: hoja donde registrás los ACCESOS (esto ya venía funcionando).
+ *  - webhookPautaURL:  hoja "Log de accesos / AceptacionesPauta" (la nueva).
+ */
+
+// ✅ Webhook ACCESOS (el que ya tenías andando)
+const webhookAccesosURL =
   "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
+
+// ✅ Webhook PAUTA (el nuevo que me pasaste)
+const webhookPautaURL =
+  "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
 
 // ---- Carga genérica de JSON ----
 function cargarJSON(nombre, ref) {
@@ -65,7 +75,7 @@ ingresosDiarios = refIngresos.data;
 proCert = refProCert.data;
 lastUpdate = refLastUpdate.data || lastUpdate;
 
-console.log("✔ Webhook cargado correctamente");
+console.log("✔ Datos cargados correctamente");
 
 app.use(express.static("public"));
 app.use(express.json());
@@ -75,7 +85,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/data", express.static(baseDir));
 
 // -------------------------------
-//     RUTAS PUBLICAS
+//     RUTAS PÚBLICAS
 // -------------------------------
 
 // Página principal
@@ -103,8 +113,8 @@ app.post("/login", (req, res) => {
     return res.status(401).send("CUIT o clave incorrectos");
   }
 
-  // Enviar log a Google Sheets (ACCESOS)
-  if (webhookURL) {
+  // Enviar log de ACCESO a Google Sheets (hoja de accesos, la de siempre)
+  if (webhookAccesosURL) {
     const postData = JSON.stringify({
       tipoRegistro: "acceso",
       nombre: proveedor.nombre,
@@ -112,7 +122,7 @@ app.post("/login", (req, res) => {
     });
 
     const reqGS = https.request(
-      webhookURL,
+      webhookAccesosURL,
       {
         method: "POST",
         headers: {
@@ -121,15 +131,13 @@ app.post("/login", (req, res) => {
         },
       },
       (resGS) => {
-        console.log(`🟢 Google respondió: ${resGS.statusCode}`);
-        resGS.on("data", (chunk) =>
-          console.log("🟢 Respuesta:", chunk.toString())
-        );
+        console.log(`🟢 ACCESO -> Google respondió: ${resGS.statusCode}`);
+        resGS.on("data", () => {});
       }
     );
 
     reqGS.on("error", (err) => {
-      console.error("❌ Error al enviar webhook:", err.message);
+      console.error("❌ Error al enviar webhook de ACCESO:", err.message);
     });
 
     reqGS.write(postData);
@@ -161,15 +169,17 @@ app.post("/login", (req, res) => {
 });
 
 // -------------------------------
-//     RUTAS P AUTAS
+//     RUTAS PAUTAS
 // -------------------------------
 
-// Estado de pauta (por ahora siempre permite firmar)
+// Estado de pauta (por ahora solo chequea en la hoja, si hace falta)
 app.get("/api/pauta/estado", (req, res) => {
   const cuit = (req.query.cuit || "").replace(/[^0-9]/g, "");
-  if (!cuit) return res.json({});
-  // Podemos expandir esto más adelante si guardamos estado en la hoja.
-  return res.json({});
+  if (!cuit) return res.json({ ok: false, error: "cuit_requerido" });
+
+  // De momento devolvemos "desconocido" para dejar siempre el botón activo.
+  // Más adelante se puede consultar la hoja "AceptacionesPauta".
+  return res.json({ ok: true, pauta: { firmado: false } });
 });
 
 // Registrar firma de pauta
@@ -177,14 +187,13 @@ app.post("/api/pauta/firmar", (req, res) => {
   const { tipo, acepta, responsable, cargo, proveedor, cuit } = req.body;
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
 
-  // Validación dura para que coincida con Apps Script
   if (!acepta || !proveedor || !cuitLimpio || !responsable || !cargo) {
     return res
       .status(400)
       .json({ ok: false, error: "datos_incompletos" });
   }
 
-  if (!webhookURL) {
+  if (!webhookPautaURL) {
     return res
       .status(500)
       .json({ ok: false, error: "webhook_no_configurado" });
@@ -201,18 +210,25 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
-  // 👇 Formato que espera tu Apps Script (doPost)
-  const postData = JSON.stringify({
-    accion: "aceptacion_pauta",
-    modo: "registrar",
+  const payload = {
+    // Estos campos son los que usa el Apps Script
     proveedor,
     cuit: cuitLimpio,
     responsable,
     cargo,
-  });
+    // Campos extra por si luego los querés usar
+    accion: "aceptacion_pauta",
+    modo: "registrar",
+    tipoPauta: tipo || "pauta",
+    fechaLocal,
+  };
+
+  const postData = JSON.stringify(payload);
+
+  console.log("➡ Enviando PAUTA a Apps Script:", payload);
 
   const reqGS = https.request(
-    webhookURL,
+    webhookPautaURL,
     {
       method: "POST",
       headers: {
@@ -221,20 +237,30 @@ app.post("/api/pauta/firmar", (req, res) => {
       },
     },
     (resGS) => {
-      console.log(`🟢 Google respondió (pauta): ${resGS.statusCode}`);
-      resGS.on("data", () => {});
+      let body = "";
+      resGS.on("data", (chunk) => (body += chunk.toString()));
       resGS.on("end", () => {
-        // Aunque Apps Script devuelva error, desde la web respondemos OK
+        console.log("⬅ Respuesta Apps Script PAUTA:", resGS.statusCode, body);
+        try {
+          const json = JSON.parse(body);
+          // Si el script nos dice ok:true, devolvemos eso mismo al front
+          if (json && typeof json === "object") {
+            return res.json(json);
+          }
+        } catch (e) {
+          console.warn("⚠ No se pudo parsear respuesta de Apps Script:", e.message);
+        }
+        // Fallback: si llegó 200 pero sin JSON válido, al menos marcamos ok
         return res.json({ ok: true, fechaLocal });
       });
     }
   );
 
   reqGS.on("error", (err) => {
-    console.error("❌ Error al enviar pauta:", err.message);
+    console.error("❌ Error al enviar PAUTA:", err.message);
     return res
       .status(500)
-      .json({ ok: false, error: "error_webhook" });
+      .json({ ok: false, error: "error_webhook", detail: err.message });
   });
 
   reqGS.write(postData);
