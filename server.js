@@ -30,7 +30,7 @@ if (fs.existsSync(lastUpdatePath)) {
   lastUpdate = JSON.parse(fs.readFileSync(lastUpdatePath, "utf8"));
 }
 
-// Webhook para accesos
+// Webhook para accesos / pautas
 let webhookURL = "";
 try {
   const webhookFile = path.join(baseDir, "webho0k.txt");
@@ -41,6 +41,12 @@ try {
   console.error("Error leyendo webhook:", e);
 }
 
+// Si no se pudo leer desde archivo, usar la URL fija del Apps Script
+if (!webhookURL) {
+  webhookURL =
+    "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
+}
+
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -48,7 +54,7 @@ app.use(express.urlencoded({ extended: true }));
 // SERVIR /data (JSON)
 app.use("/data", express.static(baseDir));
 
-// SERVIR /data/pauta (PDFs) ← AGREGADO
+// SERVIR /data/pauta (PDFs)
 app.use("/data/pauta", express.static(path.join(baseDir, "pauta")));
 
 // ---------------- LOGIN -----------------
