@@ -36,7 +36,7 @@ const webhookAccesosURL =
 
 // ✅ Webhook PAUTA (el nuevo que me pasaste)
 const webhookPautaURL =
-  "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
+  "https://script.googleusercontent.com/macros/echo?user_content_key=XXXXXXXX&lib=YYYYYYYY";
 
 // ---- Carga genérica de JSON ----
 function cargarJSON(nombre, ref) {
