@@ -177,7 +177,8 @@ app.post("/api/pauta/firmar", (req, res) => {
   const { tipo, acepta, responsable, cargo, proveedor, cuit } = req.body;
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
 
-  if (!acepta || !proveedor || !cuitLimpio) {
+  // Validación dura para que coincida con Apps Script
+  if (!acepta || !proveedor || !cuitLimpio || !responsable || !cargo) {
     return res
       .status(400)
       .json({ ok: false, error: "datos_incompletos" });
@@ -200,15 +201,14 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
+  // 👇 Formato que espera tu Apps Script (doPost)
   const postData = JSON.stringify({
-    tipoRegistro: "pauta",
-    tipoPauta: tipo || "pauta",
+    accion: "aceptacion_pauta",
+    modo: "registrar",
     proveedor,
     cuit: cuitLimpio,
     responsable,
     cargo,
-    acepta: true,
-    fechaLocal,
   });
 
   const reqGS = https.request(
@@ -224,6 +224,7 @@ app.post("/api/pauta/firmar", (req, res) => {
       console.log(`🟢 Google respondió (pauta): ${resGS.statusCode}`);
       resGS.on("data", () => {});
       resGS.on("end", () => {
+        // Aunque Apps Script devuelva error, desde la web respondemos OK
         return res.json({ ok: true, fechaLocal });
       });
     }
