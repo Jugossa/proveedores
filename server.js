@@ -62,12 +62,7 @@ lastUpdate = refLastUpdate.data || lastUpdate;
 
 console.log("✔ Webhook cargado correctamente");
 
-// Archivos estáticos
-app.use(express.static(path.join(__dirname, "public")));
-
-// 👉 Servir la carpeta /data (PDFs de pauta, JSON, etc.)
-app.use("/data", express.static(path.join(__dirname, "data")));
-
+app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -127,6 +122,15 @@ app.post("/login", (req, res) => {
 
     reqGS.write(postData);
     reqGS.end();
+  }
+
+  // Si es usuario administrador (CUIT 692018), ir al panel de ingresos
+  if (cuiLimpio === "692018") {
+    return res.json({
+      tipo: "admin",
+      proveedor: proveedor.nombre || "ADMINISTRADOR",
+      ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
+    });
   }
 
   // Filtrar entregas
