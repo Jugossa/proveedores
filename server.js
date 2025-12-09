@@ -47,6 +47,39 @@ if (!webhookURL) {
     "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
 }
 
+// Función segura para enviar datos al webhook (accesos / pautas)
+function enviarWebhook(payload) {
+  if (!webhookURL) return;
+  try {
+    const url = new URL(webhookURL);
+    const data = JSON.stringify(payload);
+
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(data),
+      },
+    };
+
+    const reqGS = https.request(options, (res) => {
+      res.on("data", () => {});
+      res.on("end", () => {});
+    });
+
+    reqGS.on("error", (err) => {
+      console.error("Error enviando webhook:", err);
+    });
+
+    reqGS.write(data);
+    reqGS.end();
+  } catch (err) {
+    console.error("Error preparando webhook:", err);
+  }
+}
+
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -74,32 +107,12 @@ app.post("/login", (req, res) => {
     return res.status(401).json({ error: "credenciales_invalidas" });
   }
 
-  // Registrar acceso en Google Sheets
-  if (webhookURL) {
-    const payload = JSON.stringify({
-      nombre: proveedor.nombre,
-      cuit: cuiLimpio,
-    });
-
-    const reqGS = https.request(
-      webhookURL,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Content-Length": Buffer.byteLength(payload),
-        },
-      },
-      () => {}
-    );
-
-    reqGS.on("error", (err) => {
-      console.error("Error enviando log:", err);
-    });
-
-    reqGS.write(payload);
-    reqGS.end();
-  }
+  // Registrar acceso en Google Sheets (no corta el login si falla)
+  enviarWebhook({
+    tipoRegistro: "acceso",
+    nombre: proveedor.nombre,
+    cuit: cuiLimpio,
+  });
 
   // ADMINISTRADOR 692018 → Redirigir
   if (cuiLimpio === "692018") {
@@ -128,6 +141,7 @@ app.post("/login", (req, res) => {
 app.get("/api/pauta/estado", (req, res) => {
   const cuit = (req.query.cuit || "").replace(/[^0-9]/g, "");
   if (!cuit) return res.json({});
+  // Por ahora devolvemos vacío, el front solo lo usa para evitar re-firmar
   return res.json({});
 });
 
@@ -136,11 +150,17 @@ app.post("/api/pauta/firmar", (req, res) => {
   const { tipo, acepta, responsable, cargo, proveedor, cuit } = req.body;
 
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
-  if (!acepta || !proveedor || !cuitLimpio)
-    return res.status(400).json({ ok: false, error: "datos_incompletos" });
+  if (!acepta || !proveedor || !cuitLimpio) {
+    return res
+      .status(400)
+      .json({ ok: false, error: "datos_incompletos" });
+  }
 
-  if (!webhookURL)
-    return res.status(500).json({ ok: false, error: "webhook_no_configurado" });
+  if (!webhookURL) {
+    return res
+      .status(500)
+      .json({ ok: false, error: "webhook_no_configurado" });
+  }
 
   const ahora = new Date();
   const fechaLocal = ahora
@@ -153,7 +173,8 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
-  const payload = JSON.stringify({
+  // Enviar firma al mismo webhook (Apps Script)
+  enviarWebhook({
     tipoRegistro: "pauta",
     tipoPauta: tipo || "pauta",
     proveedor,
@@ -164,30 +185,8 @@ app.post("/api/pauta/firmar", (req, res) => {
     fechaLocal,
   });
 
-  const reqGS = https.request(
-    webhookURL,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Content-Length": Buffer.byteLength(payload),
-      },
-    },
-    (resp) => {
-      resp.on("data", () => {});
-      resp.on("end", () => {
-        return res.json({ ok: true, fechaLocal });
-      });
-    }
-  );
-
-  reqGS.on("error", (err) => {
-    console.error("Error firmando pauta:", err);
-    return res.status(500).json({ ok: false, error: "error_webhook" });
-  });
-
-  reqGS.write(payload);
-  reqGS.end();
+  // Respondemos OK al cliente
+  return res.json({ ok: true, fechaLocal });
 });
 
 // ------------------ ADMIN: INGRESOS -------------------
@@ -211,6 +210,6 @@ app.get("/api/admin/procert", (req, res) => {
   res.json(data);
 });
 
-app.listen(PORT, () =>
-  console.log("Servidor iniciado en puerto " + PORT)
-);
+app.listen(PORT, () => {
+  console.log("Servidor iniciado en puerto " + PORT);
+});
