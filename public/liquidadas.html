@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Histórico de entregas liquidadas</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body { font-family: sans-serif; margin: 40px 20px; max-width: none; }
+    h2 { margin-top: 0; }
+    input, button, select { padding: 8px; margin: 5px 5px 5px 0; }
+    input[type="date"] { width: auto; }
+    button { cursor: pointer; }
+    table { width: auto; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; font-size: 13px; white-space: nowrap; }
+    th { background: #f0f0f0; }
+    #resumen { font-weight: bold; margin: 10px 0; }
+    td[col-id="KgsD"], td[col-id="CantBins"] { text-align: right; }
+    #filtros { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:5px; }
+    #volver { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div id="titulo" style="text-align: center; margin-bottom: 10px;">
+    <img src="img/logo.png" alt="Logo Jugos SA" style="height: 60px;" />
+    <h2 style="margin: 10px 0;">Histórico de entregas liquidadas</h2>
+  </div>
+
+  <div id="infoProveedor" style="margin-bottom:10px; font-weight:bold;"></div>
+
+  <div id="filtros">
+    <label for="filtroEspecie">Especie:</label>
+    <select id="filtroEspecie"></select>
+    <label for="desde">Desde:</label>
+    <input type="date" id="desde">
+    <label for="hasta">Hasta:</label>
+    <input type="date" id="hasta">
+    <button onclick="filtrar()">Ver</button>
+    <button onclick="descargarExcel()">Descargar Excel</button>
+  </div>
+
+  <div id="resumen"></div>
+  <div id="tabla"></div>
+
+  <button id="volver" onclick="window.location.href='index.html'">Volver al portal</button>
+
+<script>
+  let entregasOriginal = [];
+  let entregasFiltradas = [];
+
+  function getQueryParam(name) {
+    const params = new URLSearchParams(location.search);
+    return params.get(name) || "";
+  }
+
+  function convertirFecha(excelNumber) {
+    const baseDate = new Date(1899, 11, 30);
+    const dias = parseInt(excelNumber);
+    if (isNaN(dias)) return excelNumber;
+    const fecha = new Date(baseDate.getTime() + dias * 86400000);
+    return fecha.toLocaleDateString("es-AR", { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  function fechaDentroDeRango(fechaStr, desdeStr, hastaStr) {
+    if (!desdeStr && !hastaStr) return true;
+    const [dia, mes, anio] = fechaStr.split("/");
+    const fecha = new Date(`${anio}-${mes}-${dia}`);
+    const desde = desdeStr ? new Date(desdeStr) : null;
+    const hasta = hastaStr ? new Date(hastaStr) : null;
+    if (desde && fecha < desde) return false;
+    if (hasta && fecha > hasta) return false;
+    return true;
+  }
+
+  async function cargarDatos() {
+    const proveedorParam = getQueryParam("prov");
+    if (proveedorParam) {
+      document.getElementById("infoProveedor").textContent =
+        "Proveedor: " + decodeURIComponent(proveedorParam);
+    }
+
+    try {
+      const res = await fetch("/data/profruLiq.json");
+      if (!res.ok) throw new Error("No se pudo cargar profruLiq.json");
+      const data = await res.json();
+
+      // Normalizar datos y filtrar por proveedor si viene en la URL
+      entregasOriginal = data.map(e => ({
+        ...e,
+        Especie: (e.Especie || "").toUpperCase(),
+        FechaStr: convertirFecha(e.Fecha)
+      }));
+
+      if (proveedorParam) {
+        const provNombre = decodeURIComponent(proveedorParam);
+        entregasOriginal = entregasOriginal.filter(e => e.ProveedorT === provNombre);
+      }
+
+      prepararFiltros();
+      filtrar();
+    } catch (err) {
+      document.getElementById("tabla").innerHTML =
+        "<p style='color:red;'>Error al cargar datos de entregas liquidadas.</p>";
+      console.error(err);
+    }
+  }
+
+  function prepararFiltros() {
+    const especies = [...new Set(entregasOriginal.map(e => e.Especie).filter(Boolean))];
+    const select = document.getElementById("filtroEspecie");
+    select.innerHTML = '<option value="TODAS">Todas las especies</option>';
+    especies.forEach(v => {
+      select.innerHTML += `<option value="${v}">${v}</option>`;
+    });
+  }
+
+  function filtrar() {
+    const especie = document.getElementById("filtroEspecie").value;
+    const desde = document.getElementById("desde").value;
+    const hasta = document.getElementById("hasta").value;
+
+    entregasFiltradas = entregasOriginal.filter(e => {
+      const coincideEspecie = especie === "TODAS" || e.Especie === especie;
+      const enRango = fechaDentroDeRango(e.FechaStr, desde, hasta);
+      return coincideEspecie && enRango;
+    });
+
+    renderTabla();
+  }
+
+  function renderTabla() {
+    const tablaDiv = document.getElementById("tabla");
+    const resumenDiv = document.getElementById("resumen");
+
+    if (!entregasFiltradas.length) {
+      tablaDiv.innerHTML = "<p>No hay datos para el criterio seleccionado.</p>";
+      resumenDiv.textContent = "";
+      return;
+    }
+
+    const totalKgs = entregasFiltradas.reduce((sum, row) => sum + Number(row.KgsD || 0), 0);
+    resumenDiv.textContent = "Total kilos liquidados: " +
+      totalKgs.toLocaleString("es-AR") + " kg";
+
+    const columnasOcultas = ["pagado", "ProveedorT"];
+    const encabezados = Object.keys(entregasFiltradas[0])
+      .filter(k => !columnasOcultas.includes(k) && k !== "FechaStr");
+
+    let html = "<table><thead><tr>";
+    encabezados.forEach(k => { html += `<th col-id="${k}">${k}</th>`; });
+    html += "</tr></thead><tbody>";
+
+    entregasFiltradas.forEach(row => {
+      html += "<tr>";
+      encabezados.forEach(k => {
+        let val = row[k];
+        if (k === "Fecha") val = convertirFecha(val);
+        if (k === "KgsD") val = Number(val).toLocaleString("es-AR");
+        html += `<td col-id="${k}">${val}</td>`;
+      });
+      html += "</tr>";
+    });
+
+    html += "</tbody></table>";
+    tablaDiv.innerHTML = html;
+  }
+
+  function descargarExcel() {
+    if (!entregasFiltradas.length) return;
+
+    const columnasOcultas = ["pagado", "ProveedorT"];
+    const datosExportar = entregasFiltradas.map(row => {
+      const fila = {};
+      for (let key in row) {
+        if (!columnasOcultas.includes(key) && key !== "FechaStr") {
+          let val = row[key];
+          if (key === "Fecha") val = convertirFecha(val);
+          fila[key] = val;
+        }
+      }
+      return fila;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(datosExportar);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Liquidadas");
+    XLSX.writeFile(workbook, "entregas_liquidadas.xlsx");
+  }
+
+  window.onload = cargarDatos;
+</script>
+</body>
+</html>
