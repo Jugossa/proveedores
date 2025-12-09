@@ -1,192 +1,334 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Histórico de entregas liquidadas</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fruta liquidada - Portal Proveedores</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
-    body { font-family: sans-serif; margin: 40px 20px; max-width: none; }
-    h2 { margin-top: 0; }
-    input, button, select { padding: 8px; margin: 5px 5px 5px 0; }
-    input[type="date"] { width: auto; }
-    button { cursor: pointer; }
-    table { width: auto; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; font-size: 13px; white-space: nowrap; }
-    th { background: #f0f0f0; }
-    #resumen { font-weight: bold; margin: 10px 0; }
-    td[col-id="KgsD"], td[col-id="CantBins"] { text-align: right; }
-    #filtros { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:5px; }
-    #volver { margin-top: 10px; }
+    :root { --bg:#f7f7f8; --card:#fff; --ink:#222; --muted:#666; --brand:#0a7cff; --shadow:0 8px 24px rgba(0,0,0,.08); }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width:1100px; margin:24px auto; padding: 0 16px; }
+    .card { background:var(--card); border-radius:14px; box-shadow:var(--shadow); padding:16px; }
+    h1 { font-size:22px; margin:0 0 8px; }
+    .muted { color:var(--muted); font-size:14px; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    button { padding:10px 12px; font-size:15px; border:0; border-radius:10px; background:var(--brand); color:#fff; cursor:pointer; }
+    button.secondary { background:#e5e7eb; color:#111; }
+    button.ghost { background:transparent; color:var(--brand); border:1px solid var(--brand); }
+    .grid-btns { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 4px; }
+    .btn-big { font-size:16px; padding:12px 16px; border-radius:12px; }
+    table { width:100%; border-collapse: collapse; margin-top:8px; background:#fff; }
+    th, td { border-bottom:1px solid #eee; padding:8px; text-align:left; font-size:14px; white-space:nowrap; }
+    th { background:#fafafa; position:sticky; top:0; z-index:1; }
+    .badge { display:inline-block; padding:2px 8px; font-size:12px; border-radius:999px; background:#eef2ff; color:#3730a3; }
+    .totals { margin-top:6px; font-weight:600; }
+    .pill { display:inline-block; background:#f1f5f9; color:#0f172a; padding:4px 8px; border-radius:999px; font-size:12px; }
+    .spacer { height:8px; }
+    .right { text-align:right; }
+    #filtroDetalle { display:none; align-items:center; gap:8px; margin:4px 0 0 0; }
+    #selEspecie { padding:6px 10px; }
   </style>
 </head>
 <body>
-  <div id="titulo" style="text-align: center; margin-bottom: 10px;">
-    <img src="img/logo.png" alt="Logo Jugos SA" style="height: 60px;" />
-    <h2 style="margin: 10px 0;">Histórico de entregas liquidadas</h2>
+  <div class="wrap">
+    <div class="card">
+      <div class="row">
+        <div>
+          <h1>Fruta liquidada</h1>
+          <div class="muted">Proveedor: <span id="provNombre"></span></div>
+          <!-- (Se quitó el horario de actualización) -->
+        </div>
+        <div class="row" style="margin-left:auto">
+          <button class="ghost" onclick="location.href='index.html'">Volver</button>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="grid-btns">
+        <button class="btn-big" id="btnAgrupado">Agrupado</button>
+        <button class="btn-big secondary" id="btnDetalle">Detalle</button>
+        <button class="btn-big secondary" id="btnExcel">Descargar Excel</button>
+      </div>
+
+      <!-- Filtro SOLO para Detalle -->
+      <div id="filtroDetalle" class="row">
+        <span class="muted">Filtrar especie:</span>
+        <select id="selEspecie">
+          <option value="TODAS">Todas</option>
+          <option value="PERA">Pera</option>
+          <option value="MANZANA">Manzana</option>
+        </select>
+      </div>
+
+      <div id="resumen" class="totals"></div>
+
+      <div id="tablaWrap"></div>
+    </div>
   </div>
 
-  <div id="infoProveedor" style="margin-bottom:10px; font-weight:bold;"></div>
+  <script>
+    const PATH_LIQ = 'data/profruLiq.json';
+    const $ = s => document.querySelector(s);
 
-  <div id="filtros">
-    <label for="filtroEspecie">Especie:</label>
-    <select id="filtroEspecie"></select>
-    <label for="desde">Desde:</label>
-    <input type="date" id="desde">
-    <label for="hasta">Hasta:</label>
-    <input type="date" id="hasta">
-    <button onclick="filtrar()">Ver</button>
-    <button onclick="descargarExcel()">Descargar Excel</button>
-  </div>
-
-  <div id="resumen"></div>
-  <div id="tabla"></div>
-
-  <button id="volver" onclick="window.location.href='index.html'">Volver al portal</button>
-
-<script>
-  let entregasOriginal = [];
-  let entregasFiltradas = [];
-
-  function getQueryParam(name) {
-    const params = new URLSearchParams(location.search);
-    return params.get(name) || "";
-  }
-
-  function convertirFecha(excelNumber) {
-    const baseDate = new Date(1899, 11, 30);
-    const dias = parseInt(excelNumber);
-    if (isNaN(dias)) return excelNumber;
-    const fecha = new Date(baseDate.getTime() + dias * 86400000);
-    return fecha.toLocaleDateString("es-AR", { day: '2-digit', month: '2-digit', year: 'numeric' });
-  }
-
-  function fechaDentroDeRango(fechaStr, desdeStr, hastaStr) {
-    if (!desdeStr && !hastaStr) return true;
-    const [dia, mes, anio] = fechaStr.split("/");
-    const fecha = new Date(`${anio}-${mes}-${dia}`);
-    const desde = desdeStr ? new Date(desdeStr) : null;
-    const hasta = hastaStr ? new Date(hastaStr) : null;
-    if (desde && fecha < desde) return false;
-    if (hasta && fecha > hasta) return false;
-    return true;
-  }
-
-  async function cargarDatos() {
-    const proveedorParam = getQueryParam("prov");
-    if (proveedorParam) {
-      document.getElementById("infoProveedor").textContent =
-        "Proveedor: " + decodeURIComponent(proveedorParam);
-    }
-
-    try {
-      const res = await fetch("/data/profruLiq.json");
-      if (!res.ok) throw new Error("No se pudo cargar profruLiq.json");
-      const data = await res.json();
-
-      // Normalizar datos y filtrar por proveedor si viene en la URL
-      entregasOriginal = data.map(e => ({
-        ...e,
-        Especie: (e.Especie || "").toUpperCase(),
-        FechaStr: convertirFecha(e.Fecha)
-      }));
-
-      if (proveedorParam) {
-        const provNombre = decodeURIComponent(proveedorParam);
-        entregasOriginal = entregasOriginal.filter(e => e.ProveedorT === provNombre);
+    // ---------- Fechas ----------
+    const excelSerialToStr = (v) => {
+      if (typeof v === 'string') {
+        const m = v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (m) return v;
       }
+      if (typeof v === 'number' && !isNaN(v)) {
+        const epoch = new Date(Date.UTC(1899, 11, 30));
+        const d = new Date(epoch.getTime() + v * 86400000);
+        return toDDMMYYYY(d);
+      }
+      if (v instanceof Date) return toDDMMYYYY(v);
+      return '';
+    };
 
-      prepararFiltros();
-      filtrar();
-    } catch (err) {
-      document.getElementById("tabla").innerHTML =
-        "<p style='color:red;'>Error al cargar datos de entregas liquidadas.</p>";
-      console.error(err);
-    }
-  }
-
-  function prepararFiltros() {
-    const especies = [...new Set(entregasOriginal.map(e => e.Especie).filter(Boolean))];
-    const select = document.getElementById("filtroEspecie");
-    select.innerHTML = '<option value="TODAS">Todas las especies</option>';
-    especies.forEach(v => {
-      select.innerHTML += `<option value="${v}">${v}</option>`;
-    });
-  }
-
-  function filtrar() {
-    const especie = document.getElementById("filtroEspecie").value;
-    const desde = document.getElementById("desde").value;
-    const hasta = document.getElementById("hasta").value;
-
-    entregasFiltradas = entregasOriginal.filter(e => {
-      const coincideEspecie = especie === "TODAS" || e.Especie === especie;
-      const enRango = fechaDentroDeRango(e.FechaStr, desde, hasta);
-      return coincideEspecie && enRango;
-    });
-
-    renderTabla();
-  }
-
-  function renderTabla() {
-    const tablaDiv = document.getElementById("tabla");
-    const resumenDiv = document.getElementById("resumen");
-
-    if (!entregasFiltradas.length) {
-      tablaDiv.innerHTML = "<p>No hay datos para el criterio seleccionado.</p>";
-      resumenDiv.textContent = "";
-      return;
+    function toDDMMYYYY(d){
+      const dd = String(d.getUTCDate()).padStart(2,'0');
+      const mm = String(d.getUTCMonth()+1).padStart(2,'0');
+      const yy = d.getUTCFullYear();
+      return `${dd}/${mm}/${yy}`;
     }
 
-    const totalKgs = entregasFiltradas.reduce((sum, row) => sum + Number(row.KgsD || 0), 0);
-    resumenDiv.textContent = "Total kilos liquidados: " +
-      totalKgs.toLocaleString("es-AR") + " kg";
-
-    const columnasOcultas = ["pagado", "ProveedorT"];
-    const encabezados = Object.keys(entregasFiltradas[0])
-      .filter(k => !columnasOcultas.includes(k) && k !== "FechaStr");
-
-    let html = "<table><thead><tr>";
-    encabezados.forEach(k => { html += `<th col-id="${k}">${k}</th>`; });
-    html += "</tr></thead><tbody>";
-
-    entregasFiltradas.forEach(row => {
-      html += "<tr>";
-      encabezados.forEach(k => {
-        let val = row[k];
-        if (k === "Fecha") val = convertirFecha(val);
-        if (k === "KgsD") val = Number(val).toLocaleString("es-AR");
-        html += `<td col-id="${k}">${val}</td>`;
-      });
-      html += "</tr>";
-    });
-
-    html += "</tbody></table>";
-    tablaDiv.innerHTML = html;
-  }
-
-  function descargarExcel() {
-    if (!entregasFiltradas.length) return;
-
-    const columnasOcultas = ["pagado", "ProveedorT"];
-    const datosExportar = entregasFiltradas.map(row => {
-      const fila = {};
-      for (let key in row) {
-        if (!columnasOcultas.includes(key) && key !== "FechaStr") {
-          let val = row[key];
-          if (key === "Fecha") val = convertirFecha(val);
-          fila[key] = val;
+    function toMillisExcelOrDMY(v){
+      if (typeof v === 'number' && !isNaN(v)) {
+        const epoch = new Date(Date.UTC(1899, 11, 30));
+        return epoch.getTime() + v * 86400000;
+      }
+      if (typeof v === 'string') {
+        const m = v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (m) {
+          const dd = parseInt(m[1],10), mm = parseInt(m[2],10)-1, yy = parseInt(m[3],10);
+          return Date.UTC(yy, mm, dd);
         }
+        const t = Date.parse(v);
+        return isNaN(t) ? NaN : t;
       }
-      return fila;
+      return NaN;
+    };
+
+    // ---------- Kilos ----------
+    const parseKg = (v) => {
+      if (typeof v === 'number') return v;
+      if (typeof v === 'string') {
+        const s = v.replace(/\s+/g,'').replace(/\./g,'').replace(',', '.');
+        const n = Number(s);
+        return isNaN(n) ? 0 : n;
+      }
+      return 0;
+    };
+    // celda: 0 decimales si es entero; 2 si tiene fracción
+    const fmtKgCell = (n) => {
+      const x = Math.round(parseKg(n) * 1000) / 1000;
+      const hasDec = Math.abs(x - Math.trunc(x)) > 1e-9;
+      return x.toLocaleString('es-AR', {
+        minimumFractionDigits: hasDec ? 2 : 0,
+        maximumFractionDigits: hasDec ? 2 : 0
+      });
+    };
+    const fmtKgTotal = (n) => (Math.round(parseKg(n))).toLocaleString('es-AR', {
+      maximumFractionDigits: 0
     });
 
-    const worksheet = XLSX.utils.json_to_sheet(datosExportar);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Liquidadas");
-    XLSX.writeFile(workbook, "entregas_liquidadas.xlsx");
-  }
+    // ---------- Utils ----------
+    const especieKey = (s) => {
+      s = (s||'').toString().trim().toLowerCase();
+      if (s.startsWith('manz')) return 'MANZANA';
+      if (s.startsWith('pera')) return 'PERA';
+      return 'OTRA';
+    };
+    const normalizarProveedor = s => (s||'').toString().trim().toUpperCase();
 
-  window.onload = cargarDatos;
-</script>
+    async function fetchJSON(url){
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP '+r.status);
+      return await r.json();
+    }
+
+    // ---------- AGRUPADO ----------
+    function agruparPorNroLiq(rows){
+      const m = new Map();
+      for(const r of rows){
+        const nro = String(r.NroLiq ?? '-');
+        let o = m.get(nro);
+        if(!o){ o = { NroLiq:nro, kgs:0, cant:0, ms:NaN, Factura:'' }; m.set(nro, o); }
+        o.cant += 1;
+        o.kgs += parseKg(r.KgsD);
+        const ms = toMillisExcelOrDMY(r.FechaLiq);
+        if(!isNaN(ms) && (isNaN(o.ms) || ms > o.ms)) o.ms = ms;
+
+        const fac = (r.Factura ?? '').toString();
+        if (!o.Factura && fac.trim() !== '') o.Factura = fac;
+      }
+      const arr = Array.from(m.values()).map(o => ({
+        NroLiq: o.NroLiq,
+        FechaLiq: isNaN(o.ms) ? '' : toDDMMYYYY(new Date(o.ms)),
+        cant: o.cant,
+        kgs: o.kgs,
+        ms: o.ms,
+        Factura: o.Factura || ''
+      }));
+      arr.sort((a,b)=> ((isNaN(b.ms)?-Infinity:b.ms) - (isNaN(a.ms)?-Infinity:a.ms)) ||
+                       a.NroLiq.localeCompare(b.NroLiq, undefined, { numeric:true }));
+      return arr;
+    }
+
+    function renderAgrupado(datosProv){
+      const arr = agruparPorNroLiq(datosProv);
+      const tot = datosProv.reduce((a,b)=> a + parseKg(b.KgsD), 0);
+      $('#resumen').textContent = `${datosProv.length} registros - ${fmtKgTotal(tot)} kg`;
+
+      let html = `<table><thead><tr>`+
+        `<th>NroLiq</th><th>FechaLiq</th><th>Fact. Proveedor</th><th class='right'>Cant reg.</th><th class='right'>Kgs totales</th>`+
+        `</tr></thead><tbody>`;
+      for(const it of arr){
+        html += `<tr>`+
+          `<td><span class='badge'>${it.NroLiq}</span></td>`+
+          `<td>${it.FechaLiq}</td>`+
+          `<td>${it.Factura || ''}</td>`+
+          `<td class='right'>${it.cant}</td>`+
+          `<td class='right'>${fmtKgCell(it.kgs)}</td>`+
+        `</tr>`;
+      }
+      html += `</tbody></table>`;
+      $('#tablaWrap').innerHTML = html;
+      setMode('agrupado');
+    }
+
+    function renderDetallado(datosProv){
+      const sel = $('#selEspecie');
+      const wanted = sel ? sel.value : 'TODAS';
+      let rows = datosProv;
+      if (wanted !== 'TODAS') rows = rows.filter(r => especieKey(r.Especie) === wanted);
+
+      const toMs = (v) => toMillisExcelOrDMY(v);
+      rows = [...rows].sort((a,b)=> toMs(b.Fecha) - toMs(a.Fecha));
+
+      const tot = rows.reduce((a,b)=> a + parseKg(b.KgsD), 0);
+      $('#resumen').textContent = `${rows.length} registros - ${fmtKgTotal(tot)} kg`;
+
+      if (!rows.length){
+        $('#tablaWrap').innerHTML = `<p style="margin:8px 0;color:#666;">No hay registros para la especie seleccionada.</p>`;
+        setMode('detalle');
+        return;
+      }
+
+      let html = `<table><thead><tr>`+
+        `<th>NroLiq</th><th>FechaLiq</th>`+
+        `<th>Nro Jugos</th><th>Fecha Ingr.</th><th>Remito</th>`+
+        `<th>NomVariedad</th><th class='right'>KgsD</th>`+
+        `</tr></thead><tbody>`;
+      for(const r of rows){
+        html += `<tr>`+
+          `<td><span class='badge'>${r.NroLiq||'-'}</span></td>`+
+          `<td>${excelSerialToStr(r.FechaLiq)}</td>`+
+          `<td>${r['Nro Jugos']||''}</td>`+
+          `<td>${excelSerialToStr(r.Fecha)}</td>`+
+          `<td>${r.Remito||''}</td>`+
+          `<td>${r.NomVariedad||''}</td>`+
+          `<td class='right'>${fmtKgCell(r.KgsD)}</td>`+
+        `</tr>`;
+      }
+      html += `</tbody></table>`;
+      $('#tablaWrap').innerHTML = html;
+      setMode('detalle');
+    }
+
+    function setMode(m){
+      __mode = m;
+      const bAgr = $('#btnAgrupado'), bDet = $('#btnDetalle');
+      const fd = $('#filtroDetalle');
+      if(m==='detalle'){
+        bAgr.classList.add('secondary'); bDet.classList.remove('secondary');
+        if (fd) fd.style.display = 'flex';
+      } else {
+        bDet.classList.add('secondary'); bAgr.classList.remove('secondary');
+        if (fd) fd.style.display = 'none';
+      }
+    }
+
+    // ---------- Exportar ----------
+    function descargarExcel(){
+      if (!window.XLSX){ alert('No se pudo cargar el generador de Excel.'); return; }
+      const prov = $('#provNombre').textContent || 'proveedor';
+      if (__mode === 'detalle'){
+        const sel = $('#selEspecie');
+        const wanted = sel ? sel.value : 'TODAS';
+        let rows = __datosProv;
+        if (wanted !== 'TODAS') rows = rows.filter(r => especieKey(r.Especie) === wanted);
+        const out = rows
+          .sort((a,b)=> toMillisExcelOrDMY(b.Fecha) - toMillisExcelOrDMY(a.Fecha))
+          .map(r => ({
+            NroLiq: r.NroLiq||'',
+            FechaLiq: excelSerialToStr(r.FechaLiq),
+            'Nro Jugos': r['Nro Jugos']||'',
+            'Fecha Ingr.': excelSerialToStr(r.Fecha),
+            Remito: r.Remito||'',
+            NomVariedad: r.NomVariedad||'',
+            KgsD: parseKg(r.KgsD)
+          }));
+        const ws = XLSX.utils.json_to_sheet(out);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Detalle');
+        XLSX.writeFile(wb, `liquidadas_detalle_${prov}.xlsx`);
+      } else {
+        const arr = agruparPorNroLiq(__datosProv);
+        const out = arr.map(it => ({
+          NroLiq: it.NroLiq,
+          FechaLiq: it.FechaLiq,
+          'Fact. Proveedor': it.Factura || '',
+          'Cant reg.': it.cant,
+          'Kgs totales': parseKg(it.kgs)
+        }));
+        const ws = XLSX.utils.json_to_sheet(out);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Agrupado');
+        XLSX.writeFile(wb, `liquidadas_agrupado_${prov}.xlsx`);
+      }
+    }
+
+    // ---------- Init ----------
+    async function init(){
+      const prov = getProv();
+      if(!prov){ location.href = 'index.html'; return; }
+      $('#provNombre').textContent = prov;
+
+      try{
+        const rows = await fetchJSON(PATH_LIQ);
+        __datosProv = rows.filter(r => normalizarProveedor(r.ProveedorT) === prov.trim());
+
+        if (!__datosProv.length){
+          $('#resumen').textContent = `0 registros - ${fmtKgTotal(0)} kg`;
+          $('#tablaWrap').innerHTML = `<p style="margin:8px 0;color:#666;">No hay liquidaciones para este proveedor.</p>`;
+          setMode('agrupado');
+        } else {
+          renderAgrupado(__datosProv);
+        }
+
+        $('#btnAgrupado').onclick = ()=> renderAgrupado(__datosProv);
+        $('#btnDetalle').onclick  = ()=> renderDetallado(__datosProv);
+        $('#btnExcel').onclick    = descargarExcel;
+        const sel = $('#selEspecie');
+        if (sel) sel.onchange = ()=> { if(__mode==='detalle') renderDetallado(__datosProv); };
+      }catch(e){
+        alert('No se pudieron cargar las liquidaciones.');
+        console.error(e);
+      }
+    }
+    // Estado global simple
+    let __mode = 'agrupado';
+    let __datosProv = [];
+    function getProv(){
+      const u = new URL(location.href);
+      const p = u.searchParams.get('prov') || '';
+      return p.toString().trim().toUpperCase();
+    }
+    init();
+  </script>
 </body>
 </html>
