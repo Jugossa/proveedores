@@ -209,6 +209,15 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
+  // 👇 Normalizamos el tipo de pauta:
+  // - default: "pauta"
+  // - si el "tipo" contiene "organ" => "pauta organica"
+  const tipoPauta =
+    typeof tipo === "string" &&
+    tipo.toLowerCase().includes("organ")
+      ? "pauta organica"
+      : "pauta";
+
   const payload = {
     proveedor,
     cuit: cuitLimpio,
@@ -216,7 +225,7 @@ app.post("/api/pauta/firmar", (req, res) => {
     cargo,
     accion: "aceptacion_pauta",
     modo: "registrar",
-    tipoPauta: tipo || "pauta",
+    tipoPauta,          // ← se envía ya normalizado
     fechaLocal,
   };
 
