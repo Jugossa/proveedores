@@ -26,17 +26,17 @@ let lastUpdate = { fecha: "Desconocida" };
 
 /**
  * WEBHOOKS
- *  - webhookAccesosURL: hoja donde registrás los ACCESOS (esto ya venía funcionando).
- *  - webhookPautaURL:  hoja "Log de accesos / AceptacionesPauta" (la nueva).
+ *  - webhookAccesosURL: hoja donde registrás los ACCESOS.
+ *  - webhookPautaURL:  hoja "Log de accesos / AceptacionesPauta".
  */
 
 // ✅ Webhook ACCESOS (el que ya tenías andando)
 const webhookAccesosURL =
   "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
-// ✅ Webhook PAUTA (el nuevo que me pasaste)
+// ✅ Webhook PAUTA (TU WebApp actual, acceso público)
 const webhookPautaURL =
-  "https://script.googleusercontent.com/macros/echo?user_content_key=XXXXXXXX&lib=YYYYYYYY";
+  "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
 
 // ---- Carga genérica de JSON ----
 function cargarJSON(nombre, ref) {
@@ -113,7 +113,7 @@ app.post("/login", (req, res) => {
     return res.status(401).send("CUIT o clave incorrectos");
   }
 
-  // Enviar log de ACCESO a Google Sheets (hoja de accesos, la de siempre)
+  // Enviar log de ACCESO a Google Sheets
   if (webhookAccesosURL) {
     const postData = JSON.stringify({
       tipoRegistro: "acceso",
@@ -172,13 +172,12 @@ app.post("/login", (req, res) => {
 //     RUTAS PAUTAS
 // -------------------------------
 
-// Estado de pauta (por ahora solo chequea en la hoja, si hace falta)
+// Estado de pauta (placeholder, por ahora siempre permite firmar)
 app.get("/api/pauta/estado", (req, res) => {
   const cuit = (req.query.cuit || "").replace(/[^0-9]/g, "");
   if (!cuit) return res.json({ ok: false, error: "cuit_requerido" });
 
-  // De momento devolvemos "desconocido" para dejar siempre el botón activo.
-  // Más adelante se puede consultar la hoja "AceptacionesPauta".
+  // Más adelante se puede consultar la hoja AceptacionesPauta.
   return res.json({ ok: true, pauta: { firmado: false } });
 });
 
@@ -211,12 +210,10 @@ app.post("/api/pauta/firmar", (req, res) => {
     .replace(",", "");
 
   const payload = {
-    // Estos campos son los que usa el Apps Script
     proveedor,
     cuit: cuitLimpio,
     responsable,
     cargo,
-    // Campos extra por si luego los querés usar
     accion: "aceptacion_pauta",
     modo: "registrar",
     tipoPauta: tipo || "pauta",
@@ -243,14 +240,15 @@ app.post("/api/pauta/firmar", (req, res) => {
         console.log("⬅ Respuesta Apps Script PAUTA:", resGS.statusCode, body);
         try {
           const json = JSON.parse(body);
-          // Si el script nos dice ok:true, devolvemos eso mismo al front
           if (json && typeof json === "object") {
             return res.json(json);
           }
         } catch (e) {
-          console.warn("⚠ No se pudo parsear respuesta de Apps Script:", e.message);
+          console.warn(
+            "⚠ No se pudo parsear respuesta de Apps Script:",
+            e.message
+          );
         }
-        // Fallback: si llegó 200 pero sin JSON válido, al menos marcamos ok
         return res.json({ ok: true, fechaLocal });
       });
     }
