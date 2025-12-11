@@ -209,7 +209,7 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
-  // 👇 Normalizamos el tipo de pauta:
+  // Normalizamos el tipo de pauta:
   // - default: "pauta"
   // - si el "tipo" contiene "organ" => "pauta organica"
   const tipoPauta =
@@ -225,7 +225,9 @@ app.post("/api/pauta/firmar", (req, res) => {
     cargo,
     accion: "aceptacion_pauta",
     modo: "registrar",
-    tipoPauta,          // ← se envía ya normalizado
+    // Enviamos las dos variantes para que Apps Script pueda usar la que necesite
+    tipoPauta,              // minúsculas
+    TipoPauta: tipoPauta,   // coincide con el encabezado "TipoPauta" de la hoja
     fechaLocal,
   };
 
