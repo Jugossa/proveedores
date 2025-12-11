@@ -34,7 +34,7 @@ let lastUpdate = { fecha: "Desconocida" };
 const webhookAccesosURL =
   "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
-// ✅ Webhook PAUTA (TU WebApp actual, acceso público)
+// ✅ Webhook PAUTA (WebApp actual, acceso público)
 const webhookPautaURL =
   "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
 
@@ -160,8 +160,7 @@ app.post("/login", (req, res) => {
     0
   );
 
-  // 👇 NUEVO: devolvemos también el flag org para que el front
-  // sepa si debe mostrar el botón de "Pauta orgánica".
+  // Devolvemos también si es orgánico
   res.json({
     proveedor: proveedor.nombre,
     entregas,
@@ -212,12 +211,11 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
-  // 👇 Normalizamos el tipo de pauta:
-  // - default: "pauta"
-  // - si el "tipo" contiene "organ" => "pauta organica"
+  // Normalizamos el tipo de pauta según el botón:
+  //  - botón "Firmar Pauta" envía tipo="pauta"
+  //  - botón "Firmar Pauta Orgánica" envía tipo="pauta_organica"
   const tipoPauta =
-    typeof tipo === "string" &&
-    tipo.toLowerCase().includes("organ")
+    typeof tipo === "string" && tipo.toLowerCase().includes("organ")
       ? "pauta organica"
       : "pauta";
 
@@ -226,10 +224,8 @@ app.post("/api/pauta/firmar", (req, res) => {
     cuit: cuitLimpio,
     responsable,
     cargo,
-    accion: "aceptacion_pauta",
-    modo: "registrar",
-    tipoPauta,          // ← se envía ya normalizado
-    fechaLocal,
+    tipoPauta,          // 👈 esto es lo que usa AceptacionesPauta.gs
+    fechaLocal
   };
 
   const postData = JSON.stringify(payload);
