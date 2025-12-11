@@ -12,7 +12,7 @@ const isRender =
   process.env.RENDER_EXTERNAL_URL ||
   process.env.PORT;
 
-// ⚠ Ruta local corregida → I:\Pagina\proveedores\data
+// Ruta local → I:\Pagina\proveedores\data
 const baseDir = isRender
   ? path.join(__dirname, "data")
   : path.join("I:", "Pagina", "proveedores", "data");
@@ -26,15 +26,13 @@ let lastUpdate = { fecha: "Desconocida" };
 
 /**
  * WEBHOOKS
- *  - webhookAccesosURL: hoja donde registrás los ACCESOS.
- *  - webhookPautaURL:  hoja "Log de accesos / AceptacionesPauta".
+ *  - webhookAccesosURL: hoja ACCESOS.
+ *  - webhookPautaURL:  hoja AceptacionesPauta.
  */
 
-// ✅ Webhook ACCESOS (el que ya tenías andando)
 const webhookAccesosURL =
   "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
-// ✅ Webhook PAUTA (TU WebApp actual, acceso público)
 const webhookPautaURL =
   "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
 
@@ -61,14 +59,12 @@ const refIngresos = { data: ingresosDiarios };
 const refProCert = { data: proCert };
 const refLastUpdate = { data: lastUpdate };
 
-// Cargar JSON
 cargarJSON("proveedores.json", refProveedores);
 cargarJSON("profru.json", refProFru);
 cargarJSON("ingresosDiarios.json", refIngresos);
 cargarJSON("ProCert.json", refProCert);
 cargarJSON("lastUpdate.json", refLastUpdate);
 
-// reasignar variables
 proveedores = refProveedores.data;
 proFru = refProFru.data;
 ingresosDiarios = refIngresos.data;
@@ -81,19 +77,17 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos de /data (incluye /data/pauta/pauta.pdf)
+// Servir /data (incluye /data/pauta/pauta.pdf, etc.)
 app.use("/data", express.static(baseDir));
 
-// -------------------------------
-//     RUTAS PÚBLICAS
-// -------------------------------
+// ---------------------------------
+//        RUTAS PÚBLICAS
+// ---------------------------------
 
-// Página principal
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Página móvil
 app.get("/index-celu.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index-celu.html"));
 });
@@ -113,7 +107,7 @@ app.post("/login", (req, res) => {
     return res.status(401).send("CUIT o clave incorrectos");
   }
 
-  // Enviar log de ACCESO a Google Sheets
+  // Log de acceso a Google Sheets
   if (webhookAccesosURL) {
     const postData = JSON.stringify({
       tipoRegistro: "acceso",
@@ -144,7 +138,7 @@ app.post("/login", (req, res) => {
     reqGS.end();
   }
 
-  // Si es usuario administrador (CUIT 692018), ir al panel de ingresos
+  // Admin (CUIT 692018)
   if (cuiLimpio === "692018") {
     return res.json({
       tipo: "admin",
@@ -153,7 +147,7 @@ app.post("/login", (req, res) => {
     });
   }
 
-  // Filtrar entregas
+  // Entregas proveedor
   const entregas = proFru.filter((e) => e.ProveedorT === proveedor.nombre);
   const totalKgs = entregas.reduce(
     (s, e) => s + (parseFloat(e.KgsD) || 0),
@@ -168,20 +162,19 @@ app.post("/login", (req, res) => {
   });
 });
 
-// -------------------------------
-//     RUTAS PAUTAS
-// -------------------------------
+// ---------------------------------
+//        RUTAS PAUTA
+// ---------------------------------
 
-// Estado de pauta (placeholder, por ahora siempre permite firmar)
+// Estado pauta (de momento siempre permite firmar)
 app.get("/api/pauta/estado", (req, res) => {
   const cuit = (req.query.cuit || "").replace(/[^0-9]/g, "");
   if (!cuit) return res.json({ ok: false, error: "cuit_requerido" });
 
-  // Más adelante se puede consultar la hoja AceptacionesPauta.
   return res.json({ ok: true, pauta: { firmado: false } });
 });
 
-// Registrar firma de pauta
+// Registrar firma de pauta / pauta orgánica
 app.post("/api/pauta/firmar", (req, res) => {
   const { tipo, acepta, responsable, cargo, proveedor, cuit } = req.body;
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
@@ -209,9 +202,7 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
-  // Normalizamos el tipo de pauta:
-  // - default: "pauta"
-  // - si el "tipo" contiene "organ" => "pauta organica"
+  // Normalizamos tipo de pauta según botón
   const tipoPauta =
     typeof tipo === "string" &&
     tipo.toLowerCase().includes("organ")
@@ -225,9 +216,8 @@ app.post("/api/pauta/firmar", (req, res) => {
     cargo,
     accion: "aceptacion_pauta",
     modo: "registrar",
-    // Enviamos las dos variantes para que Apps Script pueda usar la que necesite
     tipoPauta,              // minúsculas
-    TipoPauta: tipoPauta,   // coincide con el encabezado "TipoPauta" de la hoja
+    TipoPauta: tipoPauta,   // igual que encabezado "TipoPauta" en la hoja
     fechaLocal,
   };
 
@@ -276,28 +266,25 @@ app.post("/api/pauta/firmar", (req, res) => {
   reqGS.end();
 });
 
-// -------------------------------
-//     RUTAS ADMINISTRADOR
-// -------------------------------
+// ---------------------------------
+//      RUTAS ADMINISTRADOR
+// ---------------------------------
 
-// Página admin
 app.get("/admin/ingresos", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin", "ingresos.html"));
 });
 
-// API ingresos diarios
 app.get("/api/admin/ingresos-diarios", (req, res) => {
   res.json(ingresosDiarios || []);
 });
 
-// API ProCert (orgánicos)
 app.get("/api/admin/procert", (req, res) => {
   res.json(proCert || []);
 });
 
-// -------------------------------
-//      INICIO DEL SERVIDOR
-// -------------------------------
+// ---------------------------------
+//      INICIO SERVIDOR
+// ---------------------------------
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor funcionando en http://localhost:${PORT}`);
