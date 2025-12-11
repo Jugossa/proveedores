@@ -7,7 +7,6 @@ const path = require("path");
 const fs = require("fs");
 
 // ====================== CONFIG =========================
-require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
@@ -28,17 +27,17 @@ app.get("/", (req, res) => {
 
 // ====================== API: PAUTA =========================
 //
-//  Esta ruta recibe desde index.html:
+// Recibe desde index.html:
 //
 //  {
 //    proveedor: "KLEPPE SA",
 //    cuit: "30511608615",
 //    responsable: "marcos",
 //    cargo: "encargado",
-//    tipo: "Pauta"               <-- VIENE DEL BOTÓN
+//    tipo: "Pauta"             <-- TEXTO DEL BOTÓN
 //  }
 //
-//  Y lo reenvía como está al Google Sheet.
+// Y lo envía igual al Google Sheet.
 //
 
 app.post("/api/pauta/firmar", (req, res) => {
@@ -48,19 +47,17 @@ app.post("/api/pauta/firmar", (req, res) => {
     return res.status(400).json({ ok: false, error: "datos_incompletos" });
   }
 
-  // CUIT limpiado por seguridad
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
 
-  // El botón decide el texto FINAL:
+  // TEXTO EXACTO DEL BOTÓN, sin modificar
   const tipoPauta = String(tipo).trim();
 
-  // Payload enviado al Google Sheet
   const payload = {
     proveedor,
     cuit: cuitLimpio,
     responsable,
     cargo,
-    tipoPauta,   // <<-- TEXTO DEL BOTÓN SIN MODIFICAR
+    tipoPauta,            // <<-- LO QUE VA A COLUMNA "TipoPauta"
     accion: "aceptacion_pauta",
     modo: "registrar",
     fechaLocal: new Date().toLocaleString("es-AR")
@@ -70,7 +67,6 @@ app.post("/api/pauta/firmar", (req, res) => {
 
   console.log("➡ Enviando a Google Sheets:", payload);
 
-  // Llamada HTTPS al WebApp
   const reqGS = https.request(
     webhookPautaURL,
     {
