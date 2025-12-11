@@ -6,39 +6,30 @@ const https = require("https");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Detección de entorno Render
+// Detectar entorno Render
 const isRender =
   process.env.RENDER ||
   process.env.RENDER_EXTERNAL_URL ||
   process.env.PORT;
 
-// ⚠ Ruta local corregida → I:\Pagina\proveedores\data
+// Rutas locales / producción
 const baseDir = isRender
   ? path.join(__dirname, "data")
   : path.join("I:", "Pagina", "proveedores", "data");
 
-// Datos en memoria
+// Variables en memoria
 let proveedores = [];
 let proFru = [];
 let ingresosDiarios = [];
 let proCert = [];
 let lastUpdate = { fecha: "Desconocida" };
 
-/**
- * WEBHOOKS
- *  - webhookAccesosURL: hoja donde registrás los ACCESOS.
- *  - webhookPautaURL:  hoja "Log de accesos / AceptacionesPauta".
- */
-
-// ✅ Webhook ACCESOS (el que ya tenías andando)
-const webhookAccesosURL =
-  "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
-
-// ✅ Webhook PAUTA (WebApp actual, acceso público)
-const webhookPautaURL =
+// Webhook oficial (Apps Script)
+let webhookURL =
   "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
 
-// ---- Carga genérica de JSON ----
+// ---------------- CARGA JSON ----------------
+
 function cargarJSON(nombre, ref) {
   const full = path.join(baseDir, nombre);
   try {
@@ -61,44 +52,41 @@ const refIngresos = { data: ingresosDiarios };
 const refProCert = { data: proCert };
 const refLastUpdate = { data: lastUpdate };
 
-// Cargar JSON
 cargarJSON("proveedores.json", refProveedores);
 cargarJSON("profru.json", refProFru);
 cargarJSON("ingresosDiarios.json", refIngresos);
 cargarJSON("ProCert.json", refProCert);
 cargarJSON("lastUpdate.json", refLastUpdate);
 
-// reasignar variables
+// reasignar
 proveedores = refProveedores.data;
 proFru = refProFru.data;
 ingresosDiarios = refIngresos.data;
 proCert = refProCert.data;
 lastUpdate = refLastUpdate.data || lastUpdate;
 
-console.log("✔ Datos cargados correctamente");
+console.log("✔ Webhook cargado OK");
 
+// Middleware
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos de /data (incluye /data/pauta/pauta.pdf)
+// Servir PDFs desde /data
 app.use("/data", express.static(baseDir));
 
-// -------------------------------
-//     RUTAS PÚBLICAS
-// -------------------------------
+// ---------------- RUTAS PÚBLICAS ----------------
 
-// Página principal
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Página móvil
 app.get("/index-celu.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index-celu.html"));
 });
 
-// LOGIN proveedores
+// ---------------- LOGIN ----------------
+
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
   const cuiLimpio = (cui || "").replace(/[^0-9]/g, "");
@@ -109,12 +97,10 @@ app.post("/login", (req, res) => {
       String(p.clave || "").trim() === String(password || "").trim()
   );
 
-  if (!proveedor) {
-    return res.status(401).send("CUIT o clave incorrectos");
-  }
+  if (!proveedor) return res.status(401).send("CUIT o clave incorrectos");
 
-  // Enviar log de ACCESO a Google Sheets
-  if (webhookAccesosURL) {
+  // Registrar acceso en Google Sheets
+  if (webhookURL) {
     const postData = JSON.stringify({
       tipoRegistro: "acceso",
       nombre: proveedor.nombre,
@@ -122,7 +108,7 @@ app.post("/login", (req, res) => {
     });
 
     const reqGS = https.request(
-      webhookAccesosURL,
+      webhookURL,
       {
         method: "POST",
         headers: {
@@ -131,20 +117,19 @@ app.post("/login", (req, res) => {
         },
       },
       (resGS) => {
-        console.log(`🟢 ACCESO -> Google respondió: ${resGS.statusCode}`);
-        resGS.on("data", () => {});
+        console.log(`🟢 Google respondió acceso: ${resGS.statusCode}`);
       }
     );
 
     reqGS.on("error", (err) => {
-      console.error("❌ Error al enviar webhook de ACCESO:", err.message);
+      console.log("❌ Error webhook acceso:", err.message);
     });
 
     reqGS.write(postData);
     reqGS.end();
   }
 
-  // Si es usuario administrador (CUIT 692018), ir al panel de ingresos
+  // ADMIN
   if (cuiLimpio === "692018") {
     return res.json({
       tipo: "admin",
@@ -153,87 +138,56 @@ app.post("/login", (req, res) => {
     });
   }
 
-  // Filtrar entregas
+  // Filtrar entregas por proveedor
   const entregas = proFru.filter((e) => e.ProveedorT === proveedor.nombre);
   const totalKgs = entregas.reduce(
     (s, e) => s + (parseFloat(e.KgsD) || 0),
     0
   );
 
-  // Devolvemos también si es orgánico
   res.json({
     proveedor: proveedor.nombre,
     entregas,
     resumen: { totalKgs },
     ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
-    org: proveedor.org || ""   // "x" si es orgánico, vacío si no
+    org: proveedor.org || ""   // <─ IMPORTANTE PARA BOTONES PAUTA
   });
 });
 
-// -------------------------------
-//     RUTAS PAUTAS
-// -------------------------------
+// ---------------- FIRMA DE PAUTA ----------------
+//
+// ESTA ES LA PARTE QUE CORRIGIMOS
+//
 
-// Estado de pauta (placeholder, por ahora siempre permite firmar)
-app.get("/api/pauta/estado", (req, res) => {
-  const cuit = (req.query.cuit || "").replace(/[^0-9]/g, "");
-  if (!cuit) return res.json({ ok: false, error: "cuit_requerido" });
-
-  // Más adelante se puede consultar la hoja AceptacionesPauta.
-  return res.json({ ok: true, pauta: { firmado: false } });
-});
-
-// Registrar firma de pauta
 app.post("/api/pauta/firmar", (req, res) => {
-  const { tipo, acepta, responsable, cargo, proveedor, cuit } = req.body;
+  const { tipoPauta, acepta, responsable, cargo, proveedor, cuit } = req.body;
+
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
+  if (!acepta || !proveedor || !cuitLimpio)
+    return res.status(400).json({ ok: false, error: "datos_incompletos" });
 
-  if (!acepta || !proveedor || !cuitLimpio || !responsable || !cargo) {
-    return res
-      .status(400)
-      .json({ ok: false, error: "datos_incompletos" });
-  }
+  if (!webhookURL)
+    return res.status(500).json({ ok: false, error: "webhook_no_configurado" });
 
-  if (!webhookPautaURL) {
-    return res
-      .status(500)
-      .json({ ok: false, error: "webhook_no_configurado" });
-  }
+  // NORMALIZAR tipo de pauta para Apps Script
+  let tipoFinal = "pauta";
+  if (tipoPauta && tipoPauta.toLowerCase().includes("organ"))
+    tipoFinal = "pauta organica";
 
-  const ahora = new Date();
-  const fechaLocal = ahora
-    .toLocaleString("es-AR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-    .replace(",", "");
+  console.log("➡ Enviando pauta:", tipoFinal);
 
-  // Normalizamos el tipo de pauta según el botón:
-  //  - botón "Firmar Pauta" envía tipo="pauta"
-  //  - botón "Firmar Pauta Orgánica" envía tipo="pauta_organica"
-  const tipoPauta =
-    typeof tipo === "string" && tipo.toLowerCase().includes("organ")
-      ? "pauta organica"
-      : "pauta";
-
-  const payload = {
+  const postData = JSON.stringify({
+    accion: "aceptacion_pauta",
+    modo: "registrar",
     proveedor,
     cuit: cuitLimpio,
     responsable,
     cargo,
-    tipoPauta,          // 👈 esto es lo que usa AceptacionesPauta.gs
-    fechaLocal
-  };
-
-  const postData = JSON.stringify(payload);
-
-  console.log("➡ Enviando PAUTA a Apps Script:", payload);
+    tipoPauta: tipoFinal
+  });
 
   const reqGS = https.request(
-    webhookPautaURL,
+    webhookURL,
     {
       method: "POST",
       headers: {
@@ -242,60 +196,40 @@ app.post("/api/pauta/firmar", (req, res) => {
       },
     },
     (resGS) => {
-      let body = "";
-      resGS.on("data", (chunk) => (body += chunk.toString()));
+      let data = "";
+      resGS.on("data", (c) => (data += c));
       resGS.on("end", () => {
-        console.log("⬅ Respuesta Apps Script PAUTA:", resGS.statusCode, body);
-        try {
-          const json = JSON.parse(body);
-          if (json && typeof json === "object") {
-            return res.json(json);
-          }
-        } catch (e) {
-          console.warn(
-            "⚠ No se pudo parsear respuesta de Apps Script:",
-            e.message
-          );
-        }
-        return res.json({ ok: true, fechaLocal });
+        console.log("⬅ Respuesta Google Pauta:", data);
+        return res.json({ ok: true });
       });
     }
   );
 
   reqGS.on("error", (err) => {
-    console.error("❌ Error al enviar PAUTA:", err.message);
-    return res
-      .status(500)
-      .json({ ok: false, error: "error_webhook", detail: err.message });
+    console.log("❌ Error webhook pauta:", err.message);
+    return res.status(500).json({ ok: false, error: "error_webhook" });
   });
 
   reqGS.write(postData);
   reqGS.end();
 });
 
-// -------------------------------
-//     RUTAS ADMINISTRADOR
-// -------------------------------
+// ---------------- ADMIN ----------------
 
-// Página admin
 app.get("/admin/ingresos", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin", "ingresos.html"));
 });
 
-// API ingresos diarios
 app.get("/api/admin/ingresos-diarios", (req, res) => {
   res.json(ingresosDiarios || []);
 });
 
-// API ProCert (orgánicos)
 app.get("/api/admin/procert", (req, res) => {
   res.json(proCert || []);
 });
 
-// -------------------------------
-//      INICIO DEL SERVIDOR
-// -------------------------------
+// ---------------- INICIO SERVIDOR ----------------
 
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor funcionando en http://localhost:${PORT}`);
-});
+app.listen(PORT, () =>
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)
+);
