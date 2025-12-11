@@ -6,13 +6,13 @@ const https = require("https");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Detección de entorno Render
+// Detectar si estamos en Render
 const isRender =
   process.env.RENDER ||
   process.env.RENDER_EXTERNAL_URL ||
   process.env.PORT;
 
-// Ruta local → I:\Pagina\proveedores\data
+// Ruta base de datos
 const baseDir = isRender
   ? path.join(__dirname, "data")
   : path.join("I:", "Pagina", "proveedores", "data");
@@ -25,22 +25,21 @@ let proCert = [];
 let lastUpdate = { fecha: "Desconocida" };
 
 /**
- * WEBHOOKS
- *  - webhookAccesosURL: hoja ACCESOS.
- *  - webhookPautaURL:  hoja AceptacionesPauta.
+ * WEBHOOKS:
+ *  - ACCESOS: log de accesos
+ *  - PAUTA:   hoja AceptacionesPauta
  */
-
 const webhookAccesosURL =
   "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
 const webhookPautaURL =
   "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
 
-// ---- Carga genérica de JSON ----
+// ---------- Carga genérica de JSON ----------
 function cargarJSON(nombre, ref) {
-  const full = path.join(baseDir, nombre);
+  const fullPath = path.join(baseDir, nombre);
   try {
-    const raw = fs.readFileSync(full, "utf8");
+    const raw = fs.readFileSync(fullPath, "utf8");
     ref.data = JSON.parse(raw);
     console.log(
       `✔ Cargado ${nombre} (${
@@ -73,15 +72,16 @@ lastUpdate = refLastUpdate.data || lastUpdate;
 
 console.log("✔ Datos cargados correctamente");
 
+// Middleware
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir /data (incluye /data/pauta/pauta.pdf, etc.)
+// Servir archivos de /data (incluye PDFs de pauta)
 app.use("/data", express.static(baseDir));
 
 // ---------------------------------
-//        RUTAS PÚBLICAS
+//              RUTAS
 // ---------------------------------
 
 app.get("/", (req, res) => {
@@ -92,7 +92,7 @@ app.get("/index-celu.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index-celu.html"));
 });
 
-// LOGIN proveedores
+// ---------- LOGIN PROVEEDORES ----------
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
   const cuiLimpio = (cui || "").replace(/[^0-9]/g, "");
@@ -143,34 +143,35 @@ app.post("/login", (req, res) => {
     return res.json({
       tipo: "admin",
       proveedor: proveedor.nombre || "ADMINISTRADOR",
+      org: proveedor.org || proveedor.Org || "",
       ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
     });
   }
 
-  // Entregas proveedor
+  // Entregas del proveedor
   const entregas = proFru.filter((e) => e.ProveedorT === proveedor.nombre);
   const totalKgs = entregas.reduce(
-    (s, e) => s + (parseFloat(e.KgsD) || 0),
+    (suma, e) => suma + (parseFloat(e.KgsD) || 0),
     0
   );
 
   res.json({
     proveedor: proveedor.nombre,
+    org: proveedor.org || proveedor.Org || "",   // ← AQUÍ ENVIAMOS org
     entregas,
     resumen: { totalKgs },
     ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
   });
 });
 
-// ---------------------------------
-//        RUTAS PAUTA
-// ---------------------------------
+// ---------- PAUTAS ----------
 
-// Estado pauta (de momento siempre permite firmar)
+// Estado pauta (por ahora: siempre permite firmar)
 app.get("/api/pauta/estado", (req, res) => {
   const cuit = (req.query.cuit || "").replace(/[^0-9]/g, "");
   if (!cuit) return res.json({ ok: false, error: "cuit_requerido" });
 
+  // Más adelante se puede leer hoja AceptacionesPauta.
   return res.json({ ok: true, pauta: { firmado: false } });
 });
 
@@ -202,7 +203,7 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
-  // Normalizamos tipo de pauta según botón
+  // Normalizar tipo de pauta según el botón
   const tipoPauta =
     typeof tipo === "string" &&
     tipo.toLowerCase().includes("organ")
@@ -216,8 +217,9 @@ app.post("/api/pauta/firmar", (req, res) => {
     cargo,
     accion: "aceptacion_pauta",
     modo: "registrar",
-    tipoPauta,              // minúsculas
-    TipoPauta: tipoPauta,   // igual que encabezado "TipoPauta" en la hoja
+    // Dos claves para que Apps Script pueda usar cualquiera
+    tipoPauta,            // minúsculas
+    TipoPauta: tipoPauta, // coincide con encabezado "TipoPauta"
     fechaLocal,
   };
 
@@ -266,9 +268,7 @@ app.post("/api/pauta/firmar", (req, res) => {
   reqGS.end();
 });
 
-// ---------------------------------
-//      RUTAS ADMINISTRADOR
-// ---------------------------------
+// ---------- ADMIN ----------
 
 app.get("/admin/ingresos", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin", "ingresos.html"));
@@ -282,10 +282,7 @@ app.get("/api/admin/procert", (req, res) => {
   res.json(proCert || []);
 });
 
-// ---------------------------------
-//      INICIO SERVIDOR
-// ---------------------------------
-
+// ---------- ARRANQUE SERVIDOR ----------
 app.listen(PORT, () => {
   console.log(`🚀 Servidor funcionando en http://localhost:${PORT}`);
 });
