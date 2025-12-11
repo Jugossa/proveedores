@@ -6,42 +6,39 @@ const https = require("https");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Detectar entorno Render
+// Detección de entorno Render
 const isRender =
   process.env.RENDER ||
   process.env.RENDER_EXTERNAL_URL ||
   process.env.PORT;
 
-// Rutas locales / producción
+// Ruta base a data
 const baseDir = isRender
   ? path.join(__dirname, "data")
   : path.join("I:", "Pagina", "proveedores", "data");
 
-// Variables en memoria
+// Datos del sistema
 let proveedores = [];
 let proFru = [];
 let ingresosDiarios = [];
 let proCert = [];
 let lastUpdate = { fecha: "Desconocida" };
 
-// Webhook oficial (Apps Script)
+// Webhook Apps Script (pautas)
 let webhookURL =
   "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
 
-// ---------------- CARGA JSON ----------------
-
+// ------------------------------
+//   FUNCIONES CARGA JSON
+// ------------------------------
 function cargarJSON(nombre, ref) {
   const full = path.join(baseDir, nombre);
   try {
     const raw = fs.readFileSync(full, "utf8");
     ref.data = JSON.parse(raw);
-    console.log(
-      `✔ Cargado ${nombre} (${
-        Array.isArray(ref.data) ? ref.data.length : "objeto"
-      } registros)`
-    );
+    console.log(`✔ Cargado ${nombre}`);
   } catch (err) {
-    console.error(`❌ Error al leer ${nombre}:`, err.message);
+    console.error(`❌ Error leyendo ${nombre}:`, err.message);
     ref.data = Array.isArray(ref.data) ? [] : {};
   }
 }
@@ -52,31 +49,33 @@ const refIngresos = { data: ingresosDiarios };
 const refProCert = { data: proCert };
 const refLastUpdate = { data: lastUpdate };
 
+// Cargar
 cargarJSON("proveedores.json", refProveedores);
 cargarJSON("profru.json", refProFru);
 cargarJSON("ingresosDiarios.json", refIngresos);
 cargarJSON("ProCert.json", refProCert);
 cargarJSON("lastUpdate.json", refLastUpdate);
 
-// reasignar
+// reasignamos
 proveedores = refProveedores.data;
 proFru = refProFru.data;
 ingresosDiarios = refIngresos.data;
 proCert = refProCert.data;
-lastUpdate = refLastUpdate.data || lastUpdate;
+lastUpdate = refLastUpdate.data;
 
-console.log("✔ Webhook cargado OK");
-
-// Middleware
+// ------------------------------
+// EXPRESS SETUP
+// ------------------------------
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir PDFs desde /data
+// Servir /data (incluye /data/pauta/pauta.pdf)
 app.use("/data", express.static(baseDir));
 
-// ---------------- RUTAS PÚBLICAS ----------------
-
+// ------------------------------
+//   RUTA PRINCIPAL
+// ------------------------------
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -85,8 +84,9 @@ app.get("/index-celu.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index-celu.html"));
 });
 
-// ---------------- LOGIN ----------------
-
+// ------------------------------
+//   LOGIN PROVEEDORES
+// ------------------------------
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
   const cuiLimpio = (cui || "").replace(/[^0-9]/g, "");
@@ -97,14 +97,17 @@ app.post("/login", (req, res) => {
       String(p.clave || "").trim() === String(password || "").trim()
   );
 
-  if (!proveedor) return res.status(401).send("CUIT o clave incorrectos");
+  if (!proveedor) {
+    return res.status(401).send("CUIT o clave incorrectos");
+  }
 
-  // Registrar acceso en Google Sheets
+  // log a Google Sheets (Accesos)
   if (webhookURL) {
     const postData = JSON.stringify({
       tipoRegistro: "acceso",
       nombre: proveedor.nombre,
       cuit: cuiLimpio,
+      fecha: new Date().toISOString(),
     });
 
     const reqGS = https.request(
@@ -117,74 +120,71 @@ app.post("/login", (req, res) => {
         },
       },
       (resGS) => {
-        console.log(`🟢 Google respondió acceso: ${resGS.statusCode}`);
+        console.log(`🟢 ACCESO -> Google respondió: ${resGS.statusCode}`);
       }
     );
 
     reqGS.on("error", (err) => {
-      console.log("❌ Error webhook acceso:", err.message);
+      console.error("❌ Error enviando log de acceso:", err.message);
     });
 
     reqGS.write(postData);
     reqGS.end();
   }
 
-  // ADMIN
+  // Si es admin
   if (cuiLimpio === "692018") {
     return res.json({
       tipo: "admin",
-      proveedor: proveedor.nombre || "ADMINISTRADOR",
-      ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
+      proveedor: proveedor.nombre,
+      ultimaActualizacion: lastUpdate.fecha,
     });
   }
 
-  // Filtrar entregas por proveedor
+  // entregas filtradas
   const entregas = proFru.filter((e) => e.ProveedorT === proveedor.nombre);
-  const totalKgs = entregas.reduce(
-    (s, e) => s + (parseFloat(e.KgsD) || 0),
-    0
-  );
+  const totalKgs = entregas.reduce((s, e) => s + (parseFloat(e.KgsD) || 0), 0);
 
   res.json({
     proveedor: proveedor.nombre,
     entregas,
     resumen: { totalKgs },
-    ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
-    org: proveedor.org || ""   // <─ IMPORTANTE PARA BOTONES PAUTA
+    ultimaActualizacion: lastUpdate.fecha,
   });
 });
 
-// ---------------- FIRMA DE PAUTA ----------------
-//
-// ESTA ES LA PARTE QUE CORRIGIMOS
-//
-
+// --------------------------------------------
+//     FIRMAS DE PAUTA (CORREGIDO ACÁ)
+// --------------------------------------------
 app.post("/api/pauta/firmar", (req, res) => {
-  const { tipoPauta, acepta, responsable, cargo, proveedor, cuit } = req.body;
-
+  const { proveedor, cuit, responsable, cargo, tipoPauta } = req.body;
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
-  if (!acepta || !proveedor || !cuitLimpio)
+
+  if (!proveedor || !cuitLimpio || !responsable || !cargo) {
     return res.status(400).json({ ok: false, error: "datos_incompletos" });
+  }
 
-  if (!webhookURL)
-    return res.status(500).json({ ok: false, error: "webhook_no_configurado" });
+  if (!webhookURL) {
+    return res
+      .status(500)
+      .json({ ok: false, error: "webhook_no_configurado" });
+  }
 
-  // NORMALIZAR tipo de pauta para Apps Script
-  let tipoFinal = "pauta";
-  if (tipoPauta && tipoPauta.toLowerCase().includes("organ"))
-    tipoFinal = "pauta organica";
-
-  console.log("➡ Enviando pauta:", tipoFinal);
+  // Marca EXACTA que Apps Script necesita
+  const tipoFinal =
+    tipoPauta === "pauta" || tipoPauta === "pauta organica"
+      ? tipoPauta
+      : "pauta";
 
   const postData = JSON.stringify({
-    accion: "aceptacion_pauta",
-    modo: "registrar",
     proveedor,
     cuit: cuitLimpio,
     responsable,
     cargo,
-    tipoPauta: tipoFinal
+    tipoPauta: tipoFinal,
   });
+
+  console.log("➡ Enviando PAUTA a Apps Script:", postData);
 
   const reqGS = https.request(
     webhookURL,
@@ -196,26 +196,31 @@ app.post("/api/pauta/firmar", (req, res) => {
       },
     },
     (resGS) => {
+      console.log(`⬅ Respuesta Apps Script PAUTA: ${resGS.statusCode}`);
+
       let data = "";
-      resGS.on("data", (c) => (data += c));
+      resGS.on("data", (chunk) => (data += chunk));
       resGS.on("end", () => {
-        console.log("⬅ Respuesta Google Pauta:", data);
-        return res.json({ ok: true });
+        console.log("Respuesta Google:", data);
+        return res.json({ ok: true, tipoPauta: tipoFinal });
       });
     }
   );
 
   reqGS.on("error", (err) => {
-    console.log("❌ Error webhook pauta:", err.message);
-    return res.status(500).json({ ok: false, error: "error_webhook" });
+    console.error("❌ Error enviando pauta:", err.message);
+    return res
+      .status(500)
+      .json({ ok: false, error: "error_webhook", detalle: err.message });
   });
 
   reqGS.write(postData);
   reqGS.end();
 });
 
-// ---------------- ADMIN ----------------
-
+// ------------------------------
+//   ADMIN: ingresos diarios & ProCert
+// ------------------------------
 app.get("/admin/ingresos", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin", "ingresos.html"));
 });
@@ -228,8 +233,9 @@ app.get("/api/admin/procert", (req, res) => {
   res.json(proCert || []);
 });
 
-// ---------------- INICIO SERVIDOR ----------------
-
-app.listen(PORT, () =>
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)
-);
+// ------------------------------
+//   START SERVER
+// ------------------------------
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor funcionando en http://localhost:${PORT}`);
+});
