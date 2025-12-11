@@ -160,11 +160,14 @@ app.post("/login", (req, res) => {
     0
   );
 
+  // 👇 NUEVO: devolvemos también el flag org para que el front
+  // sepa si debe mostrar el botón de "Pauta orgánica".
   res.json({
     proveedor: proveedor.nombre,
     entregas,
     resumen: { totalKgs },
     ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
+    org: proveedor.org || ""   // "x" si es orgánico, vacío si no
   });
 });
 
