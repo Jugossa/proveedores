@@ -385,11 +385,15 @@
       const m = txt.match(/Bienvenido\s+(.+?)(?:\s+Última|$)/i);
       return m ? m[1].trim() : '';
     }
+
+    // >>> ÚNICA MODIFICACIÓN: normalizar org para decidir si se muestra el botón orgánico
     function showOrgIfNeeded(){
       const bOrg = document.getElementById('btnPautaOrg');
-      const orgFlag = (window.USER?.org === 'x' || window.USER?.org === 'X');
+      const raw  = (window.USER && window.USER.org) ? String(window.USER.org) : '';
+      const orgFlag = raw.trim().toLowerCase() === 'x';
       if (bOrg) bOrg.style.display = orgFlag ? '' : 'none';
     }
+    // <<<
 
     function pintarEstado(s){
       const bP = document.getElementById('btnPauta');
