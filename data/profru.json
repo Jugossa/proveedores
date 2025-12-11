@@ -221,19 +221,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 2017,
-    "Nro Jugos": "0000-00003156-A",
-    "Fecha": 45696.4892708333,
-    "Remito": "2-454",
-    "CantBins": 27,
-    "ProveedorT": "FRUCTUS S.A.S",
-    "Origen": "GLP GROSSI HNOS - FRUTUS S.A.S",
-    "Especie": "pera",
-    "NomVariedad": "PERA WILLIAMS",
-    "KgsD": 11592,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 2016,
     "Nro Jugos": "0000-00003156-A",
     "Fecha": 45696.4892708333,
@@ -247,16 +234,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 2138,
-    "Nro Jugos": "0000-00003341-A",
-    "Fecha": 45698.5009143519,
-    "Remito": "10-325",
-    "CantBins": 23,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 8655,
+    "Ide Jugos": 2017,
+    "Nro Jugos": "0000-00003156-A",
+    "Fecha": 45696.4892708333,
+    "Remito": "2-454",
+    "CantBins": 27,
+    "ProveedorT": "FRUCTUS S.A.S",
+    "Origen": "GLP GROSSI HNOS - FRUTUS S.A.S",
+    "Especie": "pera",
+    "NomVariedad": "PERA WILLIAMS",
+    "KgsD": 11592,
     "pagado": false
   },
   {
@@ -270,6 +257,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 465,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 2138,
+    "Nro Jugos": "0000-00003341-A",
+    "Fecha": 45698.5009143519,
+    "Remito": "10-325",
+    "CantBins": 23,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 8655,
     "pagado": false
   },
   {
@@ -364,19 +364,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 2943,
-    "Nro Jugos": "0000-00004425-A",
-    "Fecha": 45703.7553009259,
-    "Remito": "10-326",
-    "CantBins": 4,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 1871,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 2942,
     "Nro Jugos": "0000-00004425-A",
     "Fecha": 45703.7553009259,
@@ -387,6 +374,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 10289,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 2943,
+    "Nro Jugos": "0000-00004425-A",
+    "Fecha": 45703.7553009259,
+    "Remito": "10-326",
+    "CantBins": 4,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 1871,
     "pagado": false
   },
   {
@@ -429,19 +429,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 3867,
-    "Nro Jugos": "0000-00005650-A",
-    "Fecha": 45710.700775463,
-    "Remito": "10-0327",
-    "CantBins": 24,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 8298,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 3868,
     "Nro Jugos": "0000-00005650-A",
     "Fecha": 45710.700775463,
@@ -452,6 +439,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 3034.3,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 3867,
+    "Nro Jugos": "0000-00005650-A",
+    "Fecha": 45710.700775463,
+    "Remito": "10-0327",
+    "CantBins": 25,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 9336,
     "pagado": false
   },
   {
@@ -481,19 +481,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 5462,
-    "Nro Jugos": "0000-00006821-A",
-    "Fecha": 45716.858599537,
-    "Remito": "1-4649",
-    "CantBins": 4,
-    "ProveedorT": "HERNANDEZ MARTIN CRUZ",
-    "Origen": "GLP.CARBAJO VICENTE*",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 1737,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 5460,
     "Nro Jugos": "0000-00006821-A",
     "Fecha": 45716.858599537,
@@ -504,6 +491,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 2100,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 5462,
+    "Nro Jugos": "0000-00006821-A",
+    "Fecha": 45716.858599537,
+    "Remito": "1-4649",
+    "CantBins": 4,
+    "ProveedorT": "HERNANDEZ MARTIN CRUZ",
+    "Origen": "GLP.CARBAJO VICENTE*",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 1737,
     "pagado": false
   },
   {
@@ -559,19 +559,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 13909,
-    "Nro Jugos": "0000-00008646-A",
-    "Fecha": 45728.4741898148,
-    "Remito": "10-42120",
-    "CantBins": 8,
-    "ProveedorT": "VOMMARO SETIMIO",
-    "Origen": "GLP.ALCAZAR CARBAJO VICENTE*",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 3822,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 13910,
     "Nro Jugos": "0000-00008646-A",
     "Fecha": 45728.4741898148,
@@ -582,6 +569,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 989,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 13909,
+    "Nro Jugos": "0000-00008646-A",
+    "Fecha": 45728.4741898148,
+    "Remito": "10-42120",
+    "CantBins": 8,
+    "ProveedorT": "VOMMARO SETIMIO",
+    "Origen": "GLP.ALCAZAR CARBAJO VICENTE*",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 3822,
     "pagado": false
   },
   {
@@ -624,19 +624,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 6786,
-    "Nro Jugos": "0000-00009341-A",
-    "Fecha": 45733.5194212963,
-    "Remito": "2-594",
-    "CantBins": 29,
-    "ProveedorT": "FRUCTUS S.A.S",
-    "Origen": "GLP GROSSI HNOS - FRUTUS S.A.S",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 13679,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 6787,
     "Nro Jugos": "0000-00009341-A",
     "Fecha": 45733.5194212963,
@@ -650,16 +637,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 6870,
-    "Nro Jugos": "0000-00009442-A",
-    "Fecha": 45733.8433564815,
-    "Remito": "060/10-42197",
-    "CantBins": 4,
-    "ProveedorT": "SCUADRONI CRISTIAN JAVIER",
-    "Origen": "CH.G.PAZ CASSINELLI DANIEL",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 1388,
+    "Ide Jugos": 6786,
+    "Nro Jugos": "0000-00009341-A",
+    "Fecha": 45733.5194212963,
+    "Remito": "2-594",
+    "CantBins": 29,
+    "ProveedorT": "FRUCTUS S.A.S",
+    "Origen": "GLP GROSSI HNOS - FRUTUS S.A.S",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 13679,
     "pagado": false
   },
   {
@@ -673,6 +660,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA CHACRA",
     "KgsD": 936,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 6870,
+    "Nro Jugos": "0000-00009442-A",
+    "Fecha": 45733.8433564815,
+    "Remito": "060/10-42197",
+    "CantBins": 4,
+    "ProveedorT": "SCUADRONI CRISTIAN JAVIER",
+    "Origen": "CH.G.PAZ CASSINELLI DANIEL",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 1388,
     "pagado": false
   },
   {
@@ -741,19 +741,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 8074,
-    "Nro Jugos": "0000-00011031-A",
-    "Fecha": 45743.8280787037,
-    "Remito": "10-333",
-    "CantBins": 5,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 1934,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 8073,
     "Nro Jugos": "0000-00011031-A",
     "Fecha": 45743.8280787037,
@@ -764,6 +751,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 5926,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 8074,
+    "Nro Jugos": "0000-00011031-A",
+    "Fecha": 45743.8280787037,
+    "Remito": "10-333",
+    "CantBins": 5,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 1934,
     "pagado": false
   },
   {
@@ -806,19 +806,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 8523,
-    "Nro Jugos": "0000-00011663-A",
-    "Fecha": 45748.4912731481,
-    "Remito": "149/10-42386",
-    "CantBins": 1,
-    "ProveedorT": "FRUTAS ADAN S.A.S",
-    "Origen": "CH.GODOY GALLETTA - CASTILLO",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 421.2,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 8524,
     "Nro Jugos": "0000-00011663-A",
     "Fecha": 45748.4912731481,
@@ -829,6 +816,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA CHACRA",
     "KgsD": 8247.6,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 8523,
+    "Nro Jugos": "0000-00011663-A",
+    "Fecha": 45748.4912731481,
+    "Remito": "149/10-42386",
+    "CantBins": 1,
+    "ProveedorT": "FRUTAS ADAN S.A.S",
+    "Origen": "CH.GODOY GALLETTA - CASTILLO",
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 421.2,
     "pagado": false
   },
   {
@@ -897,19 +897,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 13891,
-    "Nro Jugos": "0000-00012888-A",
-    "Fecha": 45756.43125,
-    "Remito": "981/10-42519",
-    "CantBins": 5,
-    "ProveedorT": "HERNANDEZ MARTIN CRUZ",
-    "Origen": "GLP.ALCAZAR CARBAJO VICENTE*",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 2359,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 13896,
     "Nro Jugos": "0000-00012888-A",
     "Fecha": 45756.43125,
@@ -923,16 +910,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 9474,
-    "Nro Jugos": "0000-00012927-A",
-    "Fecha": 45756.679375,
-    "Remito": "1-1699",
-    "CantBins": 1,
-    "ProveedorT": "MARTINELLI MARCELO ALEJANDRO",
-    "Origen": "CH.CASA MARTINELLI MARCELO",
-    "Especie": "manza",
-    "NomVariedad": "VERDE CHACRA",
-    "KgsD": 370.5,
+    "Ide Jugos": 13891,
+    "Nro Jugos": "0000-00012888-A",
+    "Fecha": 45756.43125,
+    "Remito": "981/10-42519",
+    "CantBins": 5,
+    "ProveedorT": "HERNANDEZ MARTIN CRUZ",
+    "Origen": "GLP.ALCAZAR CARBAJO VICENTE*",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 2359,
     "pagado": false
   },
   {
@@ -946,6 +933,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
     "KgsD": 6298.5,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 9474,
+    "Nro Jugos": "0000-00012927-A",
+    "Fecha": 45756.679375,
+    "Remito": "1-1699",
+    "CantBins": 1,
+    "ProveedorT": "MARTINELLI MARCELO ALEJANDRO",
+    "Origen": "CH.CASA MARTINELLI MARCELO",
+    "Especie": "manza",
+    "NomVariedad": "VERDE CHACRA",
+    "KgsD": 370.5,
     "pagado": false
   },
   {
@@ -1014,19 +1014,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 9730,
-    "Nro Jugos": "0000-00013242-A",
-    "Fecha": 45758.6305555556,
-    "Remito": "04-0892",
-    "CantBins": 6,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 2105.88,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 9729,
     "Nro Jugos": "0000-00013242-A",
     "Fecha": 45758.6305555556,
@@ -1040,16 +1027,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 9743,
-    "Nro Jugos": "0000-00013250-A",
-    "Fecha": 45758.6694328704,
-    "Remito": "4-893",
-    "CantBins": 23,
+    "Ide Jugos": 9730,
+    "Nro Jugos": "0000-00013242-A",
+    "Fecha": 45758.6305555556,
+    "Remito": "04-0892",
+    "CantBins": 6,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
-    "KgsD": 8475.9,
+    "KgsD": 2105.88,
     "pagado": false
   },
   {
@@ -1066,16 +1053,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 9782,
-    "Nro Jugos": "0000-00013301-A",
-    "Fecha": 45758.8251157407,
-    "Remito": "4-894",
-    "CantBins": 36,
+    "Ide Jugos": 9743,
+    "Nro Jugos": "0000-00013250-A",
+    "Fecha": 45758.6694328704,
+    "Remito": "4-893",
+    "CantBins": 23,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
-    "KgsD": 13606.8,
+    "KgsD": 8475.9,
     "pagado": false
   },
   {
@@ -1092,16 +1079,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 9790,
-    "Nro Jugos": "0000-00013312-A",
-    "Fecha": 45758.8796875,
-    "Remito": "04-0895",
-    "CantBins": 42,
+    "Ide Jugos": 9782,
+    "Nro Jugos": "0000-00013301-A",
+    "Fecha": 45758.8251157407,
+    "Remito": "4-894",
+    "CantBins": 36,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
     "Especie": "manza",
-    "NomVariedad": "VERDE CHACRA",
-    "KgsD": 14706,
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 13606.8,
     "pagado": false
   },
   {
@@ -1115,6 +1102,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 4800,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 9790,
+    "Nro Jugos": "0000-00013312-A",
+    "Fecha": 45758.8796875,
+    "Remito": "04-0895",
+    "CantBins": 42,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "VERDE CHACRA",
+    "KgsD": 14706,
     "pagado": false
   },
   {
@@ -1144,6 +1144,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 9966,
+    "Nro Jugos": "0000-00013518-A",
+    "Fecha": 45761.3897337963,
+    "Remito": "02-0661",
+    "CantBins": 20,
+    "ProveedorT": "FRUCTUS S.A.S",
+    "Origen": "GLP GROSSI HNOS - FRUTUS S.A.S",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 9194,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 9965,
     "Nro Jugos": "0000-00013518-A",
     "Fecha": 45761.3897337963,
@@ -1157,16 +1170,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 9966,
-    "Nro Jugos": "0000-00013518-A",
-    "Fecha": 45761.3897337963,
-    "Remito": "02-0661",
-    "CantBins": 20,
-    "ProveedorT": "FRUCTUS S.A.S",
-    "Origen": "GLP GROSSI HNOS - FRUTUS S.A.S",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 9194,
+    "Ide Jugos": 9987,
+    "Nro Jugos": "0000-00013546-A",
+    "Fecha": 45761.4709259259,
+    "Remito": "04-0897",
+    "CantBins": 9,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 3511,
     "pagado": false
   },
   {
@@ -1196,19 +1209,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 9987,
-    "Nro Jugos": "0000-00013546-A",
-    "Fecha": 45761.4709259259,
-    "Remito": "04-0897",
-    "CantBins": 9,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 3511,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 9999,
     "Nro Jugos": "0000-00013557-A",
     "Fecha": 45761.5508101852,
@@ -1235,19 +1235,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10020,
-    "Nro Jugos": "0000-00013577-A",
-    "Fecha": 45761.635,
-    "Remito": "4-898",
-    "CantBins": 10,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 3801,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 10022,
     "Nro Jugos": "0000-00013577-A",
     "Fecha": 45761.635,
@@ -1258,6 +1245,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE CHACRA",
     "KgsD": 16459,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 10020,
+    "Nro Jugos": "0000-00013577-A",
+    "Fecha": 45761.635,
+    "Remito": "4-898",
+    "CantBins": 10,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 3801,
     "pagado": false
   },
   {
@@ -1274,19 +1274,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10081,
-    "Nro Jugos": "0000-00013661-A",
-    "Fecha": 45761.8883564815,
-    "Remito": "04-0900",
-    "CantBins": 20,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "VERDE CHACRA",
-    "KgsD": 7563,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 10080,
     "Nro Jugos": "0000-00013661-A",
     "Fecha": 45761.8883564815,
@@ -1300,16 +1287,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10124,
-    "Nro Jugos": "0000-00013713-A",
-    "Fecha": 45762.3770601852,
-    "Remito": "04-0901",
-    "CantBins": 5,
+    "Ide Jugos": 10081,
+    "Nro Jugos": "0000-00013661-A",
+    "Fecha": 45761.8883564815,
+    "Remito": "04-0900",
+    "CantBins": 20,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 2170.75,
+    "Especie": "manza",
+    "NomVariedad": "VERDE CHACRA",
+    "KgsD": 7563,
     "pagado": false
   },
   {
@@ -1323,6 +1310,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA CHACRA",
     "KgsD": 20425,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 10124,
+    "Nro Jugos": "0000-00013713-A",
+    "Fecha": 45762.3770601852,
+    "Remito": "04-0901",
+    "CantBins": 5,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 2170.75,
     "pagado": false
   },
   {
@@ -1404,19 +1404,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10280,
-    "Nro Jugos": "0000-00013859-A",
-    "Fecha": 45762.7702199074,
-    "Remito": "10-335",
-    "CantBins": 12,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 5405,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 10279,
     "Nro Jugos": "0000-00013859-A",
     "Fecha": 45762.7702199074,
@@ -1430,16 +1417,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10287,
-    "Nro Jugos": "0000-00013865-A",
-    "Fecha": 45762.7845486111,
-    "Remito": "4-904",
-    "CantBins": 31,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 11799.95,
+    "Ide Jugos": 10280,
+    "Nro Jugos": "0000-00013859-A",
+    "Fecha": 45762.7702199074,
+    "Remito": "10-335",
+    "CantBins": 12,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 5405,
     "pagado": false
   },
   {
@@ -1456,42 +1443,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10330,
-    "Nro Jugos": "0000-00013927-A",
-    "Fecha": 45763.4208912037,
-    "Remito": "04-0905",
-    "CantBins": 33,
+    "Ide Jugos": 10287,
+    "Nro Jugos": "0000-00013865-A",
+    "Fecha": 45762.7845486111,
+    "Remito": "4-904",
+    "CantBins": 31,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
-    "KgsD": 13805,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 10333,
-    "Nro Jugos": "0000-00013927-A",
-    "Fecha": 45763.4208912037,
-    "Remito": "04-0905",
-    "CantBins": 7,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 3443,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 10331,
-    "Nro Jugos": "0000-00013927-A",
-    "Fecha": 45763.4208912037,
-    "Remito": "04-0905",
-    "CantBins": 7,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 3260,
+    "KgsD": 11799.95,
     "pagado": false
   },
   {
@@ -1508,29 +1469,42 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10442,
-    "Nro Jugos": "0000-00014052-A",
-    "Fecha": 45763.8943981482,
-    "Remito": "04-0906",
-    "CantBins": 4,
+    "Ide Jugos": 10333,
+    "Nro Jugos": "0000-00013927-A",
+    "Fecha": 45763.4208912037,
+    "Remito": "04-0905",
+    "CantBins": 7,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 1471.55,
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 3443,
     "pagado": false
   },
   {
-    "Ide Jugos": 10443,
-    "Nro Jugos": "0000-00014052-A",
-    "Fecha": 45763.8943981482,
-    "Remito": "04-0906",
-    "CantBins": 46,
+    "Ide Jugos": 10330,
+    "Nro Jugos": "0000-00013927-A",
+    "Fecha": 45763.4208912037,
+    "Remito": "04-0905",
+    "CantBins": 33,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
-    "KgsD": 17660.5,
+    "KgsD": 13805,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 10331,
+    "Nro Jugos": "0000-00013927-A",
+    "Fecha": 45763.4208912037,
+    "Remito": "04-0905",
+    "CantBins": 7,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 3260,
     "pagado": false
   },
   {
@@ -1547,6 +1521,32 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 10443,
+    "Nro Jugos": "0000-00014052-A",
+    "Fecha": 45763.8943981482,
+    "Remito": "04-0906",
+    "CantBins": 46,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 17660.5,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 10442,
+    "Nro Jugos": "0000-00014052-A",
+    "Fecha": 45763.8943981482,
+    "Remito": "04-0906",
+    "CantBins": 4,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 1471.55,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 10441,
     "Nro Jugos": "0000-00014052-A",
     "Fecha": 45763.8943981482,
@@ -1557,19 +1557,6 @@
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
     "KgsD": 368.6,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 10471,
-    "Nro Jugos": "0000-00014086-A",
-    "Fecha": 45764.3944675926,
-    "Remito": "04-0907",
-    "CantBins": 28,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 10938,
     "pagado": false
   },
   {
@@ -1586,16 +1573,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10556,
-    "Nro Jugos": "0000-00014177-A",
-    "Fecha": 45764.7834375,
-    "Remito": "4-908",
-    "CantBins": 12,
+    "Ide Jugos": 10471,
+    "Nro Jugos": "0000-00014086-A",
+    "Fecha": 45764.3944675926,
+    "Remito": "04-0907",
+    "CantBins": 28,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 5261.48,
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 10938,
     "pagado": false
   },
   {
@@ -1609,6 +1596,32 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 15165.9,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 10556,
+    "Nro Jugos": "0000-00014177-A",
+    "Fecha": 45764.7834375,
+    "Remito": "4-908",
+    "CantBins": 12,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 5261.48,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 10697,
+    "Nro Jugos": "0000-00014328-A",
+    "Fecha": 45768.4305439815,
+    "Remito": "04-0909",
+    "CantBins": 21,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 9072.9,
     "pagado": false
   },
   {
@@ -1638,19 +1651,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10697,
-    "Nro Jugos": "0000-00014328-A",
-    "Fecha": 45768.4305439815,
-    "Remito": "04-0909",
-    "CantBins": 21,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 9072.9,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 10696,
     "Nro Jugos": "0000-00014328-A",
     "Fecha": 45768.4305439815,
@@ -1664,16 +1664,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10701,
+    "Ide Jugos": 10703,
     "Nro Jugos": "0000-00014335-A",
     "Fecha": 45768.4737962963,
     "Remito": "10-0336",
-    "CantBins": 5,
+    "CantBins": 21,
     "ProveedorT": "DEL BEN JUAN CELESTINO",
     "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
-    "KgsD": 1797,
+    "KgsD": 7898,
     "pagado": false
   },
   {
@@ -1690,16 +1690,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10703,
+    "Ide Jugos": 10701,
     "Nro Jugos": "0000-00014335-A",
     "Fecha": 45768.4737962963,
     "Remito": "10-0336",
-    "CantBins": 21,
+    "CantBins": 5,
     "ProveedorT": "DEL BEN JUAN CELESTINO",
     "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
-    "KgsD": 7898,
+    "KgsD": 1797,
     "pagado": false
   },
   {
@@ -1742,19 +1742,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10871,
-    "Nro Jugos": "0000-00014592-A",
-    "Fecha": 45771.4140162037,
-    "Remito": "04-0912",
-    "CantBins": 17,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 7344,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 10872,
     "Nro Jugos": "0000-00014592-A",
     "Fecha": 45771.4140162037,
@@ -1765,6 +1752,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
     "KgsD": 5006.7,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 10871,
+    "Nro Jugos": "0000-00014592-A",
+    "Fecha": 45771.4140162037,
+    "Remito": "04-0912",
+    "CantBins": 17,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 7344,
     "pagado": false
   },
   {
@@ -1794,19 +1794,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 10948,
-    "Nro Jugos": "0000-00014696-A",
-    "Fecha": 45771.7982060185,
-    "Remito": "10-337",
-    "CantBins": 13,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 5968,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 10947,
     "Nro Jugos": "0000-00014696-A",
     "Fecha": 45771.7982060185,
@@ -1817,6 +1804,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 6442,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 10948,
+    "Nro Jugos": "0000-00014696-A",
+    "Fecha": 45771.7982060185,
+    "Remito": "10-337",
+    "CantBins": 13,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 5968,
     "pagado": false
   },
   {
@@ -1872,19 +1872,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 11160,
-    "Nro Jugos": "0000-00014945-A",
-    "Fecha": 45775.6431134259,
-    "Remito": "4-916",
-    "CantBins": 34,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 13526,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 11161,
     "Nro Jugos": "0000-00014945-A",
     "Fecha": 45775.6431134259,
@@ -1895,6 +1882,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA CHACRA",
     "KgsD": 954,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 11160,
+    "Nro Jugos": "0000-00014945-A",
+    "Fecha": 45775.6431134259,
+    "Remito": "4-916",
+    "CantBins": 34,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 13526,
     "pagado": false
   },
   {
@@ -1950,19 +1950,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 11372,
-    "Nro Jugos": "0000-00015221-A",
-    "Fecha": 45777.8381018518,
-    "Remito": "04-917",
-    "CantBins": 53,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 20198,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 11373,
     "Nro Jugos": "0000-00015221-A",
     "Fecha": 45777.8381018518,
@@ -1973,6 +1960,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA CHACRA",
     "KgsD": 2806.7,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 11372,
+    "Nro Jugos": "0000-00015221-A",
+    "Fecha": 45777.8381018518,
+    "Remito": "04-917",
+    "CantBins": 53,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 20198,
     "pagado": false
   },
   {
@@ -1989,6 +1989,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 11428,
+    "Nro Jugos": "0000-00015284-A",
+    "Fecha": 45779.5922337963,
+    "Remito": "1-3909",
+    "CantBins": 10,
+    "ProveedorT": "PIERDOMINICI HORACIO VICENTE JUAN",
+    "Origen": "CH.4 ESQUINAS PIERDOMINICI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 3448.8,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 11431,
     "Nro Jugos": "0000-00015284-A",
     "Fecha": 45779.5922337963,
@@ -2002,16 +2015,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 11428,
-    "Nro Jugos": "0000-00015284-A",
-    "Fecha": 45779.5922337963,
-    "Remito": "1-3909",
-    "CantBins": 10,
-    "ProveedorT": "PIERDOMINICI HORACIO VICENTE JUAN",
-    "Origen": "CH.4 ESQUINAS PIERDOMINICI",
+    "Ide Jugos": 11475,
+    "Nro Jugos": "0000-00015339-A",
+    "Fecha": 45780.4055671296,
+    "Remito": "10-0341",
+    "CantBins": 20,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
-    "KgsD": 3448.8,
+    "KgsD": 7172.5,
     "pagado": false
   },
   {
@@ -2028,16 +2041,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 11475,
-    "Nro Jugos": "0000-00015339-A",
-    "Fecha": 45780.4055671296,
-    "Remito": "10-0341",
-    "CantBins": 20,
+    "Ide Jugos": 11529,
+    "Nro Jugos": "0000-00015396-A",
+    "Fecha": 45782.48,
+    "Remito": "10-0342",
+    "CantBins": 1,
     "ProveedorT": "DEL BEN JUAN CELESTINO",
     "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
-    "KgsD": 7172.5,
+    "KgsD": 370.5,
     "pagado": false
   },
   {
@@ -2064,19 +2077,6 @@
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
     "KgsD": 11214.75,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 11529,
-    "Nro Jugos": "0000-00015396-A",
-    "Fecha": 45782.48,
-    "Remito": "10-0342",
-    "CantBins": 1,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 370.5,
     "pagado": false
   },
   {
@@ -2134,19 +2134,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 11569,
-    "Nro Jugos": "0000-00015450-A",
-    "Fecha": 45782.7434375,
-    "Remito": "1-15130",
-    "CantBins": 53,
-    "ProveedorT": "PRIMERA COOP.F.DE GENERAL ROCA",
-    "Origen": "GLP.PRIMERA COOPERATIVA",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 24801,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 11570,
     "Nro Jugos": "0000-00015450-A",
     "Fecha": 45782.7434375,
@@ -2160,16 +2147,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 11599,
-    "Nro Jugos": "0000-00015492-A",
-    "Fecha": 45783.4038078704,
-    "Remito": "04-0919",
-    "CantBins": 30,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 10613.95,
+    "Ide Jugos": 11569,
+    "Nro Jugos": "0000-00015450-A",
+    "Fecha": 45782.7434375,
+    "Remito": "1-15130",
+    "CantBins": 53,
+    "ProveedorT": "PRIMERA COOP.F.DE GENERAL ROCA",
+    "Origen": "GLP.PRIMERA COOPERATIVA",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 24801,
     "pagado": false
   },
   {
@@ -2199,6 +2186,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 11599,
+    "Nro Jugos": "0000-00015492-A",
+    "Fecha": 45783.4038078704,
+    "Remito": "04-0919",
+    "CantBins": 30,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 10613.95,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 11649,
     "Nro Jugos": "0000-00015561-A",
     "Fecha": 45783.7158217593,
@@ -2209,19 +2209,6 @@
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
     "KgsD": 10400,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 11684,
-    "Nro Jugos": "0000-00015611-A",
-    "Fecha": 45784.401875,
-    "Remito": "04-0921",
-    "CantBins": 20,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 8081.65,
     "pagado": false
   },
   {
@@ -2368,19 +2355,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 11912,
-    "Nro Jugos": "0000-00015871-A",
-    "Fecha": 45786.4126967593,
-    "Remito": "04-0925",
-    "CantBins": 10,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 5043.55,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 11917,
     "Nro Jugos": "0000-00015871-A",
     "Fecha": 45786.4126967593,
@@ -2407,6 +2381,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 11912,
+    "Nro Jugos": "0000-00015871-A",
+    "Fecha": 45786.4126967593,
+    "Remito": "04-0925",
+    "CantBins": 10,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 5043.55,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 11910,
     "Nro Jugos": "0000-00015871-A",
     "Fecha": 45786.4126967593,
@@ -2417,19 +2404,6 @@
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
     "KgsD": 351,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 11938,
-    "Nro Jugos": "0000-00015901-A",
-    "Fecha": 45786.5005208333,
-    "Remito": "01-4130",
-    "CantBins": 3,
-    "ProveedorT": "ALDRIGHETTI RUDI",
-    "Origen": "GLP RUDY ALDRIGHETTI V.REGINA",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 1381,
     "pagado": false
   },
   {
@@ -2459,6 +2433,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 11938,
+    "Nro Jugos": "0000-00015901-A",
+    "Fecha": 45786.5005208333,
+    "Remito": "01-4130",
+    "CantBins": 3,
+    "ProveedorT": "ALDRIGHETTI RUDI",
+    "Origen": "GLP RUDY ALDRIGHETTI V.REGINA",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 1381,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 11966,
     "Nro Jugos": "0000-00015927-A",
     "Fecha": 45786.6520138889,
@@ -2485,19 +2472,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 11987,
-    "Nro Jugos": "0000-00015953-A",
-    "Fecha": 45786.7340856481,
-    "Remito": "4-927",
-    "CantBins": 13,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 5433,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 11990,
     "Nro Jugos": "0000-00015953-A",
     "Fecha": 45786.7340856481,
@@ -2508,6 +2482,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
     "KgsD": 0,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 11986,
+    "Nro Jugos": "0000-00015953-A",
+    "Fecha": 45786.7340856481,
+    "Remito": "4-927",
+    "CantBins": 1,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 390,
     "pagado": false
   },
   {
@@ -2524,16 +2511,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 11986,
+    "Ide Jugos": 11987,
     "Nro Jugos": "0000-00015953-A",
     "Fecha": 45786.7340856481,
     "Remito": "4-927",
-    "CantBins": 1,
+    "CantBins": 13,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
-    "KgsD": 390,
+    "KgsD": 5433,
     "pagado": false
   },
   {
@@ -2563,19 +2550,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12041,
-    "Nro Jugos": "0000-00016014-A",
-    "Fecha": 45787.5274537037,
-    "Remito": "10-0347",
-    "CantBins": 2,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 707,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 12040,
     "Nro Jugos": "0000-00016014-A",
     "Fecha": 45787.5274537037,
@@ -2589,16 +2563,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12094,
-    "Nro Jugos": "0000-00016090-A",
-    "Fecha": 45789.7326736111,
-    "Remito": "4-928",
-    "CantBins": 10,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 5300,
+    "Ide Jugos": 12041,
+    "Nro Jugos": "0000-00016014-A",
+    "Fecha": 45787.5274537037,
+    "Remito": "10-0347",
+    "CantBins": 2,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 707,
     "pagado": false
   },
   {
@@ -2612,6 +2586,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE CHACRA",
     "KgsD": 4320,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 12094,
+    "Nro Jugos": "0000-00016090-A",
+    "Fecha": 45789.7326736111,
+    "Remito": "4-928",
+    "CantBins": 10,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 5300,
     "pagado": false
   },
   {
@@ -2719,19 +2706,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12241,
-    "Nro Jugos": "0000-00016307-A",
-    "Fecha": 45791.7169212963,
-    "Remito": "10-349",
-    "CantBins": 17,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 5771.7,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 12242,
     "Nro Jugos": "0000-00016307-A",
     "Fecha": 45791.7169212963,
@@ -2745,16 +2719,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12245,
-    "Nro Jugos": "0000-00016310-A",
-    "Fecha": 45791.7272800926,
-    "Remito": "04-930",
-    "CantBins": 8,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 3840,
+    "Ide Jugos": 12241,
+    "Nro Jugos": "0000-00016307-A",
+    "Fecha": 45791.7169212963,
+    "Remito": "10-349",
+    "CantBins": 17,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 5771.7,
     "pagado": false
   },
   {
@@ -2768,6 +2742,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE CHACRA",
     "KgsD": 5880,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 12245,
+    "Nro Jugos": "0000-00016310-A",
+    "Fecha": 45791.7272800926,
+    "Remito": "04-930",
+    "CantBins": 8,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 3840,
     "pagado": false
   },
   {
@@ -2797,19 +2784,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12320,
-    "Nro Jugos": "0000-00016419-A",
-    "Fecha": 45792.7368402778,
-    "Remito": "4-931",
-    "CantBins": 4,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 1865,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 12319,
     "Nro Jugos": "0000-00016419-A",
     "Fecha": 45792.7368402778,
@@ -2820,6 +2794,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE CHACRA",
     "KgsD": 6683.25,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 12320,
+    "Nro Jugos": "0000-00016419-A",
+    "Fecha": 45792.7368402778,
+    "Remito": "4-931",
+    "CantBins": 4,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 1865,
     "pagado": false
   },
   {
@@ -2849,19 +2836,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12450,
-    "Nro Jugos": "0000-00016533-A",
-    "Fecha": 45793.7151388889,
-    "Remito": "10-42945",
-    "CantBins": 2,
-    "ProveedorT": "VERDUGO JUAN CARLOS",
-    "Origen": "GLP BERMEJO - FUNBAPA",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 796,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 12452,
     "Nro Jugos": "0000-00016533-A",
     "Fecha": 45793.7151388889,
@@ -2872,6 +2846,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 1711,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 12450,
+    "Nro Jugos": "0000-00016533-A",
+    "Fecha": 45793.7151388889,
+    "Remito": "10-42945",
+    "CantBins": 2,
+    "ProveedorT": "VERDUGO JUAN CARLOS",
+    "Origen": "GLP BERMEJO - FUNBAPA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 796,
     "pagado": false
   },
   {
@@ -2927,19 +2914,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12511,
-    "Nro Jugos": "0000-00016638-A",
-    "Fecha": 45796.6464351852,
-    "Remito": "04/0934",
-    "CantBins": 2,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 783,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 12513,
     "Nro Jugos": "0000-00016638-A",
     "Fecha": 45796.6464351852,
@@ -2963,6 +2937,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
     "KgsD": 6425,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 12511,
+    "Nro Jugos": "0000-00016638-A",
+    "Fecha": 45796.6464351852,
+    "Remito": "04/0934",
+    "CantBins": 2,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 783,
     "pagado": false
   },
   {
@@ -3008,16 +2995,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12554,
+    "Ide Jugos": 12556,
     "Nro Jugos": "0000-00016696-A",
     "Fecha": 45797.3924884259,
     "Remito": "04/0935",
-    "CantBins": 2,
+    "CantBins": 7,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA CHACRA",
-    "KgsD": 683,
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 2881,
     "pagado": false
   },
   {
@@ -3034,19 +3021,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12556,
-    "Nro Jugos": "0000-00016696-A",
-    "Fecha": 45797.3924884259,
-    "Remito": "04/0935",
-    "CantBins": 7,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 2881,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 12557,
     "Nro Jugos": "0000-00016696-A",
     "Fecha": 45797.3924884259,
@@ -3060,16 +3034,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12697,
-    "Nro Jugos": "0000-00016838-A",
-    "Fecha": 45798.4033333333,
-    "Remito": "01/4148",
-    "CantBins": 3,
-    "ProveedorT": "ALDRIGHETTI RUDI",
-    "Origen": "GLP RUDY ALDRIGHETTI V.REGINA",
+    "Ide Jugos": 12554,
+    "Nro Jugos": "0000-00016696-A",
+    "Fecha": 45797.3924884259,
+    "Remito": "04/0935",
+    "CantBins": 2,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 1170,
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 683,
     "pagado": false
   },
   {
@@ -3086,6 +3060,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 12697,
+    "Nro Jugos": "0000-00016838-A",
+    "Fecha": 45798.4033333333,
+    "Remito": "01/4148",
+    "CantBins": 3,
+    "ProveedorT": "ALDRIGHETTI RUDI",
+    "Origen": "GLP RUDY ALDRIGHETTI V.REGINA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 1170,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 12714,
     "Nro Jugos": "0000-00016857-A",
     "Fecha": 45798.4919907407,
@@ -3099,19 +3086,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12758,
-    "Nro Jugos": "0000-00016923-A",
-    "Fecha": 45799.4434606481,
-    "Remito": "01/4149",
-    "CantBins": 5,
-    "ProveedorT": "ALDRIGHETTI RUDI",
-    "Origen": "GLP RUDY ALDRIGHETTI V.REGINA",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 1973,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 12757,
     "Nro Jugos": "0000-00016923-A",
     "Fecha": 45799.4434606481,
@@ -3122,6 +3096,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 7347,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 12758,
+    "Nro Jugos": "0000-00016923-A",
+    "Fecha": 45799.4434606481,
+    "Remito": "01/4149",
+    "CantBins": 5,
+    "ProveedorT": "ALDRIGHETTI RUDI",
+    "Origen": "GLP RUDY ALDRIGHETTI V.REGINA",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 1973,
     "pagado": false
   },
   {
@@ -3139,19 +3126,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12830,
-    "Nro Jugos": "0000-00017022-A",
-    "Fecha": 45800.5087384259,
-    "Remito": "04/0906",
-    "CantBins": 3,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 1283,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 12829,
     "Nro Jugos": "0000-00017022-A",
     "Fecha": 45800.5087384259,
@@ -3162,6 +3136,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE CHACRA",
     "KgsD": 7537,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 12830,
+    "Nro Jugos": "0000-00017022-A",
+    "Fecha": 45800.5087384259,
+    "Remito": "04/0906",
+    "CantBins": 3,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 1283,
     "pagado": false
   },
   {
@@ -3178,19 +3165,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12871,
-    "Nro Jugos": "0000-00017070-A",
-    "Fecha": 45800.7425347222,
-    "Remito": "4-937",
-    "CantBins": 18,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "VERDE CHACRA",
-    "KgsD": 6835,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 12870,
     "Nro Jugos": "0000-00017070-A",
     "Fecha": 45800.7425347222,
@@ -3201,6 +3175,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA CHACRA",
     "KgsD": 760,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 12871,
+    "Nro Jugos": "0000-00017070-A",
+    "Fecha": 45800.7425347222,
+    "Remito": "4-937",
+    "CantBins": 18,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "VERDE CHACRA",
+    "KgsD": 6835,
     "pagado": false
   },
   {
@@ -3231,19 +3218,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 12891,
-    "Nro Jugos": "0000-00017091-A",
-    "Fecha": 45801.4319560185,
-    "Remito": "01/4156",
-    "CantBins": 8,
-    "ProveedorT": "ALDRIGHETTI RUDI",
-    "Origen": "GLP RUDY ALDRIGHETTI V.REGINA",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 3060,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 12892,
     "Nro Jugos": "0000-00017091-A",
     "Fecha": 45801.4319560185,
@@ -3254,6 +3228,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 4290,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 12891,
+    "Nro Jugos": "0000-00017091-A",
+    "Fecha": 45801.4319560185,
+    "Remito": "01/4156",
+    "CantBins": 8,
+    "ProveedorT": "ALDRIGHETTI RUDI",
+    "Origen": "GLP RUDY ALDRIGHETTI V.REGINA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 3060,
     "pagado": false
   },
   {
@@ -3454,19 +3441,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 13311,
-    "Nro Jugos": "0000-00017643-A",
-    "Fecha": 45812.7796759259,
-    "Remito": "10-43061",
-    "CantBins": 13,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 4761,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 13312,
     "Nro Jugos": "0000-00017643-A",
     "Fecha": 45812.7796759259,
@@ -3480,16 +3454,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 13886,
-    "Nro Jugos": "0000-00017782-A",
-    "Fecha": 45814.682349537,
-    "Remito": "1-4883",
-    "CantBins": 23,
-    "ProveedorT": "CERVERA CARLOS",
-    "Origen": "GLP.CARBAJO VICENTE*",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 10910,
+    "Ide Jugos": 13311,
+    "Nro Jugos": "0000-00017643-A",
+    "Fecha": 45812.7796759259,
+    "Remito": "10-43061",
+    "CantBins": 13,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 4761,
     "pagado": false
   },
   {
@@ -3503,6 +3477,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 4860,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 13886,
+    "Nro Jugos": "0000-00017782-A",
+    "Fecha": 45814.682349537,
+    "Remito": "1-4883",
+    "CantBins": 23,
+    "ProveedorT": "CERVERA CARLOS",
+    "Origen": "GLP.CARBAJO VICENTE*",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 10910,
     "pagado": false
   },
   {
@@ -3545,19 +3532,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 13753,
-    "Nro Jugos": "0000-00018140-A",
-    "Fecha": 45826.4297916667,
-    "Remito": "01/14940",
-    "CantBins": 8,
-    "ProveedorT": "PRIMERA COOP.F.DE GENERAL ROCA",
-    "Origen": "LA CAUTIVA - PRIMERA COOP.",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 3600,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 13752,
     "Nro Jugos": "0000-00018140-A",
     "Fecha": 45826.4297916667,
@@ -3568,6 +3542,19 @@
     "Especie": "manza",
     "NomVariedad": "PINK LADY GALPON",
     "KgsD": 780,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 13753,
+    "Nro Jugos": "0000-00018140-A",
+    "Fecha": 45826.4297916667,
+    "Remito": "01/14940",
+    "CantBins": 8,
+    "ProveedorT": "PRIMERA COOP.F.DE GENERAL ROCA",
+    "Origen": "LA CAUTIVA - PRIMERA COOP.",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 3600,
     "pagado": false
   },
   {
@@ -3584,19 +3571,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 13833,
-    "Nro Jugos": "0000-00018219-A",
-    "Fecha": 45831.4495949074,
-    "Remito": "10-43115",
-    "CantBins": 13,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 6027,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 13832,
     "Nro Jugos": "0000-00018219-A",
     "Fecha": 45831.4495949074,
@@ -3607,6 +3581,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 3973,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 13833,
+    "Nro Jugos": "0000-00018219-A",
+    "Fecha": 45831.4495949074,
+    "Remito": "10-43115",
+    "CantBins": 13,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 6027,
     "pagado": false
   },
   {
@@ -3623,6 +3610,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 13958,
+    "Nro Jugos": "0000-00018349-A",
+    "Fecha": 45834.7891319444,
+    "Remito": "01-6225",
+    "CantBins": 2,
+    "ProveedorT": "MENIS SRL",
+    "Origen": "GLP.MITRE MARTINA SRL",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 965,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 13956,
     "Nro Jugos": "0000-00018349-A",
     "Fecha": 45834.7891319444,
@@ -3636,16 +3636,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 13958,
-    "Nro Jugos": "0000-00018349-A",
-    "Fecha": 45834.7891319444,
-    "Remito": "01-6225",
-    "CantBins": 2,
-    "ProveedorT": "MENIS SRL",
-    "Origen": "GLP.MITRE MARTINA SRL",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 965,
+    "Ide Jugos": 14014,
+    "Nro Jugos": "0000-00018403-A",
+    "Fecha": 45836.462025463,
+    "Remito": "10-43135",
+    "CantBins": 10,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 4550,
     "pagado": false
   },
   {
@@ -3675,19 +3675,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 14014,
-    "Nro Jugos": "0000-00018403-A",
-    "Fecha": 45836.462025463,
-    "Remito": "10-43135",
-    "CantBins": 10,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 4550,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 14037,
     "Nro Jugos": "0000-00018434-A",
     "Fecha": 45839.6566319444,
@@ -3714,19 +3701,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 14125,
-    "Nro Jugos": "0000-00018513-A",
-    "Fecha": 45842.3875347222,
-    "Remito": "1-6233",
-    "CantBins": 4,
-    "ProveedorT": "MENIS SRL",
-    "Origen": "GLP.MITRE MARTINA SRL",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 1517,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 14126,
     "Nro Jugos": "0000-00018513-A",
     "Fecha": 45842.3875347222,
@@ -3737,6 +3711,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 184,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 14125,
+    "Nro Jugos": "0000-00018513-A",
+    "Fecha": 45842.3875347222,
+    "Remito": "1-6233",
+    "CantBins": 4,
+    "ProveedorT": "MENIS SRL",
+    "Origen": "GLP.MITRE MARTINA SRL",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 1517,
     "pagado": false
   },
   {
@@ -3766,29 +3753,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 14283,
-    "Nro Jugos": "0000-00018660-A",
-    "Fecha": 45849.4753587963,
-    "Remito": "1624",
-    "CantBins": 2,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 804,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 14281,
     "Nro Jugos": "0000-00018660-A",
     "Fecha": 45849.4753587963,
     "Remito": "1624",
-    "CantBins": 72,
-    "ProveedorT": "COOP.DE COM.Y TRANSF.JULIA Y ECHARREN",
+    "CantBins": 10,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
     "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
-    "KgsD": 24500,
+    "KgsD": 4411,
     "pagado": false
   },
   {
@@ -3802,6 +3776,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 8765,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 14283,
+    "Nro Jugos": "0000-00018660-A",
+    "Fecha": 45849.4753587963,
+    "Remito": "1624",
+    "CantBins": 2,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 804,
     "pagado": false
   },
   {
@@ -3883,19 +3870,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 14541,
-    "Nro Jugos": "0000-00018927-A",
-    "Fecha": 45860.483900463,
-    "Remito": "10-43189",
-    "CantBins": 15,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 5503,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 14543,
     "Nro Jugos": "0000-00018927-A",
     "Fecha": 45860.483900463,
@@ -3919,6 +3893,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 2593,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 14541,
+    "Nro Jugos": "0000-00018927-A",
+    "Fecha": 45860.483900463,
+    "Remito": "10-43189",
+    "CantBins": 15,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 5503,
     "pagado": false
   },
   {
@@ -4013,19 +4000,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 14925,
-    "Nro Jugos": "0000-00019324-A",
-    "Fecha": 45875.7374537037,
-    "Remito": "1-4613",
-    "CantBins": 20,
-    "ProveedorT": "ORGANICOS ARGENTINOS SAS",
-    "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 7089,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 14924,
     "Nro Jugos": "0000-00019324-A",
     "Fecha": 45875.7374537037,
@@ -4036,6 +4010,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 17274,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 14925,
+    "Nro Jugos": "0000-00019324-A",
+    "Fecha": 45875.7374537037,
+    "Remito": "1-4613",
+    "CantBins": 20,
+    "ProveedorT": "ORGANICOS ARGENTINOS SAS",
+    "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 7089,
     "pagado": false
   },
   {
@@ -4104,16 +4091,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 15055,
+    "Ide Jugos": 15053,
     "Nro Jugos": "0000-00019455-A",
     "Fecha": 45880.7075347222,
     "Remito": "10-43244",
-    "CantBins": 1,
+    "CantBins": 8,
     "ProveedorT": "DEL BEN JUAN CELESTINO",
     "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
     "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 359,
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 2983,
     "pagado": false
   },
   {
@@ -4130,29 +4117,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 15053,
+    "Ide Jugos": 15055,
     "Nro Jugos": "0000-00019455-A",
     "Fecha": 45880.7075347222,
     "Remito": "10-43244",
-    "CantBins": 8,
+    "CantBins": 1,
     "ProveedorT": "DEL BEN JUAN CELESTINO",
     "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 2983,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 15095,
-    "Nro Jugos": "0000-00019499-A",
-    "Fecha": 45882.4617939815,
-    "Remito": "9-19393",
-    "CantBins": 1,
-    "ProveedorT": "POLI NELSON GABRIEL",
-    "Origen": "GLP.MATADERO - BONADE SA",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 0,
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 359,
     "pagado": false
   },
   {
@@ -4166,6 +4140,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 14030,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 15095,
+    "Nro Jugos": "0000-00019499-A",
+    "Fecha": 45882.4617939815,
+    "Remito": "9-19393",
+    "CantBins": 1,
+    "ProveedorT": "POLI NELSON GABRIEL",
+    "Origen": "GLP.MATADERO - BONADE SA",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 0,
     "pagado": false
   },
   {
@@ -4364,16 +4351,17 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 15400,
+    "Ide Jugos": 15397,
     "Nro Jugos": "0000-00019836-A",
     "Fecha": 45897.5294560185,
     "Remito": "1-4731",
-    "CantBins": 3,
+    "CantBins": 42,
     "ProveedorT": "ORGANICOS ARGENTINOS SAS",
     "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 1166,
+    "NomVariedad": "ROJA ORGANICA",
+    "KgsD": 14821,
+    "Certificado": "FALTA CERTIFICADO",
     "pagado": false
   },
   {
@@ -4390,30 +4378,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 15397,
+    "Ide Jugos": 15400,
     "Nro Jugos": "0000-00019836-A",
     "Fecha": 45897.5294560185,
     "Remito": "1-4731",
-    "CantBins": 42,
+    "CantBins": 3,
     "ProveedorT": "ORGANICOS ARGENTINOS SAS",
     "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
     "Especie": "manza",
-    "NomVariedad": "ROJA ORGANICA",
-    "KgsD": 14821,
-    "Certificado": "FALTA CERTIFICADO",
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 15403,
-    "Nro Jugos": "0000-00019839-A",
-    "Fecha": 45897.6302430556,
-    "Remito": "1-527",
-    "CantBins": 4,
-    "ProveedorT": "ZUDICH ADRIAN EDUARDO RUBEN",
-    "Origen": "GLP.ZUDICH ADRIAN E*",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 1417,
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 1166,
     "pagado": false
   },
   {
@@ -4430,6 +4404,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 15403,
+    "Nro Jugos": "0000-00019839-A",
+    "Fecha": 45897.6302430556,
+    "Remito": "1-527",
+    "CantBins": 4,
+    "ProveedorT": "ZUDICH ADRIAN EDUARDO RUBEN",
+    "Origen": "GLP.ZUDICH ADRIAN E*",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 1417,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 15407,
     "Nro Jugos": "0000-00019848-A",
     "Fecha": 45897.7404976852,
@@ -4440,19 +4427,6 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 11320,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 15408,
-    "Nro Jugos": "0000-00019849-A",
-    "Fecha": 45897.7497106481,
-    "Remito": "5211",
-    "CantBins": 48,
-    "ProveedorT": "FRUTPLANET S.A.S",
-    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 15647.2,
     "pagado": false
   },
   {
@@ -4469,6 +4443,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 15408,
+    "Nro Jugos": "0000-00019849-A",
+    "Fecha": 45897.7497106481,
+    "Remito": "5211",
+    "CantBins": 48,
+    "ProveedorT": "FRUTPLANET S.A.S",
+    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 15647.2,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 15413,
     "Nro Jugos": "0000-00019852-A",
     "Fecha": 45897.7542361111,
@@ -4479,6 +4466,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 13720,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 15497,
+    "Nro Jugos": "0000-00019934-A",
+    "Fecha": 45902.4845138889,
+    "Remito": "01-16686",
+    "CantBins": 69,
+    "ProveedorT": "COOP.FRUTICOLA Y CONSUMO LA FLOR S.C.L",
+    "Origen": "GLP.CENTENARIO COOP LA FLOR LT",
+    "Especie": "manza",
+    "NomVariedad": "ROJA CHACRA",
+    "KgsD": 25130,
     "pagado": false
   },
   {
@@ -4547,19 +4547,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 15575,
-    "Nro Jugos": "0000-00020033-A",
-    "Fecha": 45905.4927199074,
-    "Remito": "02-941",
-    "CantBins": 20,
-    "ProveedorT": "CORRADI LUCAS",
-    "Origen": "CH.GRAL. PAZ CORRADI LUCAS",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 7626,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 15576,
     "Nro Jugos": "0000-00020033-A",
     "Fecha": 45905.4927199074,
@@ -4573,6 +4560,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 15575,
+    "Nro Jugos": "0000-00020033-A",
+    "Fecha": 45905.4927199074,
+    "Remito": "02-941",
+    "CantBins": 20,
+    "ProveedorT": "CORRADI LUCAS",
+    "Origen": "CH.GRAL. PAZ CORRADI LUCAS",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 7626,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 15589,
     "Nro Jugos": "0000-00020047-A",
     "Fecha": 45905.7044675926,
@@ -4583,19 +4583,6 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 8720,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 15615,
-    "Nro Jugos": "0000-00020073-A",
-    "Fecha": 45906.5114236111,
-    "Remito": "5212",
-    "CantBins": 8,
-    "ProveedorT": "FRUTPLANET S.A.S",
-    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 2953,
     "pagado": false
   },
   {
@@ -4625,6 +4612,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 15615,
+    "Nro Jugos": "0000-00020073-A",
+    "Fecha": 45906.5114236111,
+    "Remito": "5212",
+    "CantBins": 8,
+    "ProveedorT": "FRUTPLANET S.A.S",
+    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 2953,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 15621,
     "Nro Jugos": "0000-00020082-A",
     "Fecha": 45908.410162037,
@@ -4651,19 +4651,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 15637,
-    "Nro Jugos": "0000-00020094-A",
-    "Fecha": 45908.5180555556,
-    "Remito": "1-16691",
-    "CantBins": 52,
-    "ProveedorT": "COOP.FRUTICOLA Y CONSUMO LA FLOR S.C.L",
-    "Origen": "GLP.CENTENARIO COOP LA FLOR LT",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 18969,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 15639,
     "Nro Jugos": "0000-00020094-A",
     "Fecha": 45908.5180555556,
@@ -4677,16 +4664,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 15641,
-    "Nro Jugos": "0000-00020096-A",
-    "Fecha": 45908.5375115741,
-    "Remito": "1-4732",
-    "CantBins": 11,
-    "ProveedorT": "ORGANICOS ARGENTINOS SAS",
-    "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
+    "Ide Jugos": 15637,
+    "Nro Jugos": "0000-00020094-A",
+    "Fecha": 45908.5180555556,
+    "Remito": "1-16691",
+    "CantBins": 52,
+    "ProveedorT": "COOP.FRUTICOLA Y CONSUMO LA FLOR S.C.L",
+    "Origen": "GLP.CENTENARIO COOP LA FLOR LT",
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
-    "KgsD": 3818,
+    "KgsD": 18969,
     "pagado": false
   },
   {
@@ -4703,6 +4690,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 15642,
+    "Nro Jugos": "0000-00020096-A",
+    "Fecha": 45908.5375115741,
+    "Remito": "1-4732",
+    "CantBins": 3,
+    "ProveedorT": "ORGANICOS ARGENTINOS SAS",
+    "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 1405,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 15644,
     "Nro Jugos": "0000-00020096-A",
     "Fecha": 45908.5375115741,
@@ -4716,16 +4716,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 15642,
+    "Ide Jugos": 15641,
     "Nro Jugos": "0000-00020096-A",
     "Fecha": 45908.5375115741,
     "Remito": "1-4732",
-    "CantBins": 3,
+    "CantBins": 11,
     "ProveedorT": "ORGANICOS ARGENTINOS SAS",
     "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 1405,
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 3818,
     "pagado": false
   },
   {
@@ -4781,19 +4781,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 15740,
-    "Nro Jugos": "0000-00020217-A",
-    "Fecha": 45911.7828935185,
-    "Remito": "10-43324",
-    "CantBins": 20,
-    "ProveedorT": "LUCIA GIULIANA SRL*",
-    "Origen": "GLP.CHICHINALES LUCIA GIULI*",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 6467,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 15741,
     "Nro Jugos": "0000-00020217-A",
     "Fecha": 45911.7828935185,
@@ -4817,6 +4804,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 464,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 15740,
+    "Nro Jugos": "0000-00020217-A",
+    "Fecha": 45911.7828935185,
+    "Remito": "10-43324",
+    "CantBins": 20,
+    "ProveedorT": "LUCIA GIULIANA SRL*",
+    "Origen": "GLP.CHICHINALES LUCIA GIULI*",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 6467,
     "pagado": false
   },
   {
@@ -5054,19 +5054,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 16134,
-    "Nro Jugos": "0000-00020612-A",
-    "Fecha": 45930.7565162037,
-    "Remito": "5214",
-    "CantBins": 2,
-    "ProveedorT": "FRUTPLANET S.A.S",
-    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 851,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 16133,
     "Nro Jugos": "0000-00020612-A",
     "Fecha": 45930.7565162037,
@@ -5077,6 +5064,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 21849,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 16134,
+    "Nro Jugos": "0000-00020612-A",
+    "Fecha": 45930.7565162037,
+    "Remito": "5214",
+    "CantBins": 2,
+    "ProveedorT": "FRUTPLANET S.A.S",
+    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 851,
     "pagado": false
   },
   {
@@ -5132,19 +5132,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 16220,
-    "Nro Jugos": "0000-00020696-A",
-    "Fecha": 45933.4850462963,
-    "Remito": "10-43384/718",
-    "CantBins": 10,
-    "ProveedorT": "VERDUGO JUAN CARLOS",
-    "Origen": "GLP BERMEJO - FUNBAPA",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 3368,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 16219,
     "Nro Jugos": "0000-00020696-A",
     "Fecha": 45933.4850462963,
@@ -5158,16 +5145,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 16257,
-    "Nro Jugos": "0000-00020755-A",
-    "Fecha": 45937.4180902778,
-    "Remito": "2-942",
-    "CantBins": 2,
-    "ProveedorT": "CORRADI LUCAS",
-    "Origen": "CH.GRAL. PAZ CORRADI LUCAS",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 925,
+    "Ide Jugos": 16220,
+    "Nro Jugos": "0000-00020696-A",
+    "Fecha": 45933.4850462963,
+    "Remito": "10-43384/718",
+    "CantBins": 10,
+    "ProveedorT": "VERDUGO JUAN CARLOS",
+    "Origen": "GLP BERMEJO - FUNBAPA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 3368,
     "pagado": false
   },
   {
@@ -5181,6 +5168,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 6795,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 16257,
+    "Nro Jugos": "0000-00020755-A",
+    "Fecha": 45937.4180902778,
+    "Remito": "2-942",
+    "CantBins": 2,
+    "ProveedorT": "CORRADI LUCAS",
+    "Origen": "CH.GRAL. PAZ CORRADI LUCAS",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 925,
     "pagado": false
   },
   {
@@ -5210,19 +5210,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 16294,
-    "Nro Jugos": "0000-00020804-A",
-    "Fecha": 45938.7065856481,
-    "Remito": "1-4738",
-    "CantBins": 8,
-    "ProveedorT": "ORGANICOS ARGENTINOS SAS",
-    "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 2644,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 16295,
     "Nro Jugos": "0000-00020804-A",
     "Fecha": 45938.7065856481,
@@ -5233,6 +5220,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 3720,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 16294,
+    "Nro Jugos": "0000-00020804-A",
+    "Fecha": 45938.7065856481,
+    "Remito": "1-4738",
+    "CantBins": 8,
+    "ProveedorT": "ORGANICOS ARGENTINOS SAS",
+    "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 2644,
     "pagado": false
   },
   {
@@ -5431,6 +5431,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 16499,
+    "Nro Jugos": "0000-00021051-A",
+    "Fecha": 45951.4180439815,
+    "Remito": "02-943",
+    "CantBins": 16,
+    "ProveedorT": "CORRADI LUCAS",
+    "Origen": "CH.GRAL. PAZ CORRADI LUCAS",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 5725,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 16498,
     "Nro Jugos": "0000-00021051-A",
     "Fecha": 45951.4180439815,
@@ -5444,16 +5457,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 16499,
-    "Nro Jugos": "0000-00021051-A",
-    "Fecha": 45951.4180439815,
-    "Remito": "02-943",
-    "CantBins": 16,
-    "ProveedorT": "CORRADI LUCAS",
-    "Origen": "CH.GRAL. PAZ CORRADI LUCAS",
+    "Ide Jugos": 16535,
+    "Nro Jugos": "0000-00021093-A",
+    "Fecha": 45952.6653819444,
+    "Remito": "10-43425",
+    "CantBins": 7,
+    "ProveedorT": "LUCIA GIULIANA SRL*",
+    "Origen": "GLP.CHICHINALES LUCIA GIULI*",
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
-    "KgsD": 5725,
+    "KgsD": 2320,
     "pagado": false
   },
   {
@@ -5483,16 +5496,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 16535,
-    "Nro Jugos": "0000-00021093-A",
-    "Fecha": 45952.6653819444,
-    "Remito": "10-43425",
-    "CantBins": 7,
-    "ProveedorT": "LUCIA GIULIANA SRL*",
-    "Origen": "GLP.CHICHINALES LUCIA GIULI*",
+    "Ide Jugos": 16547,
+    "Nro Jugos": "0000-00021104-A",
+    "Fecha": 45953.3246643519,
+    "Remito": "5217",
+    "CantBins": 29,
+    "ProveedorT": "FRUTPLANET S.A.S",
+    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
     "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 2320,
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 9574,
     "pagado": false
   },
   {
@@ -5506,19 +5519,6 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 1345,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 16547,
-    "Nro Jugos": "0000-00021104-A",
-    "Fecha": 45953.3246643519,
-    "Remito": "5217",
-    "CantBins": 29,
-    "ProveedorT": "FRUTPLANET S.A.S",
-    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 9574,
     "pagado": false
   },
   {
@@ -5717,19 +5717,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 16776,
-    "Nro Jugos": "0000-00021337-A",
-    "Fecha": 45964.8146759259,
-    "Remito": "01-0841",
-    "CantBins": 20,
-    "ProveedorT": "PATAGONIA UNICA S.A",
-    "Origen": "GLP.ETAPA BELTRAN-PATAGONIA U",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 7228,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 16775,
     "Nro Jugos": "0000-00021337-A",
     "Fecha": 45964.8146759259,
@@ -5740,6 +5727,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 8368,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 16776,
+    "Nro Jugos": "0000-00021337-A",
+    "Fecha": 45964.8146759259,
+    "Remito": "01-0841",
+    "CantBins": 20,
+    "ProveedorT": "PATAGONIA UNICA S.A",
+    "Origen": "GLP.ETAPA BELTRAN-PATAGONIA U",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 7228,
     "pagado": false
   },
   {
@@ -5769,19 +5769,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 16821,
-    "Nro Jugos": "0000-00021390-A",
-    "Fecha": 45967.4145023148,
-    "Remito": "9035",
-    "CantBins": 25,
-    "ProveedorT": "BATTAGLIO ARGENTINA SA",
-    "Origen": "GLP.EL MATRERO  AGRICOLA ALTO",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 8656,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 16823,
     "Nro Jugos": "0000-00021390-A",
     "Fecha": 45967.4145023148,
@@ -5792,6 +5779,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 681,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 16821,
+    "Nro Jugos": "0000-00021390-A",
+    "Fecha": 45967.4145023148,
+    "Remito": "9035",
+    "CantBins": 25,
+    "ProveedorT": "BATTAGLIO ARGENTINA SA",
+    "Origen": "GLP.EL MATRERO  AGRICOLA ALTO",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 8656,
     "pagado": false
   },
   {
@@ -5924,19 +5924,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 16962,
-    "Nro Jugos": "0000-00021523-A",
-    "Fecha": 45973.6873611111,
-    "Remito": "1-16731",
-    "CantBins": 9,
-    "ProveedorT": "COOP.FRUTICOLA Y CONSUMO LA FLOR S.C.L",
-    "Origen": "GLP.CENTENARIO COOP LA FLOR LT",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 3146,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 16961,
     "Nro Jugos": "0000-00021523-A",
     "Fecha": 45973.6873611111,
@@ -5947,6 +5934,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 20334,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 16962,
+    "Nro Jugos": "0000-00021523-A",
+    "Fecha": 45973.6873611111,
+    "Remito": "1-16731",
+    "CantBins": 9,
+    "ProveedorT": "COOP.FRUTICOLA Y CONSUMO LA FLOR S.C.L",
+    "Origen": "GLP.CENTENARIO COOP LA FLOR LT",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 3146,
     "pagado": false
   },
   {
@@ -5976,6 +5976,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 16978,
+    "Nro Jugos": "0000-00021538-A",
+    "Fecha": 45974.5887847222,
+    "Remito": "2-3595",
+    "CantBins": 14,
+    "ProveedorT": "SURCOSUR S.R.L",
+    "Origen": "GLP.POMONA SURCOSUR S.R.L*",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 4718,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 16977,
     "Nro Jugos": "0000-00021538-A",
     "Fecha": 45974.5887847222,
@@ -6002,16 +6015,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 16978,
-    "Nro Jugos": "0000-00021538-A",
-    "Fecha": 45974.5887847222,
-    "Remito": "2-3595",
-    "CantBins": 14,
-    "ProveedorT": "SURCOSUR S.R.L",
-    "Origen": "GLP.POMONA SURCOSUR S.R.L*",
+    "Ide Jugos": 16986,
+    "Nro Jugos": "0000-00021543-A",
+    "Fecha": 45974.6933101852,
+    "Remito": "01-540",
+    "CantBins": 5,
+    "ProveedorT": "ZUDICH ADRIAN EDUARDO RUBEN",
+    "Origen": "GLP.ZUDICH ADRIAN E*",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 4718,
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 1684,
     "pagado": false
   },
   {
@@ -6025,19 +6038,6 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 6736,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 16986,
-    "Nro Jugos": "0000-00021543-A",
-    "Fecha": 45974.6933101852,
-    "Remito": "01-540",
-    "CantBins": 5,
-    "ProveedorT": "ZUDICH ADRIAN EDUARDO RUBEN",
-    "Origen": "GLP.ZUDICH ADRIAN E*",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 1684,
     "pagado": false
   },
   {
@@ -6132,6 +6132,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 17026,
+    "Nro Jugos": "0000-00021582-A",
+    "Fecha": 45976.4540162037,
+    "Remito": "01-16732",
+    "CantBins": 32,
+    "ProveedorT": "COOP.FRUTICOLA Y CONSUMO LA FLOR S.C.L",
+    "Origen": "GLP.CENTENARIO COOP LA FLOR LT",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 11107,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 17027,
     "Nro Jugos": "0000-00021582-A",
     "Fecha": 45976.4540162037,
@@ -6158,19 +6171,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17026,
-    "Nro Jugos": "0000-00021582-A",
-    "Fecha": 45976.4540162037,
-    "Remito": "01-16732",
-    "CantBins": 32,
-    "ProveedorT": "COOP.FRUTICOLA Y CONSUMO LA FLOR S.C.L",
-    "Origen": "GLP.CENTENARIO COOP LA FLOR LT",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 11107,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17028,
     "Nro Jugos": "0000-00021583-A",
     "Fecha": 45976.4563541667,
@@ -6181,32 +6181,6 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 6210,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 17030,
-    "Nro Jugos": "0000-00021584-A",
-    "Fecha": 45976.4896412037,
-    "Remito": "02-3602",
-    "CantBins": 5,
-    "ProveedorT": "SURCOSUR S.R.L",
-    "Origen": "GLP.POMONA SURCOSUR S.R.L*",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 1623,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 17033,
-    "Nro Jugos": "0000-00021584-A",
-    "Fecha": 45976.4896412037,
-    "Remito": "5222",
-    "CantBins": 4,
-    "ProveedorT": "FRUTPLANET S.A.S",
-    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 1348,
     "pagado": false
   },
   {
@@ -6223,6 +6197,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 17033,
+    "Nro Jugos": "0000-00021584-A",
+    "Fecha": 45976.4896412037,
+    "Remito": "5222",
+    "CantBins": 4,
+    "ProveedorT": "FRUTPLANET S.A.S",
+    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 1348,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 17031,
     "Nro Jugos": "0000-00021584-A",
     "Fecha": 45976.4896412037,
@@ -6233,6 +6220,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 15854,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17030,
+    "Nro Jugos": "0000-00021584-A",
+    "Fecha": 45976.4896412037,
+    "Remito": "02-3602",
+    "CantBins": 5,
+    "ProveedorT": "SURCOSUR S.R.L",
+    "Origen": "GLP.POMONA SURCOSUR S.R.L*",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 1623,
     "pagado": false
   },
   {
@@ -6288,19 +6288,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17073,
-    "Nro Jugos": "0000-00021621-A",
-    "Fecha": 45980.7573032407,
-    "Remito": "1-4984",
-    "CantBins": 12,
-    "ProveedorT": "CARBAJO VICENTE",
-    "Origen": "GLP.CARBAJO VICENTE*",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 4500,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17069,
     "Nro Jugos": "0000-00021621-A",
     "Fecha": 45980.7573032407,
@@ -6314,16 +6301,29 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17071,
-    "Nro Jugos": "0000-00021622-A",
-    "Fecha": 45980.7595023148,
-    "Remito": "1-4985",
-    "CantBins": 9,
+    "Ide Jugos": 17073,
+    "Nro Jugos": "0000-00021621-A",
+    "Fecha": 45980.7573032407,
+    "Remito": "1-4984",
+    "CantBins": 12,
     "ProveedorT": "CARBAJO VICENTE",
     "Origen": "GLP.CARBAJO VICENTE*",
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
-    "KgsD": 3238,
+    "KgsD": 4500,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17074,
+    "Nro Jugos": "0000-00021622-A",
+    "Fecha": 45980.7595023148,
+    "Remito": "1-4985",
+    "CantBins": 1,
+    "ProveedorT": "CARBAJO VICENTE",
+    "Origen": "GLP.CARBAJO VICENTE*",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 0,
     "pagado": false
   },
   {
@@ -6340,6 +6340,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 17071,
+    "Nro Jugos": "0000-00021622-A",
+    "Fecha": 45980.7595023148,
+    "Remito": "1-4985",
+    "CantBins": 9,
+    "ProveedorT": "CARBAJO VICENTE",
+    "Origen": "GLP.CARBAJO VICENTE*",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 3238,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 17070,
     "Nro Jugos": "0000-00021622-A",
     "Fecha": 45980.7595023148,
@@ -6350,19 +6363,6 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 8386,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 17074,
-    "Nro Jugos": "0000-00021622-A",
-    "Fecha": 45980.7595023148,
-    "Remito": "1-4985",
-    "CantBins": 1,
-    "ProveedorT": "CARBAJO VICENTE",
-    "Origen": "GLP.CARBAJO VICENTE*",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 0,
     "pagado": false
   },
   {
@@ -6392,19 +6392,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17081,
-    "Nro Jugos": "0000-00021628-A",
-    "Fecha": 45981.5656712963,
-    "Remito": "5223",
-    "CantBins": 30,
-    "ProveedorT": "FRUTPLANET S.A.S",
-    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 9976,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17083,
     "Nro Jugos": "0000-00021628-A",
     "Fecha": 45981.5656712963,
@@ -6415,6 +6402,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 1562,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17081,
+    "Nro Jugos": "0000-00021628-A",
+    "Fecha": 45981.5656712963,
+    "Remito": "5223",
+    "CantBins": 30,
+    "ProveedorT": "FRUTPLANET S.A.S",
+    "Origen": "GLP.LAMARQUE - FRUTPLANET S.A.",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 9976,
     "pagado": false
   },
   {
@@ -6496,19 +6496,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17117,
-    "Nro Jugos": "0000-00021654-A",
-    "Fecha": 45982.7068171296,
-    "Remito": "11-557",
-    "CantBins": 6,
-    "ProveedorT": "FRUIT WORLD SA",
-    "Origen": "PLANTA 1 - G.ROCA - FRUITWORLD",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 2084,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17119,
     "Nro Jugos": "0000-00021654-A",
     "Fecha": 45982.7068171296,
@@ -6522,16 +6509,29 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17121,
+    "Ide Jugos": 17117,
+    "Nro Jugos": "0000-00021654-A",
+    "Fecha": 45982.7068171296,
+    "Remito": "11-557",
+    "CantBins": 6,
+    "ProveedorT": "FRUIT WORLD SA",
+    "Origen": "PLANTA 1 - G.ROCA - FRUITWORLD",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 2084,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17120,
     "Nro Jugos": "0000-00021656-A",
     "Fecha": 45982.7681134259,
     "Remito": "01-6402",
-    "CantBins": 1,
-    "ProveedorT": "MENIS SRL",
+    "CantBins": 7,
+    "ProveedorT": "MARTINA SRL",
     "Origen": "GLP.MITRE MARTINA SRL",
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
-    "KgsD": 504,
+    "KgsD": 3015,
     "pagado": false
   },
   {
@@ -6548,16 +6548,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17120,
+    "Ide Jugos": 17121,
     "Nro Jugos": "0000-00021656-A",
     "Fecha": 45982.7681134259,
     "Remito": "01-6402",
-    "CantBins": 7,
-    "ProveedorT": "MARTINA SRL",
+    "CantBins": 1,
+    "ProveedorT": "MENIS SRL",
     "Origen": "GLP.MITRE MARTINA SRL",
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
-    "KgsD": 3015,
+    "KgsD": 504,
     "pagado": false
   },
   {
@@ -6600,19 +6600,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17146,
-    "Nro Jugos": "0000-00021680-A",
-    "Fecha": 45987.5684027778,
-    "Remito": "8-10949",
-    "CantBins": 4,
-    "ProveedorT": "DOLE NAT.CO.SA",
-    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 1545,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17147,
     "Nro Jugos": "0000-00021680-A",
     "Fecha": 45987.5684027778,
@@ -6623,6 +6610,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 22635,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17146,
+    "Nro Jugos": "0000-00021680-A",
+    "Fecha": 45987.5684027778,
+    "Remito": "8-10949",
+    "CantBins": 4,
+    "ProveedorT": "DOLE NAT.CO.SA",
+    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 1545,
     "pagado": false
   },
   {
@@ -6652,19 +6652,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17164,
-    "Nro Jugos": "0000-00021698-A",
-    "Fecha": 45988.5016203704,
-    "Remito": "01-4365",
-    "CantBins": 15,
-    "ProveedorT": "ESTABLECIMIENTO IMF SRL",
-    "Origen": "CH.GODOY ESTABLECIMIENTO IMF",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 5020,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17165,
     "Nro Jugos": "0000-00021698-A",
     "Fecha": 45988.5016203704,
@@ -6675,6 +6662,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 5300,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17164,
+    "Nro Jugos": "0000-00021698-A",
+    "Fecha": 45988.5016203704,
+    "Remito": "01-4365",
+    "CantBins": 15,
+    "ProveedorT": "ESTABLECIMIENTO IMF SRL",
+    "Origen": "CH.GODOY ESTABLECIMIENTO IMF",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 5020,
     "pagado": false
   },
   {
@@ -6691,19 +6691,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17173,
-    "Nro Jugos": "0000-00021705-A",
-    "Fecha": 45988.7355092593,
-    "Remito": "041-11183",
-    "CantBins": 22,
-    "ProveedorT": "CELESTINO HNOS S.A.",
-    "Origen": "GLP.CELESTINO HNOS S.A.",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 7096,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17172,
     "Nro Jugos": "0000-00021705-A",
     "Fecha": 45988.7355092593,
@@ -6714,6 +6701,19 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 3284,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17173,
+    "Nro Jugos": "0000-00021705-A",
+    "Fecha": 45988.7355092593,
+    "Remito": "041-11183",
+    "CantBins": 22,
+    "ProveedorT": "CELESTINO HNOS S.A.",
+    "Origen": "GLP.CELESTINO HNOS S.A.",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 7096,
     "pagado": false
   },
   {
@@ -6730,19 +6730,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17183,
-    "Nro Jugos": "0000-00021725-A",
-    "Fecha": 45989.482974537,
-    "Remito": "00-9149",
-    "CantBins": 14,
-    "ProveedorT": "BATTAGLIO ARGENTINA SA",
-    "Origen": "GLP EL MATRERO - BATTAGLIO",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 4109.4,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17184,
     "Nro Jugos": "0000-00021725-A",
     "Fecha": 45989.482974537,
@@ -6753,6 +6740,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 1747,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17183,
+    "Nro Jugos": "0000-00021725-A",
+    "Fecha": 45989.482974537,
+    "Remito": "00-9149",
+    "CantBins": 14,
+    "ProveedorT": "BATTAGLIO ARGENTINA SA",
+    "Origen": "GLP EL MATRERO - BATTAGLIO",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 4109.4,
     "pagado": false
   },
   {
@@ -6873,19 +6873,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17220,
-    "Nro Jugos": "0000-00021758-A",
-    "Fecha": 45992.688900463,
-    "Remito": "11559",
-    "CantBins": 40,
-    "ProveedorT": "FRUIT WORLD SA",
-    "Origen": "PLANTA 1 - G.ROCA - FRUITWORLD",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 14598,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17221,
     "Nro Jugos": "0000-00021758-A",
     "Fecha": 45992.688900463,
@@ -6896,6 +6883,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 11382,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17220,
+    "Nro Jugos": "0000-00021758-A",
+    "Fecha": 45992.688900463,
+    "Remito": "11559",
+    "CantBins": 40,
+    "ProveedorT": "FRUIT WORLD SA",
+    "Origen": "PLANTA 1 - G.ROCA - FRUITWORLD",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 14598,
     "pagado": false
   },
   {
@@ -6912,19 +6912,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17223,
-    "Nro Jugos": "0000-00021763-A",
-    "Fecha": 45993.395787037,
-    "Remito": "2650",
-    "CantBins": 2,
-    "ProveedorT": "HACIENDA MARTINEZ S.R.L.",
-    "Origen": "GLP CHOGUY HUERGO - HACIENDA M",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 674,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17224,
     "Nro Jugos": "0000-00021763-A",
     "Fecha": 45993.395787037,
@@ -6935,6 +6922,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 3986,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17223,
+    "Nro Jugos": "0000-00021763-A",
+    "Fecha": 45993.395787037,
+    "Remito": "2650",
+    "CantBins": 72,
+    "ProveedorT": "HACIENDA MARTINEZ S.R.L.",
+    "Origen": "GLP CHOGUY HUERGO - HACIENDA M",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 674,
     "pagado": false
   },
   {
@@ -6951,19 +6951,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17226,
-    "Nro Jugos": "0000-00021765-A",
-    "Fecha": 45993.4666435185,
-    "Remito": "9-20010",
-    "CantBins": 23,
-    "ProveedorT": "ZAVECOM",
-    "Origen": "GLP.MATADERO - BONADE SA",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 8142,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17227,
     "Nro Jugos": "0000-00021765-A",
     "Fecha": 45993.4666435185,
@@ -6974,6 +6961,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 3998,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17226,
+    "Nro Jugos": "0000-00021765-A",
+    "Fecha": 45993.4666435185,
+    "Remito": "9-20010",
+    "CantBins": 23,
+    "ProveedorT": "ZAVECOM",
+    "Origen": "GLP.MATADERO - BONADE SA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 8142,
     "pagado": false
   },
   {
@@ -7003,19 +7003,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17230,
-    "Nro Jugos": "0000-00021769-A",
-    "Fecha": 45993.5683101852,
-    "Remito": "08-27406",
-    "CantBins": 38,
-    "ProveedorT": "DOLE NAT.CO.SA",
-    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 14679,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17231,
     "Nro Jugos": "0000-00021769-A",
     "Fecha": 45993.5683101852,
@@ -7029,16 +7016,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17233,
-    "Nro Jugos": "0000-00021770-A",
-    "Fecha": 45993.5902430556,
-    "Remito": "02-1514",
-    "CantBins": 7,
-    "ProveedorT": "INDUFRUT SAS",
-    "Origen": "RECEPTORA CERVANTES - INDUFRUT",
+    "Ide Jugos": 17230,
+    "Nro Jugos": "0000-00021769-A",
+    "Fecha": 45993.5683101852,
+    "Remito": "08-27406",
+    "CantBins": 38,
+    "ProveedorT": "DOLE NAT.CO.SA",
+    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
     "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 2519,
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 14679,
     "pagado": false
   },
   {
@@ -7055,6 +7042,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 17233,
+    "Nro Jugos": "0000-00021770-A",
+    "Fecha": 45993.5902430556,
+    "Remito": "02-1514",
+    "CantBins": 7,
+    "ProveedorT": "INDUFRUT SAS",
+    "Origen": "RECEPTORA CERVANTES - INDUFRUT",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 2519,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 17234,
     "Nro Jugos": "0000-00021774-A",
     "Fecha": 45993.7133449074,
@@ -7068,19 +7068,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17235,
-    "Nro Jugos": "0000-00021775-A",
-    "Fecha": 45993.7178356481,
-    "Remito": "1-5488",
-    "CantBins": 58,
-    "ProveedorT": "NATALINI RICARDO RUBEN",
-    "Origen": "GLP.RAICES PATAGONICAS - NATAL",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 20396,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17236,
     "Nro Jugos": "0000-00021775-A",
     "Fecha": 45993.7178356481,
@@ -7091,6 +7078,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 1594,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17235,
+    "Nro Jugos": "0000-00021775-A",
+    "Fecha": 45993.7178356481,
+    "Remito": "1-5488",
+    "CantBins": 58,
+    "ProveedorT": "NATALINI RICARDO RUBEN",
+    "Origen": "GLP.RAICES PATAGONICAS - NATAL",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 20396,
     "pagado": false
   },
   {
@@ -7120,19 +7120,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17239,
-    "Nro Jugos": "0000-00021778-A",
-    "Fecha": 45993.7555787037,
-    "Remito": "2-1515",
-    "CantBins": 15,
-    "ProveedorT": "INDUFRUT SAS",
-    "Origen": "RECEPTORA CERVANTES - INDUFRUT",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 7306,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17240,
     "Nro Jugos": "0000-00021778-A",
     "Fecha": 45993.7555787037,
@@ -7143,6 +7130,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 5479,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17239,
+    "Nro Jugos": "0000-00021778-A",
+    "Fecha": 45993.7555787037,
+    "Remito": "2-1515",
+    "CantBins": 15,
+    "ProveedorT": "INDUFRUT SAS",
+    "Origen": "RECEPTORA CERVANTES - INDUFRUT",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 7306,
     "pagado": false
   },
   {
@@ -7224,19 +7224,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17252,
-    "Nro Jugos": "0000-00021793-A",
-    "Fecha": 45995.3849421296,
-    "Remito": "81-11166",
-    "CantBins": 11,
-    "ProveedorT": "RIVOLY SRL",
-    "Origen": "GLP.3 ZONA - POLANO",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 3928,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17251,
     "Nro Jugos": "0000-00021793-A",
     "Fecha": 45995.3849421296,
@@ -7247,6 +7234,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 5132,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17252,
+    "Nro Jugos": "0000-00021793-A",
+    "Fecha": 45995.3849421296,
+    "Remito": "81-11166",
+    "CantBins": 11,
+    "ProveedorT": "RIVOLY SRL",
+    "Origen": "GLP.3 ZONA - POLANO",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 3928,
     "pagado": false
   },
   {
@@ -7276,16 +7276,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17256,
+    "Ide Jugos": 17255,
     "Nro Jugos": "0000-00021799-A",
     "Fecha": 45995.4676736111,
     "Remito": "10-43503//2658",
-    "CantBins": 8,
+    "CantBins": 14,
     "ProveedorT": "HACIENDA MARTINEZ S.R.L.",
     "Origen": "GLP CHOGUY HUERGO - HACIENDA M",
     "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 2666,
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 4699,
     "pagado": false
   },
   {
@@ -7302,16 +7302,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17255,
+    "Ide Jugos": 17256,
     "Nro Jugos": "0000-00021799-A",
     "Fecha": 45995.4676736111,
     "Remito": "10-43503//2658",
-    "CantBins": 14,
+    "CantBins": 8,
     "ProveedorT": "HACIENDA MARTINEZ S.R.L.",
     "Origen": "GLP CHOGUY HUERGO - HACIENDA M",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 4699,
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 2666,
     "pagado": false
   },
   {
@@ -7354,19 +7354,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17260,
-    "Nro Jugos": "0000-00021801-A",
-    "Fecha": 45995.5204861111,
-    "Remito": "01-16240",
-    "CantBins": 22,
-    "ProveedorT": "MEHDI CARLOS MARTIN",
-    "Origen": "GLP.MURO CERVANTES - MEHDI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 7610,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17261,
     "Nro Jugos": "0000-00021801-A",
     "Fecha": 45995.5204861111,
@@ -7377,6 +7364,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 3947,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17260,
+    "Nro Jugos": "0000-00021801-A",
+    "Fecha": 45995.5204861111,
+    "Remito": "01-16240",
+    "CantBins": 22,
+    "ProveedorT": "MEHDI CARLOS MARTIN",
+    "Origen": "GLP.MURO CERVANTES - MEHDI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 7610,
     "pagado": false
   },
   {
@@ -7406,6 +7406,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 17265,
+    "Nro Jugos": "0000-00021804-A",
+    "Fecha": 45995.5695601852,
+    "Remito": "10-43504",
+    "CantBins": 8,
+    "ProveedorT": "CABEZAS ESTEBAN ADRIAN",
+    "Origen": "ZONA ALLEN CABEZAS - CABEZAS E",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 3674,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 17264,
     "Nro Jugos": "0000-00021804-A",
     "Fecha": 45995.5695601852,
@@ -7429,19 +7442,6 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 3292,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 17265,
-    "Nro Jugos": "0000-00021804-A",
-    "Fecha": 45995.5695601852,
-    "Remito": "10-43504",
-    "CantBins": 8,
-    "ProveedorT": "CABEZAS ESTEBAN ADRIAN",
-    "Origen": "ZONA ALLEN CABEZAS - CABEZAS E",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 3674,
     "pagado": false
   },
   {
@@ -7523,19 +7523,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17275,
-    "Nro Jugos": "0000-00021818-A",
-    "Fecha": 45996.432037037,
-    "Remito": "8-27430",
-    "CantBins": 30,
-    "ProveedorT": "DOLE NAT.CO.SA",
-    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 10702,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17276,
     "Nro Jugos": "0000-00021818-A",
     "Fecha": 45996.432037037,
@@ -7546,6 +7533,19 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 16738,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17275,
+    "Nro Jugos": "0000-00021818-A",
+    "Fecha": 45996.432037037,
+    "Remito": "8-27430",
+    "CantBins": 30,
+    "ProveedorT": "DOLE NAT.CO.SA",
+    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 10702,
     "pagado": false
   },
   {
@@ -7588,16 +7588,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17283,
+    "Ide Jugos": 17281,
     "Nro Jugos": "0000-00021822-A",
     "Fecha": 45996.4896412037,
-    "Remito": "01-3288",
-    "CantBins": 26,
-    "ProveedorT": "SAN FORMERIO SRL",
-    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
+    "Remito": "11-560",
+    "CantBins": 14,
+    "ProveedorT": "FRUIT WORLD SA",
+    "Origen": "PLANTA 1 - G.ROCA - FRUITWORLD",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 9009,
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 4968,
     "pagado": false
   },
   {
@@ -7614,6 +7614,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 17283,
+    "Nro Jugos": "0000-00021822-A",
+    "Fecha": 45996.4896412037,
+    "Remito": "01-3288",
+    "CantBins": 26,
+    "ProveedorT": "SAN FORMERIO SRL",
+    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 9009,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 17285,
     "Nro Jugos": "0000-00021822-A",
     "Fecha": 45996.4896412037,
@@ -7624,19 +7637,6 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 1242,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 17281,
-    "Nro Jugos": "0000-00021822-A",
-    "Fecha": 45996.4896412037,
-    "Remito": "11-560",
-    "CantBins": 14,
-    "ProveedorT": "FRUIT WORLD SA",
-    "Origen": "PLANTA 1 - G.ROCA - FRUITWORLD",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 4968,
     "pagado": false
   },
   {
@@ -7653,19 +7653,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17287,
-    "Nro Jugos": "0000-00021825-A",
-    "Fecha": 45996.6536342593,
-    "Remito": "03-118",
-    "CantBins": 4,
-    "ProveedorT": "ESTABLECIMIENTO IMF SRL",
-    "Origen": "CH.GODOY ESTABLECIMIENTO IMF",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 1376,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17288,
     "Nro Jugos": "0000-00021825-A",
     "Fecha": 45996.6536342593,
@@ -7679,16 +7666,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17290,
-    "Nro Jugos": "0000-00021829-A",
-    "Fecha": 45996.6704976852,
-    "Remito": "1-6415",
-    "CantBins": 2,
-    "ProveedorT": "MENIS SRL",
-    "Origen": "GLP.MITRE MARTINA SRL",
+    "Ide Jugos": 17287,
+    "Nro Jugos": "0000-00021825-A",
+    "Fecha": 45996.6536342593,
+    "Remito": "03-118",
+    "CantBins": 4,
+    "ProveedorT": "ESTABLECIMIENTO IMF SRL",
+    "Origen": "CH.GODOY ESTABLECIMIENTO IMF",
     "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 733,
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 1376,
     "pagado": false
   },
   {
@@ -7705,6 +7692,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 17290,
+    "Nro Jugos": "0000-00021829-A",
+    "Fecha": 45996.6704976852,
+    "Remito": "1-6415",
+    "CantBins": 2,
+    "ProveedorT": "MENIS SRL",
+    "Origen": "GLP.MITRE MARTINA SRL",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 733,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 17293,
     "Nro Jugos": "0000-00021834-A",
     "Fecha": 45996.7033217593,
@@ -7718,29 +7718,16 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17295,
+    "Ide Jugos": 17294,
     "Nro Jugos": "0000-00021835-A",
     "Fecha": 45996.7341898148,
-    "Remito": "4-996",
+    "Remito": "1-83",
     "CantBins": 6,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "ProveedorT": "STELZER ARTURO SERGIO",
+    "Origen": "FRIO CH.STELZER ARTURO",
     "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 2277,
-    "pagado": false
-  },
-  {
-    "Ide Jugos": 17297,
-    "Nro Jugos": "0000-00021835-A",
-    "Fecha": 45996.7341898148,
-    "Remito": "4-996",
-    "CantBins": 2,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 937,
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 2221,
     "pagado": false
   },
   {
@@ -7757,16 +7744,29 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17294,
+    "Ide Jugos": 17297,
     "Nro Jugos": "0000-00021835-A",
     "Fecha": 45996.7341898148,
-    "Remito": "1-83",
+    "Remito": "4-996",
+    "CantBins": 2,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 937,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17295,
+    "Nro Jugos": "0000-00021835-A",
+    "Fecha": 45996.7341898148,
+    "Remito": "4-996",
     "CantBins": 6,
-    "ProveedorT": "STELZER ARTURO SERGIO",
-    "Origen": "FRIO CH.STELZER ARTURO",
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 2221,
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 2277,
     "pagado": false
   },
   {
@@ -7822,19 +7822,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17303,
-    "Nro Jugos": "0000-00021840-A",
-    "Fecha": 45997.419375,
-    "Remito": "08-27441",
-    "CantBins": 2,
-    "ProveedorT": "DOLE NAT.CO.SA",
-    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 937,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17302,
     "Nro Jugos": "0000-00021840-A",
     "Fecha": 45997.419375,
@@ -7845,6 +7832,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 22083,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17303,
+    "Nro Jugos": "0000-00021840-A",
+    "Fecha": 45997.419375,
+    "Remito": "08-27441",
+    "CantBins": 2,
+    "ProveedorT": "DOLE NAT.CO.SA",
+    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 937,
     "pagado": false
   },
   {
@@ -7861,19 +7861,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17305,
-    "Nro Jugos": "0000-00021841-A",
-    "Fecha": 45997.4557060185,
-    "Remito": "01-38947",
-    "CantBins": 1,
-    "ProveedorT": "ALDECOA MARIA LIDA",
-    "Origen": "PLA.CENTENARIO ALDECOA MARIA L",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 333,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17306,
     "Nro Jugos": "0000-00021841-A",
     "Fecha": 45997.4557060185,
@@ -7887,6 +7874,19 @@
     "pagado": false
   },
   {
+    "Ide Jugos": 17305,
+    "Nro Jugos": "0000-00021841-A",
+    "Fecha": 45997.4557060185,
+    "Remito": "01-38947",
+    "CantBins": 1,
+    "ProveedorT": "ALDECOA MARIA LIDA",
+    "Origen": "PLA.CENTENARIO ALDECOA MARIA L",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 333,
+    "pagado": false
+  },
+  {
     "Ide Jugos": 17308,
     "Nro Jugos": "0000-00021841-A",
     "Fecha": 45997.4557060185,
@@ -7897,6 +7897,19 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 2085,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17310,
+    "Nro Jugos": "0000-00021844-A",
+    "Fecha": 45997.4834606481,
+    "Remito": "10-43507",
+    "CantBins": 12,
+    "ProveedorT": "SAN FORMERIO SRL",
+    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 4188,
     "pagado": false
   },
   {
@@ -7926,19 +7939,6 @@
     "pagado": false
   },
   {
-    "Ide Jugos": 17310,
-    "Nro Jugos": "0000-00021844-A",
-    "Fecha": 45997.4834606481,
-    "Remito": "10-43507",
-    "CantBins": 12,
-    "ProveedorT": "SAN FORMERIO SRL",
-    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 4188,
-    "pagado": false
-  },
-  {
     "Ide Jugos": 17312,
     "Nro Jugos": "0000-00021845-A",
     "Fecha": 45997.523125,
@@ -7949,6 +7949,201 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 6460,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17315,
+    "Nro Jugos": "0000-00021850-A",
+    "Fecha": 46001.2893865741,
+    "Remito": "03-5506",
+    "CantBins": 42,
+    "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
+    "Origen": "GLP.LOS PILARES ALLEN - STANDA",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 14267,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17316,
+    "Nro Jugos": "0000-00021850-A",
+    "Fecha": 46001.2893865741,
+    "Remito": "03-5506",
+    "CantBins": 9,
+    "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
+    "Origen": "GLP.LOS PILARES ALLEN - STANDA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 3183,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17317,
+    "Nro Jugos": "0000-00021853-A",
+    "Fecha": 46001.3650231482,
+    "Remito": "4-11189",
+    "CantBins": 30,
+    "ProveedorT": "CELESTINO HNOS S.A.",
+    "Origen": "GLP.CELESTINO HNOS S.A.",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 9860,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17318,
+    "Nro Jugos": "0000-00021856-A",
+    "Fecha": 46001.4251736111,
+    "Remito": "2370",
+    "CantBins": 1,
+    "ProveedorT": "TRES ASES SA",
+    "Origen": "GLP CIPOLLETTI - TRES ASES SA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 20360,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17322,
+    "Nro Jugos": "0000-00021857-A",
+    "Fecha": 46001.476099537,
+    "Remito": "04-11190",
+    "CantBins": 10,
+    "ProveedorT": "CELESTINO HNOS S.A.",
+    "Origen": "GLP.CELESTINO HNOS S.A.",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 3284,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17319,
+    "Nro Jugos": "0000-00021857-A",
+    "Fecha": 46001.476099537,
+    "Remito": "04-11190",
+    "CantBins": 16,
+    "ProveedorT": "CELESTINO HNOS S.A.",
+    "Origen": "GLP.CELESTINO HNOS S.A.",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 5296,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17321,
+    "Nro Jugos": "0000-00021858-A",
+    "Fecha": 46001.4811805556,
+    "Remito": "081-11180",
+    "CantBins": 5,
+    "ProveedorT": "RIVOLY SRL",
+    "Origen": "CH126.3ºZONA RIVOLY SRL",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 2032,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17320,
+    "Nro Jugos": "0000-00021858-A",
+    "Fecha": 46001.4811805556,
+    "Remito": "00-9207",
+    "CantBins": 16,
+    "ProveedorT": "BATTAGLIO ARGENTINA SA",
+    "Origen": "GLP EL MATRERO - BATTAGLIO",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 5198,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17323,
+    "Nro Jugos": "0000-00021859-A",
+    "Fecha": 46001.5429861111,
+    "Remito": "016-104811",
+    "CantBins": 1,
+    "ProveedorT": "KLEPPE SA",
+    "Origen": "GLP.SANTARELLI F.ORO KLEPPE SA",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 26200,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17325,
+    "Nro Jugos": "0000-00021860-A",
+    "Fecha": 46001.5626388889,
+    "Remito": "04-4884",
+    "CantBins": 12,
+    "ProveedorT": "BOSCHI HNOS. SA",
+    "Origen": "GLP.CIPOLLETI BOSCHI HNOS. SA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 4441,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17324,
+    "Nro Jugos": "0000-00021860-A",
+    "Fecha": 46001.5626388889,
+    "Remito": "04-4884",
+    "CantBins": 54,
+    "ProveedorT": "BOSCHI HNOS. SA",
+    "Origen": "GLP.CIPOLLETI BOSCHI HNOS. SA",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 19319,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17327,
+    "Nro Jugos": "0000-00021863-A",
+    "Fecha": 46001.6899421296,
+    "Remito": "1-5489",
+    "CantBins": 35,
+    "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
+    "Origen": "GLP.ALLEN DOLE - STANDARD FRUI",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 13797,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17328,
+    "Nro Jugos": "0000-00021863-A",
+    "Fecha": 46001.6899421296,
+    "Remito": "1-5489",
+    "CantBins": 25,
+    "ProveedorT": "NATALINI RICARDO RUBEN",
+    "Origen": "GLP.RAICES PATAGONICAS - NATAL",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 9383,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17330,
+    "Nro Jugos": "0000-00021864-A",
+    "Fecha": 46001.7121180556,
+    "Remito": "1-16280",
+    "CantBins": 24,
+    "ProveedorT": "DON CLEMENTE SRL",
+    "Origen": "GLP.TRES+ UNO exMURO CERVANTES",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 8314,
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 17329,
+    "Nro Jugos": "0000-00021864-A",
+    "Fecha": 46001.7121180556,
+    "Remito": "1-16280",
+    "CantBins": 15,
+    "ProveedorT": "DON CLEMENTE SRL",
+    "Origen": "GLP.TRES+ UNO exMURO CERVANTES",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 5176,
     "pagado": false
   }
 ]
