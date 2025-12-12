@@ -347,6 +347,7 @@
     }
   </script>
 
+  <!-- MODAL FIRMA DE PAUTA -->
   <div id="modalPauta">
     <div class="box">
       <h3 id="modalTitulo" style="margin:0 0 8px 0;font-size:16px;">Firmar Pauta</h3>
@@ -358,6 +359,10 @@
           <input id="inpResponsable" class="input-mini" placeholder="Responsable">
           <input id="inpCargo" class="input-mini" placeholder="Cargo">
           <input id="inpFecha" class="input-mini" placeholder="Fecha y hora" readonly>
+        </div>
+        <div style="margin-top:6px;">
+          <label for="inpTipoPauta" style="font-size:12px;">Tipo de pauta</label>
+          <input id="inpTipoPauta" class="input-mini" placeholder="Tipo de pauta" readonly>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
           <button id="btnConfirmar" class="btn-mini" disabled>Confirmar firma</button>
@@ -386,14 +391,12 @@
       return m ? m[1].trim() : '';
     }
 
-    // >>> ÚNICA MODIFICACIÓN: normalizar org para decidir si se muestra el botón orgánico
     function showOrgIfNeeded(){
       const bOrg = document.getElementById('btnPautaOrg');
       const raw  = (window.USER && window.USER.org) ? String(window.USER.org) : '';
       const orgFlag = raw.trim().toLowerCase() === 'x';
       if (bOrg) bOrg.style.display = orgFlag ? '' : 'none';
     }
-    // <<<
 
     function pintarEstado(s){
       const bP = document.getElementById('btnPauta');
@@ -439,6 +442,7 @@
       const inpR   = document.getElementById('inpResponsable');
       const inpC   = document.getElementById('inpCargo');
       const inpF   = document.getElementById('inpFecha');
+      const inpTipo= document.getElementById('inpTipoPauta');
       const btnOK  = document.getElementById('btnConfirmar');
       const btnCancel = document.getElementById('btnCancelar');
 
@@ -448,6 +452,9 @@
 
       chk.checked = false; inpR.value=''; inpC.value='';
       inpF.value = new Date().toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).replace(',', '');
+      if (inpTipo) {
+        inpTipo.value = (tipo === 'pauta') ? 'pauta' : 'pauta organica';
+      }
       btnOK.disabled = true;
 
       const validar = ()=> btnOK.disabled = !(chk.checked && inpR.value.trim() && inpC.value.trim());
@@ -457,6 +464,7 @@
         btnOK.disabled = true;
         const body = {
           tipo,
+          tipoPauta: inpTipo ? inpTipo.value : (tipo === 'pauta' ? 'pauta' : 'pauta organica'),
           acepta: true,
           responsable: inpR.value.trim(),
           cargo: inpC.value.trim(),

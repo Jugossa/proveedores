@@ -157,7 +157,7 @@ app.post("/login", (req, res) => {
 
   res.json({
     proveedor: proveedor.nombre,
-    org: proveedor.org || proveedor.Org || "",   // ← AQUÍ ENVIAMOS org
+    org: proveedor.org || proveedor.Org || "",
     entregas,
     resumen: { totalKgs },
     ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
@@ -177,7 +177,7 @@ app.get("/api/pauta/estado", (req, res) => {
 
 // Registrar firma de pauta / pauta orgánica
 app.post("/api/pauta/firmar", (req, res) => {
-  const { tipo, acepta, responsable, cargo, proveedor, cuit } = req.body;
+  const { tipo, tipoPauta: tipoPautaForm, acepta, responsable, cargo, proveedor, cuit } = req.body;
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
 
   if (!acepta || !proveedor || !cuitLimpio || !responsable || !cargo) {
@@ -203,12 +203,19 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
-  // Normalizar tipo de pauta según el botón
-  const tipoPauta =
-    typeof tipo === "string" &&
-    tipo.toLowerCase().includes("organ")
-      ? "pauta organica"
-      : "pauta";
+  // Normalizar tipo de pauta: priorizamos lo que viene del formulario
+  let tipoPauta =
+    typeof tipoPautaForm === "string" && tipoPautaForm.trim()
+      ? tipoPautaForm.trim()
+      : null;
+
+  if (!tipoPauta) {
+    // Si no vino desde el formulario, inferimos según el botón usado
+    tipoPauta =
+      typeof tipo === "string" && tipo.toLowerCase().includes("organ")
+        ? "pauta organica"
+        : "pauta";
+  }
 
   const payload = {
     proveedor,
