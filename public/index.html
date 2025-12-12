@@ -361,8 +361,8 @@
           <input id="inpFecha" class="input-mini" placeholder="Fecha y hora" readonly>
         </div>
         <div style="margin-top:6px;">
-          <label for="inpTipoPauta" style="font-size:12px;">Tipo de pauta</label>
-          <input id="inpTipoPauta" class="input-mini" placeholder="Tipo de pauta" readonly>
+          <label for="inpTipo" style="font-size:12px;">Tipo de pauta</label>
+          <input id="inpTipo" class="input-mini" placeholder="Tipo de pauta" readonly>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
           <button id="btnConfirmar" class="btn-mini" disabled>Confirmar firma</button>
@@ -442,7 +442,7 @@
       const inpR   = document.getElementById('inpResponsable');
       const inpC   = document.getElementById('inpCargo');
       const inpF   = document.getElementById('inpFecha');
-      const inpTipo= document.getElementById('inpTipoPauta');
+      const inpTipo= document.getElementById('inpTipo');
       const btnOK  = document.getElementById('btnConfirmar');
       const btnCancel = document.getElementById('btnCancelar');
 
@@ -463,8 +463,7 @@
       btnOK.onclick = async ()=>{
         btnOK.disabled = true;
         const body = {
-          tipo,
-          tipoPauta: inpTipo ? inpTipo.value : (tipo === 'pauta' ? 'pauta' : 'pauta organica'),
+          tipo: inpTipo ? inpTipo.value : (tipo === 'pauta' ? 'pauta' : 'pauta organica'),
           acepta: true,
           responsable: inpR.value.trim(),
           cargo: inpC.value.trim(),
@@ -474,7 +473,11 @@
         if (qsTest) body.test = 1;
 
         try{
-          const r = await fetch('/api/pauta/firmar', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+          const r = await fetch('/api/pauta/firmar', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify(body)
+          });
           const j = await r.json();
 
           if (r.status === 409 || j?.error === 'ya_firmada'){

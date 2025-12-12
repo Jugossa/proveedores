@@ -33,7 +33,7 @@ const webhookAccesosURL =
   "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
 const webhookPautaURL =
-  "https://script.google.com/macros/s/AKfycbyNukewSLy5upQqKBlejTBv_CV5m-0AEzfF8O4B618MRajhIc_W1mAEoMDQEzpusp0u/exec";
+  "https://script.google.com/macros/s/AKfycbxI3ENlw27gbPwgoujI8vtWXO2jvWWUnAwEvtLbPJw-w2F4PVia-UIEFkR_ENriKbWf/exec";
 
 // ---------- Carga genérica de JSON ----------
 function cargarJSON(nombre, ref) {
@@ -177,7 +177,7 @@ app.get("/api/pauta/estado", (req, res) => {
 
 // Registrar firma de pauta / pauta orgánica
 app.post("/api/pauta/firmar", (req, res) => {
-  const { tipo, tipoPauta: tipoPautaForm, acepta, responsable, cargo, proveedor, cuit } = req.body;
+  const { tipo, acepta, responsable, cargo, proveedor, cuit } = req.body;
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
 
   if (!acepta || !proveedor || !cuitLimpio || !responsable || !cargo) {
@@ -203,18 +203,10 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
-  // Normalizar tipo de pauta: priorizamos lo que viene del formulario
-  let tipoPauta =
-    typeof tipoPautaForm === "string" && tipoPautaForm.trim()
-      ? tipoPautaForm.trim()
-      : null;
-
-  if (!tipoPauta) {
-    // Si no vino desde el formulario, inferimos según el botón usado
-    tipoPauta =
-      typeof tipo === "string" && tipo.toLowerCase().includes("organ")
-        ? "pauta organica"
-        : "pauta";
+  // Normalizar valor de tipo
+  let tipoNormalizado = (tipo || "").toString().trim().toLowerCase();
+  if (!tipoNormalizado) {
+    tipoNormalizado = "pauta";
   }
 
   const payload = {
@@ -222,11 +214,7 @@ app.post("/api/pauta/firmar", (req, res) => {
     cuit: cuitLimpio,
     responsable,
     cargo,
-    accion: "aceptacion_pauta",
-    modo: "registrar",
-    // Dos claves para que Apps Script pueda usar cualquiera
-    tipoPauta,            // minúsculas
-    TipoPauta: tipoPauta, // coincide con encabezado "TipoPauta"
+    tipo: tipoNormalizado,
     fechaLocal,
   };
 
@@ -244,23 +232,9 @@ app.post("/api/pauta/firmar", (req, res) => {
       },
     },
     (resGS) => {
-      let body = "";
-      resGS.on("data", (chunk) => (body += chunk.toString()));
-      resGS.on("end", () => {
-        console.log("⬅ Respuesta Apps Script PAUTA:", resGS.statusCode, body);
-        try {
-          const json = JSON.parse(body);
-          if (json && typeof json === "object") {
-            return res.json(json);
-          }
-        } catch (e) {
-          console.warn(
-            "⚠ No se pudo parsear respuesta de Apps Script:",
-            e.message
-          );
-        }
-        return res.json({ ok: true, fechaLocal });
-      });
+      console.log("⬅ Respuesta Apps Script PAUTA:", resGS.statusCode);
+      // Apps Script devuelve HTML (302), no lo parseamos; confirmamos igual al front
+      res.json({ ok: true, fechaLocal, tipo: tipoNormalizado });
     }
   );
 
