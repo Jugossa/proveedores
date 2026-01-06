@@ -119,11 +119,11 @@
 
     function norm(s) {
       return String(s || "")
-        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9\s]/g, " ")   // quita puntos, comas, símbolos: "S.R.L." -> "S R L"
         .replace(/\s+/g, " ")
-        .toUpperCase();
+        .trim();
     }
-
 
     function setViendoLabel() {
       const lbl = document.getElementById("lblViendo");
@@ -345,7 +345,7 @@
         }
 
         entregas2026 = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
-      // (2025/2026) No reset: filtra sobre el año activo
+      // (2025/2026) Mantener el año activo: filtra sobre entregasOriginal
 setViendoLabel();
         mostrarFiltrosYTabla(entregasOriginal);
 } catch (err) {
