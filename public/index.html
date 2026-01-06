@@ -369,11 +369,7 @@ setViendoLabel();
       const especie = document.getElementById("filtroEspecie").value;
       const desde = document.getElementById("desde").value;
       const hasta = document.getElementById("hasta").value;
-
-      
-        entregasOriginal = entregas2026;
-        anioActual = 2026;
-        initTabsAnio();
+      // Mantener el año activo: filtrar sobre entregasOriginal (2026 o 2025 según pestaña)
 entregasFiltradas = entregasOriginal.filter(e => {
         const coincideEspecie = especie === "TODAS" || e.Especie === especie;
         const enRango = fechaDentroDeRango(e.FechaStr, desde, hasta);
