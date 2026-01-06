@@ -323,14 +323,19 @@
           if (bExcel) bExcel.style.display = 'none';
           if (bPDF)   bPDF.style.display   = 'none';
 
+          // --- 2025: inicializar pestañas aunque 2026 no tenga datos ---
+          entregas2026 = [];
+          entregasOriginal = [];
+          anioActual = 2026;
+          initTabsAnio();
+          setViendoLabel();
+          // -------------------------------------------------------------
+
           return;
         }
 
         entregas2026 = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
-        entregasOriginal = entregas2026;
-        anioActual = 2026;
-        initTabsAnio();
-        setViendoLabel();
+setViendoLabel();
         mostrarFiltrosYTabla(entregasOriginal);
 } catch (err) {
         errorDiv.textContent = "❌ Error de red.";
