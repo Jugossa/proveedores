@@ -20,6 +20,7 @@ const baseDir = isRender
 // Datos en memoria
 let proveedores = [];
 let proFru = [];
+let proFru25 = []; // <-- NUEVO (solo para log/diagnóstico, no afecta nada existente)
 let ingresosDiarios = [];
 let proCert = [];
 let lastUpdate = { fecha: "Desconocida" };
@@ -54,18 +55,25 @@ function cargarJSON(nombre, ref) {
 
 const refProveedores = { data: proveedores };
 const refProFru = { data: proFru };
+const refProFru25 = { data: proFru25 }; // <-- NUEVO
 const refIngresos = { data: ingresosDiarios };
 const refProCert = { data: proCert };
 const refLastUpdate = { data: lastUpdate };
 
 cargarJSON("proveedores.json", refProveedores);
 cargarJSON("profru.json", refProFru);
+
+// ---- NUEVO: ProFru25.json (solo se agrega para que figure en el log) ----
+cargarJSON("ProFru25.json", refProFru25);
+// ------------------------------------------------------------------------
+
 cargarJSON("ingresosDiarios.json", refIngresos);
 cargarJSON("ProCert.json", refProCert);
 cargarJSON("lastUpdate.json", refLastUpdate);
 
 proveedores = refProveedores.data;
 proFru = refProFru.data;
+proFru25 = refProFru25.data; // <-- NUEVO
 ingresosDiarios = refIngresos.data;
 proCert = refProCert.data;
 lastUpdate = refLastUpdate.data || lastUpdate;
@@ -77,7 +85,7 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos de /data (incluye PDFs de pauta)
+// Servir archivos de /data (incluye PDFs de pauta y JSON)
 app.use("/data", express.static(baseDir));
 
 // ---------------------------------
@@ -148,7 +156,7 @@ app.post("/login", (req, res) => {
     });
   }
 
-  // Entregas del proveedor
+  // Entregas del proveedor (2026 / actual)
   const entregas = proFru.filter((e) => e.ProveedorT === proveedor.nombre);
   const totalKgs = entregas.reduce(
     (suma, e) => suma + (parseFloat(e.KgsD) || 0),
@@ -171,7 +179,6 @@ app.get("/api/pauta/estado", (req, res) => {
   const cuit = (req.query.cuit || "").replace(/[^0-9]/g, "");
   if (!cuit) return res.json({ ok: false, error: "cuit_requerido" });
 
-  // Más adelante se puede leer hoja AceptacionesPauta.
   return res.json({ ok: true, pauta: { firmado: false } });
 });
 
@@ -181,15 +188,11 @@ app.post("/api/pauta/firmar", (req, res) => {
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
 
   if (!acepta || !proveedor || !cuitLimpio || !responsable || !cargo) {
-    return res
-      .status(400)
-      .json({ ok: false, error: "datos_incompletos" });
+    return res.status(400).json({ ok: false, error: "datos_incompletos" });
   }
 
   if (!webhookPautaURL) {
-    return res
-      .status(500)
-      .json({ ok: false, error: "webhook_no_configurado" });
+    return res.status(500).json({ ok: false, error: "webhook_no_configurado" });
   }
 
   const ahora = new Date();
@@ -203,11 +206,8 @@ app.post("/api/pauta/firmar", (req, res) => {
     })
     .replace(",", "");
 
-  // Normalizar valor de tipo
   let tipoNormalizado = (tipo || "").toString().trim().toLowerCase();
-  if (!tipoNormalizado) {
-    tipoNormalizado = "pauta";
-  }
+  if (!tipoNormalizado) tipoNormalizado = "pauta";
 
   const payload = {
     proveedor,
@@ -233,7 +233,6 @@ app.post("/api/pauta/firmar", (req, res) => {
     },
     (resGS) => {
       console.log("⬅ Respuesta Apps Script PAUTA:", resGS.statusCode);
-      // Apps Script devuelve HTML (302), no lo parseamos; confirmamos igual al front
       res.json({ ok: true, fechaLocal, tipo: tipoNormalizado });
     }
   );
@@ -250,7 +249,6 @@ app.post("/api/pauta/firmar", (req, res) => {
 });
 
 // ---------- ADMIN ----------
-
 app.get("/admin/ingresos", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin", "ingresos.html"));
 });
@@ -262,6 +260,13 @@ app.get("/api/admin/ingresos-diarios", (req, res) => {
 app.get("/api/admin/procert", (req, res) => {
   res.json(proCert || []);
 });
+
+// --- NUEVO (opcional): endpoint admin para ver ProFru25 en memoria ---
+// No afecta nada existente; solo sirve para diagnóstico.
+app.get("/api/admin/profru25", (req, res) => {
+  res.json(proFru25 || []);
+});
+// --------------------------------------------------------------------
 
 // ---------- ARRANQUE SERVIDOR ----------
 app.listen(PORT, () => {
