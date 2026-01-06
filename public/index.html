@@ -94,12 +94,11 @@
     <div id="acciones">
       <button id="btnExcel" onclick="descargarExcel()">📄 Descargar Excel</button>
       <button id="btnPDF" onclick="window.print()">📅 Descargar PDF</button>
-      <button id="btnAno2026" class="btn-mini" style="display:none;">2026</button>
-      <button id="btnAno2025" class="btn-mini" style="display:none;">2025</button>
-      <span id="anioVista" style="font-size:12px;color:#555;"></span>
-      <button id="btnHistorico" style="display:none;">Histórico</button>
-
-      <button id="btnPauta" class="btn-mini">Firmar Pauta</button>
+      <span id="lblViendo" style="margin-right:10px; font-weight:600;">Viendo: 2026 (Actual)</span>
+      <button id="btn2026" class="btn-mini" type="button">2026</button>
+      <button id="btnHistorico" style="display:none;" type="button">Histórico</button>
+      <button id="btn2025" class="btn-mini" type="button">2025</button>
+<button id="btnPauta" class="btn-mini">Firmar Pauta</button>
       <button id="btnPautaOrg" class="btn-mini" style="display:none;">Firmar Pauta Orgánica</button>
 
       <div class="pauta-status">
@@ -114,74 +113,62 @@
   <script>
     let entregasOriginal = [];
     let entregasFiltradas = [];
-
     let entregas2026 = [];
-    let entregas2025 = [];
-    let vistaAnio = 2026;
+    let entregas2025 = null; // null = todavía no cargado
+    let anioActual = 2026;
 
-    function actualizarIndicadorAnio(){
-      const el = document.getElementById('anioVista');
-      if (!el) return;
-      el.textContent = vistaAnio === 2025 ? 'Viendo: 2025 (Adeudado)' : 'Viendo: 2026 (Actual)';
+    function setViendoLabel() {
+      const lbl = document.getElementById("lblViendo");
+      if (!lbl) return;
+      if (anioActual === 2025) lbl.textContent = "Viendo: 2025 (Adeudado)";
+      else lbl.textContent = "Viendo: 2026 (Actual)";
     }
 
-    function configurarBotonesAnio(){
-      const b26 = document.getElementById('btnAno2026');
-      const b25 = document.getElementById('btnAno2025');
-      if (b26) {
-        b26.style.display = 'inline-block';
-        b26.onclick = ()=> setVistaAnio(2026);
-      }
-      if (b25) {
-        b25.style.display = (entregas2025 && entregas2025.length) ? 'inline-block' : 'none';
-        b25.onclick = ()=> setVistaAnio(2025);
-      }
-      actualizarIndicadorAnio();
-    }
-
-    function setVistaAnio(anio){
-      vistaAnio = anio;
-      const data = (anio === 2025) ? (entregas2025 || []) : (entregas2026 || []);
-      entregasOriginal = data;
-
-      // Reset filtros de fechas (para evitar confusión al cambiar de año)
-      const desde = document.getElementById('desde');
-      const hasta = document.getElementById('hasta');
-      if (desde) desde.value = '';
-      if (hasta) hasta.value = '';
-
-      const tablaDiv = document.getElementById("tabla");
-      if (!data.length){
-        tablaDiv.innerHTML = anio === 2025
-          ? "<p>No hay entregas adeudadas del año 2025.</p>"
-          : "<p>No hay entregas registradas.</p>";
-        document.getElementById("resumen").textContent = "";
-        actualizarIndicadorAnio();
-        configurarBotonesAnio();
-        return;
-      }
-
-      // Re-render filtros y tabla
-      mostrarFiltrosYTabla(data);
-      actualizarIndicadorAnio();
-      configurarBotonesAnio();
-    }
-
-    async function cargarEntregas2025(proveedorNombre){
-      try{
-        const r = await fetch("/data/ProFru25.json", { cache: "no-store" });
-        if (!r.ok) return [];
-        const all = await r.json();
-        if (!Array.isArray(all)) return [];
-        const filtradas = all.filter(e => e.ProveedorT === proveedorNombre);
-        return filtradas.map(e => ({
+    async function cargarEntregas2025SiHaceFalta() {
+      if (entregas2025 !== null) return; // ya cargado (aunque sea vacío)
+      try {
+        const res = await fetch("/data/ProFru25.json?ts=" + Date.now());
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const all = await res.json();
+        const prov = (window.USER && window.USER.proveedor) ? window.USER.proveedor : "";
+        const filtrado = Array.isArray(all) ? all.filter(e => (e.ProveedorT || "") === prov) : [];
+        // Normalizamos igual que 2026 (Especie uppercase, FechaStr)
+        entregas2025 = filtrado.map(e => ({
           ...e,
           Especie: (e.Especie || '').toUpperCase(),
           FechaStr: convertirFecha(e.Fecha)
         }));
-      } catch(e){
-        return [];
+      } catch (e) {
+        entregas2025 = [];
+        alert("No se encontró ProFru25.json (2025). Ejecutá la actualización y asegurate de subir data/ProFru25.json a GitHub.");
       }
+    }
+
+    async function cambiarAnio(nuevo) {
+      if (nuevo === anioActual) return;
+
+      if (nuevo === 2025) {
+        await cargarEntregas2025SiHaceFalta();
+        entregasOriginal = entregas2025;
+        anioActual = 2025;
+      } else {
+        entregasOriginal = entregas2026;
+        anioActual = 2026;
+      }
+
+      setViendoLabel();
+      mostrarFiltrosYTabla(entregasOriginal);
+    }
+
+    function initTabsAnio() {
+      const b2026 = document.getElementById("btn2026");
+      const b2025 = document.getElementById("btn2025");
+      if (b2026) b2026.onclick = () => cambiarAnio(2026);
+      if (b2025) b2025.onclick = () => cambiarAnio(2025);
+
+      // 2025 se muestra solo si hay datos; si todavía no cargó, queda visible igual (pedido del usuario)
+      if (b2025) b2025.style.display = "inline-block";
+      setViendoLabel();
     }
 
 
@@ -320,11 +307,6 @@
           tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
           filtrosDiv.style.display = "block";
 
-          entregas2026 = [];
-          entregas2025 = [];
-          vistaAnio = 2026;
-          configurarBotonesAnio();
-
           const filaFiltros = filtrosDiv.firstElementChild;
           if (filaFiltros) filaFiltros.style.display = "none";
 
@@ -337,13 +319,6 @@
         }
 
         entregas2026 = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
-        entregasOriginal = entregas2026;
-        // Cargar 2025 (Adeudado) en segundo plano y habilitar pestaña si hay datos
-        cargarEntregas2025(nombre).then(arr => {
-          entregas2025 = arr || [];
-          configurarBotonesAnio();
-        });
-        configurarBotonesAnio();
         mostrarFiltrosYTabla(entregasOriginal);
       } catch (err) {
         errorDiv.textContent = "❌ Error de red.";
@@ -367,7 +342,11 @@
       const desde = document.getElementById("desde").value;
       const hasta = document.getElementById("hasta").value;
 
-      entregasFiltradas = entregasOriginal.filter(e => {
+      
+        entregasOriginal = entregas2026;
+        anioActual = 2026;
+        initTabsAnio();
+entregasFiltradas = entregasOriginal.filter(e => {
         const coincideEspecie = especie === "TODAS" || e.Especie === especie;
         const enRango = fechaDentroDeRango(e.FechaStr, desde, hasta);
         return coincideEspecie && enRango;
