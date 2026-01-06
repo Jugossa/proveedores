@@ -94,6 +94,9 @@
     <div id="acciones">
       <button id="btnExcel" onclick="descargarExcel()">📄 Descargar Excel</button>
       <button id="btnPDF" onclick="window.print()">📅 Descargar PDF</button>
+      <button id="btnAno2026" class="btn-mini" style="display:none;">2026</button>
+      <button id="btnAno2025" class="btn-mini" style="display:none;">2025</button>
+      <span id="anioVista" style="font-size:12px;color:#555;"></span>
       <button id="btnHistorico" style="display:none;">Histórico</button>
 
       <button id="btnPauta" class="btn-mini">Firmar Pauta</button>
@@ -111,6 +114,76 @@
   <script>
     let entregasOriginal = [];
     let entregasFiltradas = [];
+
+    let entregas2026 = [];
+    let entregas2025 = [];
+    let vistaAnio = 2026;
+
+    function actualizarIndicadorAnio(){
+      const el = document.getElementById('anioVista');
+      if (!el) return;
+      el.textContent = vistaAnio === 2025 ? 'Viendo: 2025 (Adeudado)' : 'Viendo: 2026 (Actual)';
+    }
+
+    function configurarBotonesAnio(){
+      const b26 = document.getElementById('btnAno2026');
+      const b25 = document.getElementById('btnAno2025');
+      if (b26) {
+        b26.style.display = 'inline-block';
+        b26.onclick = ()=> setVistaAnio(2026);
+      }
+      if (b25) {
+        b25.style.display = (entregas2025 && entregas2025.length) ? 'inline-block' : 'none';
+        b25.onclick = ()=> setVistaAnio(2025);
+      }
+      actualizarIndicadorAnio();
+    }
+
+    function setVistaAnio(anio){
+      vistaAnio = anio;
+      const data = (anio === 2025) ? (entregas2025 || []) : (entregas2026 || []);
+      entregasOriginal = data;
+
+      // Reset filtros de fechas (para evitar confusión al cambiar de año)
+      const desde = document.getElementById('desde');
+      const hasta = document.getElementById('hasta');
+      if (desde) desde.value = '';
+      if (hasta) hasta.value = '';
+
+      const tablaDiv = document.getElementById("tabla");
+      if (!data.length){
+        tablaDiv.innerHTML = anio === 2025
+          ? "<p>No hay entregas adeudadas del año 2025.</p>"
+          : "<p>No hay entregas registradas.</p>";
+        document.getElementById("resumen").textContent = "";
+        actualizarIndicadorAnio();
+        configurarBotonesAnio();
+        return;
+      }
+
+      // Re-render filtros y tabla
+      mostrarFiltrosYTabla(data);
+      actualizarIndicadorAnio();
+      configurarBotonesAnio();
+    }
+
+    async function cargarEntregas2025(proveedorNombre){
+      try{
+        const r = await fetch("/data/ProFru25.json", { cache: "no-store" });
+        if (!r.ok) return [];
+        const all = await r.json();
+        if (!Array.isArray(all)) return [];
+        const filtradas = all.filter(e => e.ProveedorT === proveedorNombre);
+        return filtradas.map(e => ({
+          ...e,
+          Especie: (e.Especie || '').toUpperCase(),
+          FechaStr: convertirFecha(e.Fecha)
+        }));
+      } catch(e){
+        return [];
+      }
+    }
+
 
     function mostrarBotonHistorico() {
       const btn = document.getElementById('btnHistorico');
@@ -247,6 +320,11 @@
           tablaDiv.innerHTML = "<p>No hay entregas registradas.</p>";
           filtrosDiv.style.display = "block";
 
+          entregas2026 = [];
+          entregas2025 = [];
+          vistaAnio = 2026;
+          configurarBotonesAnio();
+
           const filaFiltros = filtrosDiv.firstElementChild;
           if (filaFiltros) filaFiltros.style.display = "none";
 
@@ -258,7 +336,14 @@
           return;
         }
 
-        entregasOriginal = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
+        entregas2026 = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
+        entregasOriginal = entregas2026;
+        // Cargar 2025 (Adeudado) en segundo plano y habilitar pestaña si hay datos
+        cargarEntregas2025(nombre).then(arr => {
+          entregas2025 = arr || [];
+          configurarBotonesAnio();
+        });
+        configurarBotonesAnio();
         mostrarFiltrosYTabla(entregasOriginal);
       } catch (err) {
         errorDiv.textContent = "❌ Error de red.";
