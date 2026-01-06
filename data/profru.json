@@ -1,1 +1,72 @@
-[]
+[
+  {
+    "Ide Jugos": 7,
+    "Nro Jugos": "0000-00000010-A",
+    "Fecha": 46024.6838310185,
+    "Remito": "10-43554",
+    "CantBins": 39,
+    "ProveedorT": "SAN FORMERIO SRL",
+    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 13332,
+    "Certificado": "",
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 6,
+    "Nro Jugos": "0000-00000010-A",
+    "Fecha": 46024.6838310185,
+    "Remito": "10-43554",
+    "CantBins": 21,
+    "ProveedorT": "SAN FORMERIO SRL",
+    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 8888,
+    "Certificado": "",
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 10,
+    "Nro Jugos": "0000-00000012-A",
+    "Fecha": 46024.7119907407,
+    "Remito": "2-1535",
+    "CantBins": 2,
+    "ProveedorT": "INDUFRUT SAS",
+    "Origen": "RECEPTORA CERVANTES - INDUFRUT",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 755,
+    "Certificado": "",
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 11,
+    "Nro Jugos": "0000-00000012-A",
+    "Fecha": 46024.7119907407,
+    "Remito": "2-1535",
+    "CantBins": 6,
+    "ProveedorT": "INDUFRUT SAS",
+    "Origen": "RECEPTORA CERVANTES - INDUFRUT",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 2785,
+    "Certificado": "",
+    "pagado": false
+  },
+  {
+    "Ide Jugos": 13,
+    "Nro Jugos": "0000-00000026-A",
+    "Fecha": 46027.7149074074,
+    "Remito": "10-43555",
+    "CantBins": 21,
+    "ProveedorT": "ACUÑA JOSE LUIS",
+    "Origen": "GLP EX SABADIN - ACUÑA JOSE",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 6720,
+    "Certificado": "",
+    "pagado": false
+  }
+]
