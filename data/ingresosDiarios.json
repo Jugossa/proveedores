@@ -3,17 +3,6 @@
     "Nro Jugos": "0000-00000010-A",
     "Fecha": 46024.6838310185,
     "Remito": "10-43554",
-    "CantBins": 39,
-    "ProveedorT": "SAN FORMERIO SRL",
-    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 13332
-  },
-  {
-    "Nro Jugos": "0000-00000010-A",
-    "Fecha": 46024.6838310185,
-    "Remito": "10-43554",
     "CantBins": 21,
     "ProveedorT": "SAN FORMERIO SRL",
     "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
@@ -22,15 +11,15 @@
     "KgsD": 8888
   },
   {
-    "Nro Jugos": "0000-00000012-A",
-    "Fecha": 46024.7119907407,
-    "Remito": "2-1535",
-    "CantBins": 2,
-    "ProveedorT": "INDUFRUT SAS",
-    "Origen": "RECEPTORA CERVANTES - INDUFRUT",
+    "Nro Jugos": "0000-00000010-A",
+    "Fecha": 46024.6838310185,
+    "Remito": "10-43554",
+    "CantBins": 39,
+    "ProveedorT": "SAN FORMERIO SRL",
+    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
     "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 755
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 13332
   },
   {
     "Nro Jugos": "0000-00000012-A",
@@ -42,6 +31,17 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 2785
+  },
+  {
+    "Nro Jugos": "0000-00000012-A",
+    "Fecha": 46024.7119907407,
+    "Remito": "2-1535",
+    "CantBins": 2,
+    "ProveedorT": "INDUFRUT SAS",
+    "Origen": "RECEPTORA CERVANTES - INDUFRUT",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 755
   },
   {
     "Nro Jugos": "0000-00000026-A",
@@ -91,12 +91,12 @@
     "Nro Jugos": "0000-00000041-A",
     "Fecha": 46028.6095601852,
     "Remito": "1-81631",
-    "CantBins": 6,
+    "CantBins": 3,
     "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
     "Origen": "GLP.ALLEN DOLE - STANDARD FRUI",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 2308
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 1126
   },
   {
     "Nro Jugos": "0000-00000041-A",
@@ -113,12 +113,12 @@
     "Nro Jugos": "0000-00000041-A",
     "Fecha": 46028.6095601852,
     "Remito": "1-81631",
-    "CantBins": 3,
+    "CantBins": 6,
     "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
     "Origen": "GLP.ALLEN DOLE - STANDARD FRUI",
     "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 1126
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 2308
   },
   {
     "Nro Jugos": "0000-00000043-A",
@@ -168,23 +168,23 @@
     "Nro Jugos": "0000-00000051-A",
     "Fecha": 46029.4134953704,
     "Remito": "1-32",
-    "CantBins": 23,
-    "ProveedorT": "AGRICOLA ALTO VALLE S.A",
-    "Origen": "GLP.EL MATRERO  AGRICOLA ALTO",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 8256
-  },
-  {
-    "Nro Jugos": "0000-00000051-A",
-    "Fecha": 46029.4134953704,
-    "Remito": "1-32",
     "CantBins": 1,
     "ProveedorT": "AGRICOLA ALTO VALLE S.A",
     "Origen": "GLP.EL MATRERO  AGRICOLA ALTO",
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 0
+  },
+  {
+    "Nro Jugos": "0000-00000051-A",
+    "Fecha": 46029.4134953704,
+    "Remito": "1-32",
+    "CantBins": 23,
+    "ProveedorT": "AGRICOLA ALTO VALLE S.A",
+    "Origen": "GLP.EL MATRERO  AGRICOLA ALTO",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 8256
   },
   {
     "Nro Jugos": "0000-00000059-A",
@@ -212,23 +212,23 @@
     "Nro Jugos": "0000-00000061-A",
     "Fecha": 46029.607025463,
     "Remito": "2-1537",
-    "CantBins": 6,
-    "ProveedorT": "INDUFRUT SAS",
-    "Origen": "RECEPTORA CERVANTES - INDUFRUT",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 2397
-  },
-  {
-    "Nro Jugos": "0000-00000061-A",
-    "Fecha": 46029.607025463,
-    "Remito": "2-1537",
     "CantBins": 39,
     "ProveedorT": "INDUFRUT SAS",
     "Origen": "RECEPTORA CERVANTES - INDUFRUT",
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 15463
+  },
+  {
+    "Nro Jugos": "0000-00000061-A",
+    "Fecha": 46029.607025463,
+    "Remito": "2-1537",
+    "CantBins": 6,
+    "ProveedorT": "INDUFRUT SAS",
+    "Origen": "RECEPTORA CERVANTES - INDUFRUT",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 2397
   },
   {
     "Nro Jugos": "0000-00000066-A",
@@ -262,5 +262,71 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 1347
+  },
+  {
+    "Nro Jugos": "0000-00000076-A",
+    "Fecha": 46030.4038773148,
+    "Remito": "2718",
+    "CantBins": 29,
+    "ProveedorT": "HACIENDA MARTINEZ S.R.L.",
+    "Origen": "GLP CHOGUY HUERGO - HACIENDA M",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 11930
+  },
+  {
+    "Nro Jugos": "0000-00000079-A",
+    "Fecha": 46030.4343055556,
+    "Remito": "2380",
+    "CantBins": 1,
+    "ProveedorT": "TRES ASES SA",
+    "Origen": "GLP CIPOLLETTI - TRES ASES SA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 25600
+  },
+  {
+    "Nro Jugos": "0000-00000089-A",
+    "Fecha": 46030.6536574074,
+    "Remito": "4-1002",
+    "CantBins": 3,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 1200
+  },
+  {
+    "Nro Jugos": "0000-00000089-A",
+    "Fecha": 46030.6536574074,
+    "Remito": "4-1002",
+    "CantBins": 1,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 540
+  },
+  {
+    "Nro Jugos": "0000-00000089-A",
+    "Fecha": 46030.6536574074,
+    "Remito": "4-1002",
+    "CantBins": 9,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 3600
+  },
+  {
+    "Nro Jugos": "0000-00000095-A",
+    "Fecha": 46030.7365277778,
+    "Remito": "2381",
+    "CantBins": 66,
+    "ProveedorT": "TRES ASES SA",
+    "Origen": "GLP CIPOLLETTI - TRES ASES SA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 24200
   }
 ]
