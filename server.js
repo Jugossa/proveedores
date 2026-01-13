@@ -2,105 +2,158 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Detectar si estamos en Render
-const isRender =
-  process.env.RENDER ||
-  process.env.RENDER_EXTERNAL_URL ||
-  process.env.PORT;
-
-// Ruta base de datos
+/**
+ * Render vs Local:
+ * - Render: __dirname/data
+ * - Local/red: I:\Pagina\proveedores\data
+ */
+const isRender = Boolean(process.env.RENDER || process.env.RENDER_EXTERNAL_URL);
 const baseDir = isRender
   ? path.join(__dirname, "data")
   : path.join("I:", "Pagina", "proveedores", "data");
 
-// Datos en memoria
+// -------------------- Helpers --------------------
+function norm(s) {
+  return (s ?? "")
+    .toString()
+    .normalize("NFKD")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toUpperCase();
+}
+
+function safeJsonParse(raw, fallback) {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return fallback;
+  }
+}
+
+function cargarJSON(nombre, fallback) {
+  const fullPath = path.join(baseDir, nombre);
+  try {
+    const raw = fs.readFileSync(fullPath, "utf8");
+    const data = safeJsonParse(raw, fallback);
+    console.log(
+      `✔ Cargado ${nombre} (${Array.isArray(data) ? data.length : "objeto"} registros)`
+    );
+    return data;
+  } catch (err) {
+    console.error(`❌ Error al leer ${nombre}:`, err.message);
+    return fallback;
+  }
+}
+
+// Cookies sin dependencias externas
+function parseCookies(req) {
+  const header = req.headers.cookie;
+  const out = {};
+  if (!header) return out;
+  header.split(";").forEach((part) => {
+    const idx = part.indexOf("=");
+    if (idx === -1) return;
+    const k = part.slice(0, idx).trim();
+    const v = part.slice(idx + 1).trim();
+    out[k] = decodeURIComponent(v);
+  });
+  return out;
+}
+
+function setCookie(res, name, value, opts = {}) {
+  const parts = [`${name}=${encodeURIComponent(value)}`];
+  if (opts.maxAge != null) parts.push(`Max-Age=${opts.maxAge}`);
+  if (opts.httpOnly) parts.push("HttpOnly");
+  if (opts.sameSite) parts.push(`SameSite=${opts.sameSite}`);
+  if (opts.secure) parts.push("Secure");
+  parts.push(`Path=${opts.path || "/"}`);
+  res.setHeader("Set-Cookie", parts.join("; "));
+}
+
+// -------------------- Datos en memoria --------------------
 let proveedores = [];
 let proFru = [];
-let proFru25 = []; // <-- NUEVO (solo para log/diagnóstico, no afecta nada existente)
+let proFru25 = [];
 let ingresosDiarios = [];
 let proCert = [];
 let lastUpdate = { fecha: "Desconocida" };
 
-/**
- * WEBHOOKS:
- *  - ACCESOS: log de accesos
- *  - PAUTA:   hoja AceptacionesPauta
- */
+function recargarTodo() {
+  proveedores = cargarJSON("proveedores.json", []);
+  proFru = cargarJSON("profru.json", []);
+  proFru25 = cargarJSON("ProFru25.json", []);
+  ingresosDiarios = cargarJSON("ingresosDiarios.json", []);
+  proCert = cargarJSON("ProCert.json", []);
+  lastUpdate = cargarJSON("lastUpdate.json", { fecha: "Desconocida" }) || {
+    fecha: "Desconocida",
+  };
+  console.log("✔ Datos cargados correctamente");
+}
+recargarTodo();
+
+// -------------------- Webhooks --------------------
 const webhookAccesosURL =
   "https://script.google.com/macros/s/AKfycbw8lL7K2t2co2Opujs8Z95fA61hKsU0ddGV6NKV2iFx8338Fq_PbB5vr_C7UbVlGYOj/exec";
 
 const webhookPautaURL =
   "https://script.google.com/macros/s/AKfycbxI3ENlw27gbPwgoujI8vtWXO2jvWWUnAwEvtLbPJw-w2F4PVia-UIEFkR_ENriKbWf/exec";
 
-// ---------- Carga genérica de JSON ----------
-function cargarJSON(nombre, ref) {
-  const fullPath = path.join(baseDir, nombre);
-  try {
-    const raw = fs.readFileSync(fullPath, "utf8");
-    ref.data = JSON.parse(raw);
-    console.log(
-      `✔ Cargado ${nombre} (${
-        Array.isArray(ref.data) ? ref.data.length : "objeto"
-      } registros)`
-    );
-  } catch (err) {
-    console.error(`❌ Error al leer ${nombre}:`, err.message);
-    ref.data = Array.isArray(ref.data) ? [] : {};
+// -------------------- Auth simple (cookie + token en memoria) --------------------
+const TOKENS = new Map(); // token -> { nombre, cuit, tipo, org, issuedAt }
+const TOKEN_TTL_SEC = 60 * 60 * 12; // 12 horas
+
+function issueToken(payload) {
+  const token = crypto.randomBytes(24).toString("hex");
+  TOKENS.set(token, { ...payload, issuedAt: Date.now() });
+  return token;
+}
+
+function cleanupTokens() {
+  const now = Date.now();
+  for (const [t, v] of TOKENS.entries()) {
+    if (now - (v.issuedAt || 0) > TOKEN_TTL_SEC * 1000) TOKENS.delete(t);
   }
 }
 
-const refProveedores = { data: proveedores };
-const refProFru = { data: proFru };
-const refProFru25 = { data: proFru25 }; // <-- NUEVO
-const refIngresos = { data: ingresosDiarios };
-const refProCert = { data: proCert };
-const refLastUpdate = { data: lastUpdate };
+function requireAuth(req, res, next) {
+  cleanupTokens();
+  const cookies = parseCookies(req);
+  const token = cookies.auth || "";
+  const session = TOKENS.get(token);
+  if (!session) return res.status(401).json({ ok: false, error: "no_auth" });
+  req.user = session;
+  next();
+}
 
-cargarJSON("proveedores.json", refProveedores);
-cargarJSON("profru.json", refProFru);
+function requireAdmin(req, res, next) {
+  if (req.user?.tipo !== "admin")
+    return res.status(403).json({ ok: false, error: "forbidden" });
+  next();
+}
 
-// ---- NUEVO: ProFru25.json (solo se agrega para que figure en el log) ----
-cargarJSON("ProFru25.json", refProFru25);
-// ------------------------------------------------------------------------
-
-cargarJSON("ingresosDiarios.json", refIngresos);
-cargarJSON("ProCert.json", refProCert);
-cargarJSON("lastUpdate.json", refLastUpdate);
-
-proveedores = refProveedores.data;
-proFru = refProFru.data;
-proFru25 = refProFru25.data; // <-- NUEVO
-ingresosDiarios = refIngresos.data;
-proCert = refProCert.data;
-lastUpdate = refLastUpdate.data || lastUpdate;
-
-console.log("✔ Datos cargados correctamente");
-
-// Middleware
-app.use(express.static("public"));
-app.use(express.json());
+// -------------------- Middleware --------------------
+app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos de /data (incluye PDFs de pauta y JSON)
-app.use("/data", express.static(baseDir));
+app.use(express.static(path.join(__dirname, "public")));
 
-// ---------------------------------
-//              RUTAS
-// ---------------------------------
+// Servir /data (JSON + PDFs)
+app.use("/data", express.static(baseDir, { etag: false, maxAge: 0 }));
 
+// Root
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-
 app.get("/index-celu.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index-celu.html"));
 });
 
-// ---------- LOGIN PROVEEDORES ----------
+// -------------------- LOGIN --------------------
 app.post("/login", (req, res) => {
   const { cui, password } = req.body;
   const cuiLimpio = (cui || "").replace(/[^0-9]/g, "");
@@ -115,7 +168,7 @@ app.post("/login", (req, res) => {
     return res.status(401).send("CUIT o clave incorrectos");
   }
 
-  // Log de acceso a Google Sheets
+  // Log acceso a Google Sheets (no bloquea)
   if (webhookAccesosURL) {
     const postData = JSON.stringify({
       tipoRegistro: "acceso",
@@ -139,50 +192,82 @@ app.post("/login", (req, res) => {
     );
 
     reqGS.on("error", (err) => {
-      console.error("❌ Error al enviar webhook de ACCESO:", err.message);
+      console.error("❌ Error webhook ACCESO:", err.message);
     });
 
     reqGS.write(postData);
     reqGS.end();
   }
 
-  // Admin (CUIT 692018)
-  if (cuiLimpio === "692018") {
-    return res.json({
-      tipo: "admin",
-      proveedor: proveedor.nombre || "ADMINISTRADOR",
-      org: proveedor.org || proveedor.Org || "",
-      ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
-    });
-  }
+  const isAdmin = cuiLimpio === "692018";
+  const tipo = isAdmin ? "admin" : "proveedor";
 
-  // Entregas del proveedor (2026 / actual)
-  const entregas = proFru.filter((e) => e.ProveedorT === proveedor.nombre);
-  const totalKgs = entregas.reduce(
-    (suma, e) => suma + (parseFloat(e.KgsD) || 0),
-    0
-  );
-
-  res.json({
-    proveedor: proveedor.nombre,
+  const token = issueToken({
+    tipo,
+    nombre: proveedor.nombre || (isAdmin ? "ADMINISTRADOR" : ""),
+    cuit: cuiLimpio,
     org: proveedor.org || proveedor.Org || "",
-    entregas,
-    resumen: { totalKgs },
+  });
+
+  setCookie(res, "auth", token, {
+    httpOnly: true,
+    sameSite: "Lax",
+    secure: isRender, // HTTPS en Render
+    maxAge: TOKEN_TTL_SEC,
+    path: "/",
+  });
+
+  return res.json({
+    ok: true,
+    tipo,
+    proveedor: proveedor.nombre || (isAdmin ? "ADMINISTRADOR" : ""),
+    org: proveedor.org || proveedor.Org || "",
     ultimaActualizacion: lastUpdate.fecha || "Fecha desconocida",
   });
 });
 
-// ---------- PAUTAS ----------
+app.post("/logout", (req, res) => {
+  const cookies = parseCookies(req);
+  const token = cookies.auth;
+  if (token) TOKENS.delete(token);
+  setCookie(res, "auth", "", {
+    httpOnly: true,
+    sameSite: "Lax",
+    secure: isRender,
+    maxAge: 0,
+    path: "/",
+  });
+  res.json({ ok: true });
+});
 
-// Estado pauta (por ahora: siempre permite firmar)
+// -------------------- ENDPOINTS QUE TU PÁGINA NECESITA --------------------
+// Antes te daba: Cannot GET /profru
+// Ahora existe y devuelve datos filtrados por proveedor logueado.
+app.get("/profru", requireAuth, (req, res) => {
+  if (req.user.tipo === "admin") return res.json(proFru || []);
+  const prov = norm(req.user.nombre);
+  const rows = (proFru || []).filter((e) => norm(e.ProveedorT) === prov);
+  res.json(rows);
+});
+
+app.get("/profru25", requireAuth, (req, res) => {
+  if (req.user.tipo === "admin") return res.json(proFru25 || []);
+  const prov = norm(req.user.nombre);
+  const rows = (proFru25 || []).filter((e) => norm(e.ProveedorT) === prov);
+  res.json(rows);
+});
+
+app.get("/lastUpdate", (req, res) => {
+  res.json(lastUpdate || { fecha: "Desconocida" });
+});
+
+// -------------------- PAUTAS --------------------
 app.get("/api/pauta/estado", (req, res) => {
   const cuit = (req.query.cuit || "").replace(/[^0-9]/g, "");
   if (!cuit) return res.json({ ok: false, error: "cuit_requerido" });
-
   return res.json({ ok: true, pauta: { firmado: false } });
 });
 
-// Registrar firma de pauta / pauta orgánica
 app.post("/api/pauta/firmar", (req, res) => {
   const { tipo, acepta, responsable, cargo, proveedor, cuit } = req.body;
   const cuitLimpio = (cuit || "").replace(/[^0-9]/g, "");
@@ -220,8 +305,6 @@ app.post("/api/pauta/firmar", (req, res) => {
 
   const postData = JSON.stringify(payload);
 
-  console.log("➡ Enviando PAUTA a Apps Script:", payload);
-
   const reqGS = https.request(
     webhookPautaURL,
     {
@@ -248,27 +331,25 @@ app.post("/api/pauta/firmar", (req, res) => {
   reqGS.end();
 });
 
-// ---------- ADMIN ----------
-app.get("/admin/ingresos", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "admin", "ingresos.html"));
-});
-
-app.get("/api/admin/ingresos-diarios", (req, res) => {
+// -------------------- ADMIN --------------------
+app.get("/api/admin/ingresos-diarios", requireAuth, requireAdmin, (req, res) => {
   res.json(ingresosDiarios || []);
 });
 
-app.get("/api/admin/procert", (req, res) => {
+app.get("/api/admin/procert", requireAuth, requireAdmin, (req, res) => {
   res.json(proCert || []);
 });
 
-// --- NUEVO (opcional): endpoint admin para ver ProFru25 en memoria ---
-// No afecta nada existente; solo sirve para diagnóstico.
-app.get("/api/admin/profru25", (req, res) => {
+app.get("/api/admin/profru25", requireAuth, requireAdmin, (req, res) => {
   res.json(proFru25 || []);
 });
-// --------------------------------------------------------------------
 
-// ---------- ARRANQUE SERVIDOR ----------
+// Opcional: recargar JSON sin redeploy (solo admin)
+app.post("/api/admin/recargar", requireAuth, requireAdmin, (req, res) => {
+  recargarTodo();
+  res.json({ ok: true });
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor funcionando en http://localhost:${PORT}`);
 });
