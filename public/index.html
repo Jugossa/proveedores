@@ -135,11 +135,9 @@
     async function cargarEntregas2025SiHaceFalta() {
       if (entregas2025 !== null) return; // ya cargado (aunque sea vacío)
       try {
-        const res = await fetch("/data/ProFru25.json?ts=" + Date.now());
+        const res = await fetch("/profru25?ts=" + Date.now(), { credentials: "include" });
         if (!res.ok) throw new Error("HTTP " + res.status);
-        const all = await res.json();
-        const prov = norm((window.USER && window.USER.proveedor) ? window.USER.proveedor : "");
-        const filtrado = Array.isArray(all) ? all.filter(e => norm(e.ProveedorT) === prov) : [];
+        const filtrado = await res.json();
         // Normalizamos igual que 2026 (Especie uppercase, FechaStr)
         entregas2025 = filtrado.map(e => ({
           ...e,
@@ -263,7 +261,10 @@
           return;
         }
 
-        const data = result.entregas || [];
+        // El backend devuelve entregas filtradas por proveedor desde /profru
+        const resEnt = await fetch("/profru?ts=" + Date.now(), { credentials: "include" });
+        if (!resEnt.ok) throw new Error("HTTP " + resEnt.status + " al pedir /profru");
+        const data = await resEnt.json();
 
         window.USER = {
           proveedor: result.proveedor || "",
@@ -345,8 +346,10 @@
         }
 
         entregas2026 = data.map(e => ({ ...e, Especie: (e.Especie || '').toUpperCase(), FechaStr: convertirFecha(e.Fecha) }));
-      // (2025/2026) Mantener el año activo: filtra sobre entregasOriginal
-setViendoLabel();
+        entregasOriginal = entregas2026;
+        anioActual = 2026;
+        initTabsAnio();
+        setViendoLabel();
         mostrarFiltrosYTabla(entregasOriginal);
 } catch (err) {
         errorDiv.textContent = "❌ Error de red.";
