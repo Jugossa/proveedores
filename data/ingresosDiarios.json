@@ -3,23 +3,23 @@
     "Nro Jugos": "0000-00000010-A",
     "Fecha": 46024.6838310185,
     "Remito": "10-43554",
-    "CantBins": 21,
-    "ProveedorT": "SAN FORMERIO SRL",
-    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 8888
-  },
-  {
-    "Nro Jugos": "0000-00000010-A",
-    "Fecha": 46024.6838310185,
-    "Remito": "10-43554",
     "CantBins": 39,
     "ProveedorT": "SAN FORMERIO SRL",
     "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 13332
+  },
+  {
+    "Nro Jugos": "0000-00000010-A",
+    "Fecha": 46024.6838310185,
+    "Remito": "10-43554",
+    "CantBins": 21,
+    "ProveedorT": "SAN FORMERIO SRL",
+    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 8888
   },
   {
     "Nro Jugos": "0000-00000012-A",
@@ -91,6 +91,17 @@
     "Nro Jugos": "0000-00000041-A",
     "Fecha": 46028.6095601852,
     "Remito": "1-81631",
+    "CantBins": 6,
+    "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
+    "Origen": "GLP.ALLEN DOLE - STANDARD FRUI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 2308
+  },
+  {
+    "Nro Jugos": "0000-00000041-A",
+    "Fecha": 46028.6095601852,
+    "Remito": "1-81631",
     "CantBins": 3,
     "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
     "Origen": "GLP.ALLEN DOLE - STANDARD FRUI",
@@ -108,17 +119,6 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 2196
-  },
-  {
-    "Nro Jugos": "0000-00000041-A",
-    "Fecha": 46028.6095601852,
-    "Remito": "1-81631",
-    "CantBins": 6,
-    "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
-    "Origen": "GLP.ALLEN DOLE - STANDARD FRUI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 2308
   },
   {
     "Nro Jugos": "0000-00000043-A",
@@ -245,23 +245,23 @@
     "Nro Jugos": "0000-00000068-A",
     "Fecha": 46029.7715509259,
     "Remito": "01-465",
-    "CantBins": 26,
-    "ProveedorT": "DEL BEN JUAN CELESTINO",
-    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 9013
-  },
-  {
-    "Nro Jugos": "0000-00000068-A",
-    "Fecha": 46029.7715509259,
-    "Remito": "01-465",
     "CantBins": 4,
     "ProveedorT": "DEL BEN JUAN CELESTINO",
     "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 1347
+  },
+  {
+    "Nro Jugos": "0000-00000068-A",
+    "Fecha": 46029.7715509259,
+    "Remito": "01-465",
+    "CantBins": 26,
+    "ProveedorT": "DEL BEN JUAN CELESTINO",
+    "Origen": "GLP.D.BOSCO DEL BEN JUAN CELES",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 9013
   },
   {
     "Nro Jugos": "0000-00000076-A",
@@ -300,23 +300,23 @@
     "Nro Jugos": "0000-00000089-A",
     "Fecha": 46030.6536574074,
     "Remito": "4-1002",
-    "CantBins": 9,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 3600
-  },
-  {
-    "Nro Jugos": "0000-00000089-A",
-    "Fecha": 46030.6536574074,
-    "Remito": "4-1002",
     "CantBins": 3,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 1200
+  },
+  {
+    "Nro Jugos": "0000-00000089-A",
+    "Fecha": 46030.6536574074,
+    "Remito": "4-1002",
+    "CantBins": 9,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 3600
   },
   {
     "Nro Jugos": "0000-00000095-A",
@@ -328,6 +328,17 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 24200
+  },
+  {
+    "Nro Jugos": "0000-00000101-A",
+    "Fecha": 46031.3128125,
+    "Remito": "08/27610",
+    "CantBins": 6,
+    "ProveedorT": "DOLE NAT.CO.SA",
+    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 2339
   },
   {
     "Nro Jugos": "0000-00000101-A",
@@ -352,17 +363,6 @@
     "KgsD": 5660
   },
   {
-    "Nro Jugos": "0000-00000101-A",
-    "Fecha": 46031.3128125,
-    "Remito": "08/27610",
-    "CantBins": 6,
-    "ProveedorT": "DOLE NAT.CO.SA",
-    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 2339
-  },
-  {
     "Nro Jugos": "0000-00000108-A",
     "Fecha": 46031.4010532407,
     "Remito": "557/9510",
@@ -377,17 +377,6 @@
     "Nro Jugos": "0000-00000108-A",
     "Fecha": 46031.4010532407,
     "Remito": "557/9510",
-    "CantBins": 1,
-    "ProveedorT": "BONA TERRA",
-    "Origen": "GLP ZOVICH - VA ALBERDI",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 0
-  },
-  {
-    "Nro Jugos": "0000-00000108-A",
-    "Fecha": 46031.4010532407,
-    "Remito": "557/9510",
     "CantBins": 7,
     "ProveedorT": "BONA TERRA",
     "Origen": "GLP ZOVICH - VA ALBERDI",
@@ -396,15 +385,26 @@
     "KgsD": 2663
   },
   {
+    "Nro Jugos": "0000-00000108-A",
+    "Fecha": 46031.4010532407,
+    "Remito": "557/9510",
+    "CantBins": 1,
+    "ProveedorT": "BONA TERRA",
+    "Origen": "GLP ZOVICH - VA ALBERDI",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 0
+  },
+  {
     "Nro Jugos": "0000-00000110-A",
     "Fecha": 46031.4250231481,
     "Remito": "01/3295",
-    "CantBins": 24,
+    "CantBins": 20,
     "ProveedorT": "SAN FORMERIO SRL",
     "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 7602
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 8217
   },
   {
     "Nro Jugos": "0000-00000110-A",
@@ -421,12 +421,12 @@
     "Nro Jugos": "0000-00000110-A",
     "Fecha": 46031.4250231481,
     "Remito": "01/3295",
-    "CantBins": 20,
+    "CantBins": 24,
     "ProveedorT": "SAN FORMERIO SRL",
     "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 8217
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 7602
   },
   {
     "Nro Jugos": "0000-00000111-A",
@@ -438,17 +438,6 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 27200
-  },
-  {
-    "Nro Jugos": "0000-00000113-A",
-    "Fecha": 46031.4641550926,
-    "Remito": "08/1043558",
-    "CantBins": 8,
-    "ProveedorT": "BASIL SA",
-    "Origen": "GLP FRUTICLT REG. - BASIL SA",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 3121
   },
   {
     "Nro Jugos": "0000-00000113-A",
@@ -471,6 +460,17 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 3209
+  },
+  {
+    "Nro Jugos": "0000-00000113-A",
+    "Fecha": 46031.4641550926,
+    "Remito": "08/1043558",
+    "CantBins": 8,
+    "ProveedorT": "BASIL SA",
+    "Origen": "GLP FRUTICLT REG. - BASIL SA",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 3121
   },
   {
     "Nro Jugos": "0000-00000115-A",
@@ -519,24 +519,13 @@
   {
     "Nro Jugos": "0000-00000123-A",
     "Fecha": 46031.5775694444,
-    "Remito": "01/16309",
-    "CantBins": 7,
-    "ProveedorT": "MEHDI CARLOS MARTIN",
-    "Origen": "GLP.MURO CERVANTES - MEHDI",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 2298
-  },
-  {
-    "Nro Jugos": "0000-00000123-A",
-    "Fecha": 46031.5775694444,
-    "Remito": "01/16309",
-    "CantBins": 4,
-    "ProveedorT": "MEHDI CARLOS MARTIN",
-    "Origen": "GLP.MURO CERVANTES - MEHDI",
+    "Remito": "01/16310",
+    "CantBins": 12,
+    "ProveedorT": "DON CLEMENTE SRL",
+    "Origen": "GLP.TRES+ UNO exMURO CERVANTES",
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
-    "KgsD": 1603
+    "KgsD": 4983
   },
   {
     "Nro Jugos": "0000-00000123-A",
@@ -552,13 +541,24 @@
   {
     "Nro Jugos": "0000-00000123-A",
     "Fecha": 46031.5775694444,
-    "Remito": "01/16310",
-    "CantBins": 12,
-    "ProveedorT": "DON CLEMENTE SRL",
-    "Origen": "GLP.TRES+ UNO exMURO CERVANTES",
+    "Remito": "01/16309",
+    "CantBins": 4,
+    "ProveedorT": "MEHDI CARLOS MARTIN",
+    "Origen": "GLP.MURO CERVANTES - MEHDI",
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
-    "KgsD": 4983
+    "KgsD": 1603
+  },
+  {
+    "Nro Jugos": "0000-00000123-A",
+    "Fecha": 46031.5775694444,
+    "Remito": "01/16309",
+    "CantBins": 7,
+    "ProveedorT": "MEHDI CARLOS MARTIN",
+    "Origen": "GLP.MURO CERVANTES - MEHDI",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 2298
   },
   {
     "Nro Jugos": "0000-00000129-A",
@@ -630,12 +630,12 @@
     "Nro Jugos": "0000-00000137-A",
     "Fecha": 46031.7634606482,
     "Remito": "1-5496",
-    "CantBins": 22,
+    "CantBins": 2,
     "ProveedorT": "NATALINI RICARDO RUBEN",
     "Origen": "GLP.RAICES PATAGONICAS - NATAL",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 7520
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 719
   },
   {
     "Nro Jugos": "0000-00000137-A",
@@ -651,13 +651,13 @@
   {
     "Nro Jugos": "0000-00000137-A",
     "Fecha": 46031.7634606482,
-    "Remito": "1-5496",
-    "CantBins": 2,
-    "ProveedorT": "NATALINI RICARDO RUBEN",
-    "Origen": "GLP.RAICES PATAGONICAS - NATAL",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 719
+    "Remito": "10-43560",
+    "CantBins": 1,
+    "ProveedorT": "SAN FORMERIO SRL",
+    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 446
   },
   {
     "Nro Jugos": "0000-00000137-A",
@@ -673,13 +673,13 @@
   {
     "Nro Jugos": "0000-00000137-A",
     "Fecha": 46031.7634606482,
-    "Remito": "10-43560",
-    "CantBins": 1,
-    "ProveedorT": "SAN FORMERIO SRL",
-    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 446
+    "Remito": "1-5496",
+    "CantBins": 22,
+    "ProveedorT": "NATALINI RICARDO RUBEN",
+    "Origen": "GLP.RAICES PATAGONICAS - NATAL",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 7520
   },
   {
     "Nro Jugos": "0000-00000152-A",
@@ -718,23 +718,23 @@
     "Nro Jugos": "0000-00000168-A",
     "Fecha": 46034.454212963,
     "Remito": "1-16328",
-    "CantBins": 6,
-    "ProveedorT": "DON CLEMENTE SRL",
-    "Origen": "GLP.TRES+ UNO exMURO CERVANTES",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 2083
-  },
-  {
-    "Nro Jugos": "0000-00000168-A",
-    "Fecha": 46034.454212963,
-    "Remito": "1-16328",
     "CantBins": 1,
     "ProveedorT": "DON CLEMENTE SRL",
     "Origen": "GLP.TRES+ UNO exMURO CERVANTES",
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 365
+  },
+  {
+    "Nro Jugos": "0000-00000168-A",
+    "Fecha": 46034.454212963,
+    "Remito": "1-16328",
+    "CantBins": 34,
+    "ProveedorT": "DON CLEMENTE SRL",
+    "Origen": "GLP.TRES+ UNO exMURO CERVANTES",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 9757
   },
   {
     "Nro Jugos": "0000-00000168-A",
@@ -751,12 +751,12 @@
     "Nro Jugos": "0000-00000168-A",
     "Fecha": 46034.454212963,
     "Remito": "1-16328",
-    "CantBins": 34,
+    "CantBins": 6,
     "ProveedorT": "DON CLEMENTE SRL",
     "Origen": "GLP.TRES+ UNO exMURO CERVANTES",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 9757
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 2083
   },
   {
     "Nro Jugos": "0000-00000172-A",
@@ -795,23 +795,23 @@
     "Nro Jugos": "0000-00000186-A",
     "Fecha": 46034.7078472222,
     "Remito": "93",
-    "CantBins": 6,
-    "ProveedorT": "BATTAGLIO ARGENTINA SA",
-    "Origen": "GLP EL MATRERO - BATTAGLIO",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 2066
-  },
-  {
-    "Nro Jugos": "0000-00000186-A",
-    "Fecha": 46034.7078472222,
-    "Remito": "93",
     "CantBins": 18,
     "ProveedorT": "BATTAGLIO ARGENTINA SA",
     "Origen": "GLP EL MATRERO - BATTAGLIO",
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 6194
+  },
+  {
+    "Nro Jugos": "0000-00000186-A",
+    "Fecha": 46034.7078472222,
+    "Remito": "93",
+    "CantBins": 6,
+    "ProveedorT": "BATTAGLIO ARGENTINA SA",
+    "Origen": "GLP EL MATRERO - BATTAGLIO",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 2066
   },
   {
     "Nro Jugos": "0000-00000189-A",
@@ -823,6 +823,17 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 4310
+  },
+  {
+    "Nro Jugos": "0000-00000197-A",
+    "Fecha": 46035.3946643519,
+    "Remito": "1-427",
+    "CantBins": 9,
+    "ProveedorT": "AGRICOLA ALBERDI S.A.S",
+    "Origen": "CH.GLP.ALBERDI - GARCIA SEBAST",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 3137
   },
   {
     "Nro Jugos": "0000-00000197-A",
@@ -845,17 +856,6 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 389
-  },
-  {
-    "Nro Jugos": "0000-00000197-A",
-    "Fecha": 46035.3946643519,
-    "Remito": "1-427",
-    "CantBins": 9,
-    "ProveedorT": "AGRICOLA ALBERDI S.A.S",
-    "Origen": "CH.GLP.ALBERDI - GARCIA SEBAST",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 3137
   },
   {
     "Nro Jugos": "0000-00000201-A",
@@ -894,17 +894,6 @@
     "Nro Jugos": "0000-00000205-A",
     "Fecha": 46035.4459490741,
     "Remito": "1-5497",
-    "CantBins": 9,
-    "ProveedorT": "NATALINI RICARDO RUBEN",
-    "Origen": "GLP.RAICES PATAGONICAS - NATAL",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 3187
-  },
-  {
-    "Nro Jugos": "0000-00000205-A",
-    "Fecha": 46035.4459490741,
-    "Remito": "1-5497",
     "CantBins": 29,
     "ProveedorT": "NATALINI RICARDO RUBEN",
     "Origen": "GLP.RAICES PATAGONICAS - NATAL",
@@ -922,6 +911,17 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 3227
+  },
+  {
+    "Nro Jugos": "0000-00000205-A",
+    "Fecha": 46035.4459490741,
+    "Remito": "1-5497",
+    "CantBins": 9,
+    "ProveedorT": "NATALINI RICARDO RUBEN",
+    "Origen": "GLP.RAICES PATAGONICAS - NATAL",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 3187
   },
   {
     "Nro Jugos": "0000-00000207-A",
@@ -971,17 +971,6 @@
     "Nro Jugos": "0000-00000213-A",
     "Fecha": 46035.6205324074,
     "Remito": "23-A",
-    "CantBins": 12,
-    "ProveedorT": "BASIL SA",
-    "Origen": "GLP FRUTICLT REG. - BASIL SA",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 3804
-  },
-  {
-    "Nro Jugos": "0000-00000213-A",
-    "Fecha": 46035.6205324074,
-    "Remito": "23-A",
     "CantBins": 3,
     "ProveedorT": "BASIL SA",
     "Origen": "GLP FRUTICLT REG. - BASIL SA",
@@ -1001,15 +990,15 @@
     "KgsD": 4564
   },
   {
-    "Nro Jugos": "0000-00000215-A",
-    "Fecha": 46035.6505787037,
-    "Remito": "1-273",
-    "CantBins": 2,
-    "ProveedorT": "CONTADINI SRL",
-    "Origen": "GLP LENZI ALDO -",
+    "Nro Jugos": "0000-00000213-A",
+    "Fecha": 46035.6205324074,
+    "Remito": "23-A",
+    "CantBins": 12,
+    "ProveedorT": "BASIL SA",
+    "Origen": "GLP FRUTICLT REG. - BASIL SA",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 660
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 3804
   },
   {
     "Nro Jugos": "0000-00000215-A",
@@ -1021,6 +1010,17 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 7520
+  },
+  {
+    "Nro Jugos": "0000-00000215-A",
+    "Fecha": 46035.6505787037,
+    "Remito": "1-273",
+    "CantBins": 2,
+    "ProveedorT": "CONTADINI SRL",
+    "Origen": "GLP LENZI ALDO -",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 660
   },
   {
     "Nro Jugos": "0000-00000216-A",
@@ -1081,23 +1081,23 @@
     "Nro Jugos": "0000-00000221-A",
     "Fecha": 46035.6901041667,
     "Remito": "82-35961",
-    "CantBins": 3,
-    "ProveedorT": "MOÑO AZUL SA",
-    "Origen": "GLP.V.REGINA MOÑO AZUL SA",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 1200
-  },
-  {
-    "Nro Jugos": "0000-00000221-A",
-    "Fecha": 46035.6901041667,
-    "Remito": "82-35961",
     "CantBins": 8,
     "ProveedorT": "MOÑO AZUL SA",
     "Origen": "GLP.V.REGINA MOÑO AZUL SA",
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 3073
+  },
+  {
+    "Nro Jugos": "0000-00000221-A",
+    "Fecha": 46035.6901041667,
+    "Remito": "82-35961",
+    "CantBins": 3,
+    "ProveedorT": "MOÑO AZUL SA",
+    "Origen": "GLP.V.REGINA MOÑO AZUL SA",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 1200
   },
   {
     "Nro Jugos": "0000-00000223-A",
@@ -1131,17 +1131,6 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 5100
-  },
-  {
-    "Nro Jugos": "0000-00000227-A",
-    "Fecha": 46035.7212152778,
-    "Remito": "82-35965",
-    "CantBins": 5,
-    "ProveedorT": "MOÑO AZUL SA",
-    "Origen": "GLP.V.REGINA MOÑO AZUL SA",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 1858
   },
   {
     "Nro Jugos": "0000-00000230-A",
@@ -1191,17 +1180,6 @@
     "Nro Jugos": "0000-00000234-A",
     "Fecha": 46036.3811805556,
     "Remito": "9-20067/5552",
-    "CantBins": 33,
-    "ProveedorT": "DOLE NAT.CO.SA",
-    "Origen": "GLP.MATADERO - BONADE SA",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 14795
-  },
-  {
-    "Nro Jugos": "0000-00000234-A",
-    "Fecha": 46036.3811805556,
-    "Remito": "9-20067/5552",
     "CantBins": 3,
     "ProveedorT": "BONADE SA",
     "Origen": "GLP.MATADERO - BONADE SA",
@@ -1210,15 +1188,15 @@
     "KgsD": 1345
   },
   {
-    "Nro Jugos": "0000-00000240-A",
-    "Fecha": 46036.4281134259,
-    "Remito": "82-35967",
-    "CantBins": 3,
-    "ProveedorT": "MOÑO AZUL SA",
-    "Origen": "GLP.V.REGINA MOÑO AZUL SA",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 762
+    "Nro Jugos": "0000-00000234-A",
+    "Fecha": 46036.3811805556,
+    "Remito": "9-20067/5552",
+    "CantBins": 33,
+    "ProveedorT": "DOLE NAT.CO.SA",
+    "Origen": "GLP.MATADERO - BONADE SA",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 14795
   },
   {
     "Nro Jugos": "0000-00000240-A",
@@ -1230,6 +1208,17 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 12173
+  },
+  {
+    "Nro Jugos": "0000-00000240-A",
+    "Fecha": 46036.4281134259,
+    "Remito": "82-35967",
+    "CantBins": 3,
+    "ProveedorT": "MOÑO AZUL SA",
+    "Origen": "GLP.V.REGINA MOÑO AZUL SA",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 762
   },
   {
     "Nro Jugos": "0000-00000241-A",
@@ -1290,23 +1279,12 @@
     "Nro Jugos": "0000-00000247-A",
     "Fecha": 46036.4629050926,
     "Remito": "4-136521",
-    "CantBins": 2,
+    "CantBins": 24,
     "ProveedorT": "MARIO CERVI E HIJOS SA",
     "Origen": "CERVI MARIO GLP. NQN.",
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
-    "KgsD": 858
-  },
-  {
-    "Nro Jugos": "0000-00000247-A",
-    "Fecha": 46036.4629050926,
-    "Remito": "4-136521",
-    "CantBins": 5,
-    "ProveedorT": "MARIO CERVI E HIJOS SA",
-    "Origen": "CERVI MARIO GLP. NQN.",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 1801
+    "KgsD": 9823
   },
   {
     "Nro Jugos": "0000-00000247-A",
@@ -1323,12 +1301,12 @@
     "Nro Jugos": "0000-00000247-A",
     "Fecha": 46036.4629050926,
     "Remito": "4-136521",
-    "CantBins": 24,
+    "CantBins": 2,
     "ProveedorT": "MARIO CERVI E HIJOS SA",
     "Origen": "CERVI MARIO GLP. NQN.",
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
-    "KgsD": 9823
+    "KgsD": 858
   },
   {
     "Nro Jugos": "0000-00000247-A",
@@ -1340,6 +1318,17 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 643
+  },
+  {
+    "Nro Jugos": "0000-00000247-A",
+    "Fecha": 46036.4629050926,
+    "Remito": "4-136521",
+    "CantBins": 5,
+    "ProveedorT": "MARIO CERVI E HIJOS SA",
+    "Origen": "CERVI MARIO GLP. NQN.",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 1801
   },
   {
     "Nro Jugos": "0000-00000248-A",
@@ -1356,23 +1345,23 @@
     "Nro Jugos": "0000-00000249-A",
     "Fecha": 46036.475,
     "Remito": "4-1003",
-    "CantBins": 12,
-    "ProveedorT": "MINISINI JORGE RAUL",
-    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 5481
-  },
-  {
-    "Nro Jugos": "0000-00000249-A",
-    "Fecha": 46036.475,
-    "Remito": "4-1003",
     "CantBins": 15,
     "ProveedorT": "MINISINI JORGE RAUL",
     "Origen": "PLANCHADA - Bº SANTA RITA MINI",
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 6223
+  },
+  {
+    "Nro Jugos": "0000-00000249-A",
+    "Fecha": 46036.475,
+    "Remito": "4-1003",
+    "CantBins": 12,
+    "ProveedorT": "MINISINI JORGE RAUL",
+    "Origen": "PLANCHADA - Bº SANTA RITA MINI",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 5481
   },
   {
     "Nro Jugos": "0000-00000250-A",
@@ -1411,17 +1400,6 @@
     "Nro Jugos": "0000-00000253-A",
     "Fecha": 46036.641712963,
     "Remito": "1057-1968",
-    "CantBins": 3,
-    "ProveedorT": "PATAGONIAN FRUITS TRADE SA",
-    "Origen": "GLP.ALBERDI BIO - PATAGONIAN",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 720
-  },
-  {
-    "Nro Jugos": "0000-00000253-A",
-    "Fecha": 46036.641712963,
-    "Remito": "1057-1968",
     "CantBins": 45,
     "ProveedorT": "PATAGONIAN FRUITS TRADE SA",
     "Origen": "GLP.ALBERDI BIO - PATAGONIAN",
@@ -1430,26 +1408,15 @@
     "KgsD": 14560
   },
   {
-    "Nro Jugos": "0000-00000255-A",
-    "Fecha": 46036.6489351852,
-    "Remito": "1-81632",
-    "CantBins": 6,
-    "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
-    "Origen": "GLP.LOS PILARES ALLEN - STANDA",
+    "Nro Jugos": "0000-00000253-A",
+    "Fecha": 46036.641712963,
+    "Remito": "1057-1968",
+    "CantBins": 3,
+    "ProveedorT": "PATAGONIAN FRUITS TRADE SA",
+    "Origen": "GLP.ALBERDI BIO - PATAGONIAN",
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
-    "KgsD": 2103
-  },
-  {
-    "Nro Jugos": "0000-00000255-A",
-    "Fecha": 46036.6489351852,
-    "Remito": "10-43562",
-    "CantBins": 32,
-    "ProveedorT": "BOROCCI EMILIANO",
-    "Origen": "CH ALLEN - BOROCCI EMILIANO",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 13118
+    "KgsD": 720
   },
   {
     "Nro Jugos": "0000-00000255-A",
@@ -1474,6 +1441,28 @@
     "KgsD": 3482
   },
   {
+    "Nro Jugos": "0000-00000255-A",
+    "Fecha": 46036.6489351852,
+    "Remito": "1-81632",
+    "CantBins": 6,
+    "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
+    "Origen": "GLP.LOS PILARES ALLEN - STANDA",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 2103
+  },
+  {
+    "Nro Jugos": "0000-00000255-A",
+    "Fecha": 46036.6489351852,
+    "Remito": "10-43562",
+    "CantBins": 32,
+    "ProveedorT": "BOROCCI EMILIANO",
+    "Origen": "CH ALLEN - BOROCCI EMILIANO",
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 13118
+  },
+  {
     "Nro Jugos": "0000-00000257-A",
     "Fecha": 46036.655150463,
     "Remito": "9-20080",
@@ -1493,7 +1482,7 @@
     "Origen": "GLP.MATADERO - BONADE SA",
     "Especie": "pera",
     "NomVariedad": "PERA WILLIAMS",
-    "KgsD": 6379
+    "KgsD": 6911
   },
   {
     "Nro Jugos": "0000-00000257-A",
@@ -1504,7 +1493,7 @@
     "Origen": "GLP.MATADERO - BONADE SA",
     "Especie": "pera",
     "NomVariedad": "PERA WILLIAMS",
-    "KgsD": 6911
+    "KgsD": 6379
   },
   {
     "Nro Jugos": "0000-00000260-A",
@@ -1543,17 +1532,6 @@
     "Nro Jugos": "0000-00000264-A",
     "Fecha": 46036.6832638889,
     "Remito": "82-35969",
-    "CantBins": 16,
-    "ProveedorT": "MOÑO AZUL SA",
-    "Origen": "GLP.V.REGINA MOÑO AZUL SA",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 6960
-  },
-  {
-    "Nro Jugos": "0000-00000264-A",
-    "Fecha": 46036.6832638889,
-    "Remito": "82-35969",
     "CantBins": 30,
     "ProveedorT": "MOÑO AZUL SA",
     "Origen": "GLP.V.REGINA MOÑO AZUL SA",
@@ -1571,6 +1549,17 @@
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 6095
+  },
+  {
+    "Nro Jugos": "0000-00000264-A",
+    "Fecha": 46036.6832638889,
+    "Remito": "82-35969",
+    "CantBins": 16,
+    "ProveedorT": "MOÑO AZUL SA",
+    "Origen": "GLP.V.REGINA MOÑO AZUL SA",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 6960
   },
   {
     "Nro Jugos": "0000-00000267-A",
@@ -1598,23 +1587,23 @@
     "Nro Jugos": "0000-00000273-A",
     "Fecha": 46036.7139351852,
     "Remito": "9-20082",
+    "CantBins": 3,
+    "ProveedorT": "ZAVECOM",
+    "Origen": "GLP.MATADERO - BONADE SA",
+    "Especie": "pera",
+    "NomVariedad": "PERA WILLIAMS",
+    "KgsD": 1296
+  },
+  {
+    "Nro Jugos": "0000-00000273-A",
+    "Fecha": 46036.7139351852,
+    "Remito": "9-20082",
     "CantBins": 9,
     "ProveedorT": "BONADE SA",
     "Origen": "GLP.MATADERO - BONADE SA",
     "Especie": "pera",
     "NomVariedad": "PERA WILLIAMS",
     "KgsD": 3889
-  },
-  {
-    "Nro Jugos": "0000-00000273-A",
-    "Fecha": 46036.7139351852,
-    "Remito": "9-20082",
-    "CantBins": 12,
-    "ProveedorT": "ZAVECOM",
-    "Origen": "GLP.MATADERO - BONADE SA",
-    "Especie": "pera",
-    "NomVariedad": "PERA WILLIAMS",
-    "KgsD": 5464
   },
   {
     "Nro Jugos": "0000-00000273-A",
@@ -1631,12 +1620,12 @@
     "Nro Jugos": "0000-00000273-A",
     "Fecha": 46036.7139351852,
     "Remito": "9-20082",
-    "CantBins": 3,
+    "CantBins": 12,
     "ProveedorT": "ZAVECOM",
     "Origen": "GLP.MATADERO - BONADE SA",
     "Especie": "pera",
     "NomVariedad": "PERA WILLIAMS",
-    "KgsD": 1296
+    "KgsD": 5464
   },
   {
     "Nro Jugos": "0000-00000275-A",
@@ -1648,17 +1637,6 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 25040
-  },
-  {
-    "Nro Jugos": "0000-00000278-A",
-    "Fecha": 46036.7753009259,
-    "Remito": "57-18663",
-    "CantBins": 18,
-    "ProveedorT": "PATAGONIAN FRUITS TRADE SA",
-    "Origen": "GLP.ALBERDI BIO - PATAGONIAN",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 6738
   },
   {
     "Nro Jugos": "0000-00000278-A",
@@ -1681,6 +1659,17 @@
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 2809
+  },
+  {
+    "Nro Jugos": "0000-00000278-A",
+    "Fecha": 46036.7753009259,
+    "Remito": "57-18663",
+    "CantBins": 18,
+    "ProveedorT": "PATAGONIAN FRUITS TRADE SA",
+    "Origen": "GLP.ALBERDI BIO - PATAGONIAN",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 6738
   },
   {
     "Nro Jugos": "0000-00000280-A",
@@ -1729,13 +1718,13 @@
   {
     "Nro Jugos": "0000-00000284-A",
     "Fecha": 46037.3405555556,
-    "Remito": "1-16344",
-    "CantBins": 23,
-    "ProveedorT": "DON CLEMENTE SRL",
-    "Origen": "GLP.TRES+ UNO exMURO CERVANTES",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 7461
+    "Remito": "1-16345",
+    "CantBins": 11,
+    "ProveedorT": "MEHDI CARLOS MARTIN",
+    "Origen": "GLP.MURO CERVANTES - MEHDI",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 4007
   },
   {
     "Nro Jugos": "0000-00000284-A",
@@ -1751,13 +1740,13 @@
   {
     "Nro Jugos": "0000-00000284-A",
     "Fecha": 46037.3405555556,
-    "Remito": "1-16345",
-    "CantBins": 11,
-    "ProveedorT": "MEHDI CARLOS MARTIN",
-    "Origen": "GLP.MURO CERVANTES - MEHDI",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 4007
+    "Remito": "1-16344",
+    "CantBins": 23,
+    "ProveedorT": "DON CLEMENTE SRL",
+    "Origen": "GLP.TRES+ UNO exMURO CERVANTES",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 7461
   },
   {
     "Nro Jugos": "0000-00000285-A",
@@ -1796,17 +1785,6 @@
     "Nro Jugos": "0000-00000292-A",
     "Fecha": 46037.4260532407,
     "Remito": "1-4739",
-    "CantBins": 14,
-    "ProveedorT": "ORGANICOS ARGENTINOS SAS",
-    "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
-    "Especie": "pera",
-    "NomVariedad": "PERA ORGANICA",
-    "KgsD": 6051
-  },
-  {
-    "Nro Jugos": "0000-00000292-A",
-    "Fecha": 46037.4260532407,
-    "Remito": "1-4739",
     "CantBins": 1,
     "ProveedorT": "ORGANICOS ARGENTINOS SAS",
     "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
@@ -1826,15 +1804,15 @@
     "KgsD": 0
   },
   {
-    "Nro Jugos": "0000-00000293-A",
-    "Fecha": 46037.441400463,
-    "Remito": "9-200993",
-    "CantBins": 9,
-    "ProveedorT": "ZAVECOM",
-    "Origen": "GLP.MATADERO - BONADE SA",
+    "Nro Jugos": "0000-00000292-A",
+    "Fecha": 46037.4260532407,
+    "Remito": "1-4739",
+    "CantBins": 14,
+    "ProveedorT": "ORGANICOS ARGENTINOS SAS",
+    "Origen": "GLP.ACUARIO F.ORO - ORGANICOS",
     "Especie": "pera",
-    "NomVariedad": "PERA WILLIAMS",
-    "KgsD": 3882
+    "NomVariedad": "PERA ORGANICA",
+    "KgsD": 6051
   },
   {
     "Nro Jugos": "0000-00000293-A",
@@ -1852,11 +1830,11 @@
     "Fecha": 46037.441400463,
     "Remito": "9-200993",
     "CantBins": 9,
-    "ProveedorT": "BONADE SA",
+    "ProveedorT": "ZAVECOM",
     "Origen": "GLP.MATADERO - BONADE SA",
     "Especie": "pera",
     "NomVariedad": "PERA WILLIAMS",
-    "KgsD": 4024
+    "KgsD": 3882
   },
   {
     "Nro Jugos": "0000-00000293-A",
@@ -1868,6 +1846,17 @@
     "Especie": "pera",
     "NomVariedad": "PERA WILLIAMS",
     "KgsD": 8274
+  },
+  {
+    "Nro Jugos": "0000-00000293-A",
+    "Fecha": 46037.441400463,
+    "Remito": "9-200993",
+    "CantBins": 9,
+    "ProveedorT": "BONADE SA",
+    "Origen": "GLP.MATADERO - BONADE SA",
+    "Especie": "pera",
+    "NomVariedad": "PERA WILLIAMS",
+    "KgsD": 4024
   },
   {
     "Nro Jugos": "0000-00000295-A",
@@ -1906,23 +1895,23 @@
     "Nro Jugos": "0000-00000301-A",
     "Fecha": 46037.4725115741,
     "Remito": "08-27659",
-    "CantBins": 18,
-    "ProveedorT": "DOLE NAT.CO.SA",
-    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
-    "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 6306
-  },
-  {
-    "Nro Jugos": "0000-00000301-A",
-    "Fecha": 46037.4725115741,
-    "Remito": "08-27659",
     "CantBins": 42,
     "ProveedorT": "DOLE NAT.CO.SA",
     "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 15221
+  },
+  {
+    "Nro Jugos": "0000-00000301-A",
+    "Fecha": 46037.4725115741,
+    "Remito": "08-27659",
+    "CantBins": 18,
+    "ProveedorT": "DOLE NAT.CO.SA",
+    "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
+    "Especie": "manza",
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 6306
   },
   {
     "Nro Jugos": "0000-00000301-A",
@@ -1939,23 +1928,23 @@
     "Nro Jugos": "0000-00000303-A",
     "Fecha": 46037.4794560185,
     "Remito": "1-16596",
-    "CantBins": 32,
-    "ProveedorT": "COOP.FRUTICOLA Y CONSUMO LA FLOR S.C.L",
-    "Origen": "GLP.CENTENARIO COOP LA FLOR LT",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 11790
-  },
-  {
-    "Nro Jugos": "0000-00000303-A",
-    "Fecha": 46037.4794560185,
-    "Remito": "1-16596",
     "CantBins": 13,
     "ProveedorT": "COOP.FRUTICOLA Y CONSUMO LA FLOR S.C.L",
     "Origen": "GLP.CENTENARIO COOP LA FLOR LT",
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
     "KgsD": 5459
+  },
+  {
+    "Nro Jugos": "0000-00000303-A",
+    "Fecha": 46037.4794560185,
+    "Remito": "1-16596",
+    "CantBins": 32,
+    "ProveedorT": "COOP.FRUTICOLA Y CONSUMO LA FLOR S.C.L",
+    "Origen": "GLP.CENTENARIO COOP LA FLOR LT",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 11790
   },
   {
     "Nro Jugos": "0000-00000303-A",
@@ -1993,13 +1982,13 @@
   {
     "Nro Jugos": "0000-00000308-A",
     "Fecha": 46037.5182407407,
-    "Remito": "3-5515",
-    "CantBins": 31,
-    "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
-    "Origen": "GLP.LOS PILARES ALLEN - STANDA",
+    "Remito": "20976",
+    "CantBins": 3,
+    "ProveedorT": "FUN LEMU SA",
+    "Origen": "FUN LEMU SA",
     "Especie": "manza",
-    "NomVariedad": "VERDE GALPON",
-    "KgsD": 10897
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 1047
   },
   {
     "Nro Jugos": "0000-00000308-A",
@@ -2015,13 +2004,13 @@
   {
     "Nro Jugos": "0000-00000308-A",
     "Fecha": 46037.5182407407,
-    "Remito": "20976",
-    "CantBins": 3,
-    "ProveedorT": "FUN LEMU SA",
-    "Origen": "FUN LEMU SA",
+    "Remito": "3-5515",
+    "CantBins": 31,
+    "ProveedorT": "STANDARD FRUIT ARG/ DOLE",
+    "Origen": "GLP.LOS PILARES ALLEN - STANDA",
     "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 1047
+    "NomVariedad": "VERDE GALPON",
+    "KgsD": 10897
   },
   {
     "Nro Jugos": "0000-00000309-A",
@@ -2049,17 +2038,6 @@
     "Nro Jugos": "0000-00000311-A",
     "Fecha": 46037.7687152778,
     "Remito": "7-1316",
-    "CantBins": 1,
-    "ProveedorT": "CARBAJO VICENTE",
-    "Origen": "CH.JUEGUELE VICENTE* CARBAJO",
-    "Especie": "pera",
-    "NomVariedad": "PERA CHACRA",
-    "KgsD": 477
-  },
-  {
-    "Nro Jugos": "0000-00000311-A",
-    "Fecha": 46037.7687152778,
-    "Remito": "7-1316",
     "CantBins": 6,
     "ProveedorT": "CARBAJO VICENTE",
     "Origen": "CH.JUEGUELE VICENTE* CARBAJO",
@@ -2077,6 +2055,17 @@
     "Especie": "pera",
     "NomVariedad": "PERA WILLIAMS",
     "KgsD": 8009
+  },
+  {
+    "Nro Jugos": "0000-00000311-A",
+    "Fecha": 46037.7687152778,
+    "Remito": "7-1316",
+    "CantBins": 1,
+    "ProveedorT": "CARBAJO VICENTE",
+    "Origen": "CH.JUEGUELE VICENTE* CARBAJO",
+    "Especie": "pera",
+    "NomVariedad": "PERA CHACRA",
+    "KgsD": 477
   },
   {
     "Nro Jugos": "0000-00000312-A",
@@ -2213,13 +2202,13 @@
   {
     "Nro Jugos": "0000-00000341-A",
     "Fecha": 46038.472337963,
-    "Remito": "8-27665",
-    "CantBins": 9,
+    "Remito": "8-27666",
+    "CantBins": 16,
     "ProveedorT": "DOLE NAT.CO.SA",
     "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
-    "Especie": "pera",
-    "NomVariedad": "PERA WILLIAMS",
-    "KgsD": 3709
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 5856
   },
   {
     "Nro Jugos": "0000-00000341-A",
@@ -2246,13 +2235,13 @@
   {
     "Nro Jugos": "0000-00000341-A",
     "Fecha": 46038.472337963,
-    "Remito": "8-27666",
-    "CantBins": 16,
+    "Remito": "8-27665",
+    "CantBins": 9,
     "ProveedorT": "DOLE NAT.CO.SA",
     "Origen": "GLP.TRANSMARITIMA DOLE NATURAL",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 5856
+    "Especie": "pera",
+    "NomVariedad": "PERA WILLIAMS",
+    "KgsD": 3709
   },
   {
     "Nro Jugos": "0000-00000345-A",
@@ -2280,23 +2269,23 @@
     "Nro Jugos": "0000-00000351-A",
     "Fecha": 46038.6464583333,
     "Remito": "1-20",
-    "CantBins": 38,
-    "ProveedorT": "HACIENDA MARTINEZ S.R.L.",
-    "Origen": "GLP.3PNTES HACIENDA MARTINEZ",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 16899
-  },
-  {
-    "Nro Jugos": "0000-00000351-A",
-    "Fecha": 46038.6464583333,
-    "Remito": "1-20",
     "CantBins": 1,
     "ProveedorT": "HACIENDA MARTINEZ S.R.L.",
     "Origen": "GLP.3PNTES HACIENDA MARTINEZ",
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 391
+  },
+  {
+    "Nro Jugos": "0000-00000351-A",
+    "Fecha": 46038.6464583333,
+    "Remito": "1-20",
+    "CantBins": 38,
+    "ProveedorT": "HACIENDA MARTINEZ S.R.L.",
+    "Origen": "GLP.3PNTES HACIENDA MARTINEZ",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 16899
   },
   {
     "Nro Jugos": "0000-00000354-A",
@@ -2313,23 +2302,23 @@
     "Nro Jugos": "0000-00000355-A",
     "Fecha": 46038.6580092593,
     "Remito": "1-3298",
-    "CantBins": 18,
-    "ProveedorT": "SAN FORMERIO SRL",
-    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 7854
-  },
-  {
-    "Nro Jugos": "0000-00000355-A",
-    "Fecha": 46038.6580092593,
-    "Remito": "1-3298",
     "CantBins": 15,
     "ProveedorT": "SAN FORMERIO SRL",
     "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
     "Especie": "manza",
     "NomVariedad": "VERDE GALPON",
     "KgsD": 5448
+  },
+  {
+    "Nro Jugos": "0000-00000355-A",
+    "Fecha": 46038.6580092593,
+    "Remito": "1-3298",
+    "CantBins": 18,
+    "ProveedorT": "SAN FORMERIO SRL",
+    "Origen": "GLP.PLANTA 1 SAN FORMERIO*",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 7854
   },
   {
     "Nro Jugos": "0000-00000355-A",
@@ -2356,24 +2345,13 @@
   {
     "Nro Jugos": "0000-00000358-A",
     "Fecha": 46038.7188078704,
-    "Remito": "9-20125/5554",
-    "CantBins": 6,
-    "ProveedorT": "DOLE NAT.CO.SA",
-    "Origen": "GLP.MATADERO - BONADE SA",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 2814
-  },
-  {
-    "Nro Jugos": "0000-00000358-A",
-    "Fecha": 46038.7188078704,
     "Remito": "9-20124/5554",
-    "CantBins": 5,
+    "CantBins": 3,
     "ProveedorT": "BONADE SA",
     "Origen": "GLP.MATADERO - BONADE SA",
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
-    "KgsD": 2340
+    "KgsD": 1404
   },
   {
     "Nro Jugos": "0000-00000358-A",
@@ -2402,7 +2380,7 @@
     "Fecha": 46038.7188078704,
     "Remito": "9-20124/5554",
     "CantBins": 5,
-    "ProveedorT": "DOLE NAT.CO.SA",
+    "ProveedorT": "BONADE SA",
     "Origen": "GLP.MATADERO - BONADE SA",
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
@@ -2412,12 +2390,23 @@
     "Nro Jugos": "0000-00000358-A",
     "Fecha": 46038.7188078704,
     "Remito": "9-20124/5554",
-    "CantBins": 3,
-    "ProveedorT": "BONADE SA",
+    "CantBins": 5,
+    "ProveedorT": "DOLE NAT.CO.SA",
     "Origen": "GLP.MATADERO - BONADE SA",
     "Especie": "pera",
     "NomVariedad": "PERA GALPON",
-    "KgsD": 1404
+    "KgsD": 2340
+  },
+  {
+    "Nro Jugos": "0000-00000358-A",
+    "Fecha": 46038.7188078704,
+    "Remito": "9-20125/5554",
+    "CantBins": 6,
+    "ProveedorT": "DOLE NAT.CO.SA",
+    "Origen": "GLP.MATADERO - BONADE SA",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 2814
   },
   {
     "Nro Jugos": "0000-00000360-A",
@@ -2429,28 +2418,6 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 0
-  },
-  {
-    "Nro Jugos": "0000-00000360-A",
-    "Fecha": 46038.727662037,
-    "Remito": "10-43574",
-    "CantBins": 8,
-    "ProveedorT": "PERAZZOLO HUGO ALBERTO",
-    "Origen": "CH.CASA PERAZZOLO HUGO ALBERTO",
-    "Especie": "pera",
-    "NomVariedad": "PERA GALPON",
-    "KgsD": 3317
-  },
-  {
-    "Nro Jugos": "0000-00000360-A",
-    "Fecha": 46038.727662037,
-    "Remito": "10-43574",
-    "CantBins": 14,
-    "ProveedorT": "PERAZZOLO HUGO ALBERTO",
-    "Origen": "CH.CASA PERAZZOLO HUGO ALBERTO",
-    "Especie": "manza",
-    "NomVariedad": "ROJA GALPON",
-    "KgsD": 4893
   },
   {
     "Nro Jugos": "0000-00000360-A",
@@ -2473,6 +2440,28 @@
     "Especie": "manza",
     "NomVariedad": "ROJA GALPON",
     "KgsD": 646
+  },
+  {
+    "Nro Jugos": "0000-00000360-A",
+    "Fecha": 46038.727662037,
+    "Remito": "10-43574",
+    "CantBins": 14,
+    "ProveedorT": "PERAZZOLO HUGO ALBERTO",
+    "Origen": "CH.CASA PERAZZOLO HUGO ALBERTO",
+    "Especie": "manza",
+    "NomVariedad": "ROJA GALPON",
+    "KgsD": 4893
+  },
+  {
+    "Nro Jugos": "0000-00000360-A",
+    "Fecha": 46038.727662037,
+    "Remito": "10-43574",
+    "CantBins": 8,
+    "ProveedorT": "PERAZZOLO HUGO ALBERTO",
+    "Origen": "CH.CASA PERAZZOLO HUGO ALBERTO",
+    "Especie": "pera",
+    "NomVariedad": "PERA GALPON",
+    "KgsD": 3317
   },
   {
     "Nro Jugos": "0000-00000361-A",
