@@ -332,6 +332,12 @@ app.post("/api/pauta/firmar", (req, res) => {
 });
 
 // -------------------- ADMIN --------------------
+// Pantalla admin (UI)
+app.get("/admin/ingresos", requireAuth, requireAdmin, (req, res) => {
+  // UI historica: public/admin/ingresos.html
+  res.sendFile(path.join(__dirname, "public", "admin", "ingresos.html"));
+});
+
 app.get("/api/admin/ingresos-diarios", requireAuth, requireAdmin, (req, res) => {
   res.json(ingresosDiarios || []);
 });
