@@ -222,68 +222,6 @@
       return true;
     }
 
-
-    // ===== PAUTA PENDIENTE (CARTEL BLOQUEANTE) =====
-    function mostrarModalPautaPendiente(tipo) {
-      const modal = document.getElementById("modalPautaPendiente");
-      const txt = document.getElementById("modalPautaPendienteText");
-      if (!modal || !txt) return;
-
-      if (tipo === "organica") {
-        txt.textContent = "Para poder ver tus kilos, primero tenés que firmar la pauta orgánica.";
-      } else {
-        txt.textContent = "Para poder ver tus kilos, primero tenés que firmar la pauta.";
-      }
-      modal.style.display = "block";
-    }
-
-    function cerrarModalPautaPendiente() {
-      const modal = document.getElementById("modalPautaPendiente");
-      if (modal) modal.style.display = "none";
-    }
-
-    function abrirFirmaDesdePendiente() {
-      // Abre el modal de firma que ya existe (modalPauta)
-      const tipo = window.__PAUTA_PENDIENTE_TIPO || "pauta";
-      const btn = (tipo === "organica")
-        ? document.getElementById("btnPautaOrg")
-        : document.getElementById("btnPauta");
-      if (btn) btn.click();
-    }
-
-    async function chequearPautaPendienteYBloquearSiHaceFalta() {
-      const cuit = (window.USER && window.USER.cuit) ? String(window.USER.cuit) : "";
-      if (!cuit) return false;
-
-      try {
-        const r = await fetch("/api/pauta/estado?cuit=" + encodeURIComponent(cuit));
-        if (!r.ok) return false;
-
-        const s = await r.json();
-
-        const faltaPauta = !(s && s.pauta && s.pauta.firmado);
-        const faltaOrg = !(s && s.pautaorganica && s.pautaorganica.firmado);
-
-        if (faltaPauta) {
-          window.__PAUTA_PENDIENTE_TIPO = "pauta";
-          mostrarModalPautaPendiente("pauta");
-          return true;
-        }
-
-        // Solo exigimos orgánica a proveedores orgánicos (org === "X")
-        const orgFlag = String(window.USER?.org || "").trim().toLowerCase() === "x";
-        if (orgFlag && faltaOrg) {
-          window.__PAUTA_PENDIENTE_TIPO = "organica";
-          mostrarModalPautaPendiente("organica");
-          return true;
-        }
-
-        return false;
-      } catch (e) {
-        return false;
-      }
-    }
-
     async function login() {
       const cui = document.getElementById("cui").value.trim();
       const password = document.getElementById("password").value.trim();
@@ -323,24 +261,17 @@
           return;
         }
 
+        // El backend devuelve entregas filtradas por proveedor desde /profru
+        const resEnt = await fetch("/profru?ts=" + Date.now(), { credentials: "include" });
+        if (!resEnt.ok) throw new Error("HTTP " + resEnt.status + " al pedir /profru");
+        const data = await resEnt.json();
+
         window.USER = {
           proveedor: result.proveedor || "",
           cuit: (cui || "").replace(/[^0-9]/g, ""),
           org: result.org || ""
         };
         renderPautaButtons(window.USER);
-
-        // ✅ Si falta firmar, mostramos cartel y NO seguimos a cargar kilos
-        const bloqueado = await chequearPautaPendienteYBloquearSiHaceFalta();
-        if (bloqueado) {
-          // Dejamos la sesión iniciada, pero no mostramos datos
-          return;
-        }
-
-        // El backend devuelve entregas filtradas por proveedor desde /profru
-        const resEnt = await fetch("/profru?ts=" + Date.now(), { credentials: "include" });
-        if (!resEnt.ok) throw new Error("HTTP " + resEnt.status + " al pedir /profru");
-        const data = await resEnt.json();
 
         document.getElementById("login").style.display = "none";
         const nombre = result.proveedor || "Proveedor";
@@ -530,31 +461,6 @@ entregasFiltradas = entregasOriginal.filter(e => {
           <a id="btnDescargar" class="btn-mini" download>Descargar PDF</a>
         </div>
       </div>
-
-
-  <!-- MODAL: PAUTA PENDIENTE (BLOQUEANTE) -->
-  <div id="modalPautaPendiente" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:99999;">
-    <div style="max-width:520px; margin:12vh auto; background:#fff; border-radius:14px; padding:18px 16px; box-shadow:0 12px 40px rgba(0,0,0,.25); font-family:Arial, sans-serif;">
-      <h2 style="margin:0 0 10px; font-size:20px;">⚠️ Pauta pendiente de firmar</h2>
-      <p id="modalPautaPendienteText" style="margin:0 0 14px; font-size:15px; line-height:1.35;">
-        Para poder ver tus kilos, primero tenés que firmar la pauta.
-      </p>
-
-      <div style="display:flex; gap:10px; justify-content:flex-end;">
-        <button type="button" onclick="cerrarModalPautaPendiente()"
-                style="padding:10px 14px; border-radius:10px; border:1px solid #bbb; background:#f6f6f6; cursor:pointer;">
-          Cerrar
-        </button>
-
-        <button type="button" onclick="abrirFirmaDesdePendiente()"
-                style="padding:10px 14px; border-radius:10px; border:0; background:#111; color:#fff; cursor:pointer;">
-          Firmar ahora
-        </button>
-      </div>
-    </div>
-  </div>
-
-
     </div>
   </div>
 
