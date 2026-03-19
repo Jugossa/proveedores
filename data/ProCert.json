@@ -28,13 +28,6 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
-    "Nro": 40378,
-    "Nom": "COSTA DEL RIO",
-    "ApcFecha": 45940,
-    "Ibr": "Ecocert",
-    "Via": "ArgUE - NOP -Canada"
-  },
-  {
     "Nro": 40391,
     "Nom": "DOS RIOS SA",
     "ApcFecha": 45952,
@@ -84,13 +77,6 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
-    "Nro": 30074,
-    "Nom": "KLEPPE SA",
-    "ApcFecha": 46050,
-    "Ibr": "Letis",
-    "Via": "NOP"
-  },
-  {
     "Nro": 31091,
     "Nom": "EST. SOLEDAD SA",
     "ApcFecha": 46059,
@@ -117,13 +103,6 @@
     "ApcFecha": 46080,
     "Ibr": "Ecocert",
     "Via": "ArgUE - NOP -Canada"
-  },
-  {
-    "Nro": 31430,
-    "Nom": "MORAIS JORGE ARIEL",
-    "ApcFecha": 46085,
-    "Ibr": "Letis",
-    "Via": "ArgUE - NOP"
   },
   {
     "Nro": 30368,
@@ -168,15 +147,15 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
-    "Nro": 30828,
-    "Nom": "COSTANZI EDGARDO",
+    "Nro": 30748,
+    "Nom": "COSTANZI CARLOS SILVIO",
     "ApcFecha": 46127,
     "Ibr": "Letis",
     "Via": "ArgUE - NOP"
   },
   {
-    "Nro": 30748,
-    "Nom": "COSTANZI CARLOS SILVIO",
+    "Nro": 30828,
+    "Nom": "COSTANZI EDGARDO",
     "ApcFecha": 46127,
     "Ibr": "Letis",
     "Via": "ArgUE - NOP"
@@ -238,6 +217,13 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
+    "Nro": 40378,
+    "Nom": "COSTA DEL RIO",
+    "ApcFecha": 46318,
+    "Ibr": "Ecocert",
+    "Via": "ArgUE - NOP -Canada"
+  },
+  {
     "Nro": 40289,
     "Nom": "VALTIERRA SA",
     "ApcFecha": 46365,
@@ -252,6 +238,13 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
+    "Nro": 30074,
+    "Nom": "KLEPPE SA",
+    "ApcFecha": 46415,
+    "Ibr": "Letis",
+    "Via": "ArgUE - NOP"
+  },
+  {
     "Nro": 40369,
     "Nom": "FUENTES ROLANDO",
     "ApcFecha": 46431,
@@ -264,5 +257,12 @@
     "ApcFecha": 46447,
     "Ibr": "Letis",
     "Via": "ArgUE - NOP -Canada"
+  },
+  {
+    "Nro": 31430,
+    "Nom": "MORAIS JORGE ARIEL",
+    "ApcFecha": 46450,
+    "Ibr": "Letis",
+    "Via": "ArgUE - NOP"
   }
 ]
