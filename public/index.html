@@ -494,8 +494,21 @@ entregasFiltradas = entregasOriginal.filter(e => {
       const bO = document.getElementById('btnPautaOrg');
       const eP = document.getElementById('pauta-estado');
       const eO = document.getElementById('pautaorg-estado');
-      if (s?.pauta?.firmado){ bP.textContent='Pauta firmada'; bP.disabled=true; eP.textContent='Pauta firmada el '+s.pauta.fechaLocal; }
-      if (s?.pautaorganica?.firmado){ bO.textContent='Pauta Orgánica firmada'; bO.disabled=true; eO.textContent='Pauta Orgánica firmada el '+s.pautaorganica.fechaLocal; }
+
+      const fechaPauta = s?.pauta?.fechaLocal || s?.pauta?.fechaHora || '';
+      const fechaOrg = s?.pautaorganica?.fechaLocal || s?.pautaorganica?.fechaHora || '';
+
+      if (s?.pauta?.firmado){
+        bP.textContent = 'Pauta firmada';
+        bP.disabled = true;
+        eP.textContent = fechaPauta ? ('Pauta firmada el ' + fechaPauta) : 'Pauta firmada';
+      }
+
+      if (s?.pautaorganica?.firmado){
+        bO.textContent = 'Pauta Orgánica firmada';
+        bO.disabled = true;
+        eO.textContent = fechaOrg ? ('Pauta Orgánica firmada el ' + fechaOrg) : 'Pauta Orgánica firmada';
+      }
     }
 
     function cargarEstado(){
@@ -515,10 +528,12 @@ entregasFiltradas = entregasOriginal.filter(e => {
         const s = await r.json();
         const ya = (tipo==='pauta') ? s?.pauta?.firmado : s?.pautaorganica?.firmado;
         if (ya){
-          const fecha = (tipo==='pauta') ? s.pauta.fechaLocal : s.pautaorganica.fechaLocal;
-          alert(`Ya registraste la ${tipo==='pauta'?'Pauta':'Pauta Orgánica'} el ${fecha}.`);
-          if (tipo==='pauta'){ const b=document.getElementById('btnPauta'); if(b){ b.textContent='Pauta firmada'; b.disabled=true; document.getElementById('pauta-estado').textContent = 'Pauta firmada el ' + fecha; } }
-          else { const b=document.getElementById('btnPautaOrg'); if(b){ b.textContent='Pauta Orgánica firmada'; b.disabled=true; document.getElementById('pautaorg-estado').textContent = 'Pauta Orgánica firmada el ' + fecha; } }
+          const fecha = (tipo==='pauta')
+            ? (s?.pauta?.fechaLocal || s?.pauta?.fechaHora || '')
+            : (s?.pautaorganica?.fechaLocal || s?.pautaorganica?.fechaHora || '');
+          alert(`Ya registraste la ${tipo==='pauta'?'Pauta':'Pauta Orgánica'}${fecha ? ' el ' + fecha : ''}.`);
+          if (tipo==='pauta'){ const b=document.getElementById('btnPauta'); if(b){ b.textContent='Pauta firmada'; b.disabled=true; document.getElementById('pauta-estado').textContent = fecha ? ('Pauta firmada el ' + fecha) : 'Pauta firmada'; } }
+          else { const b=document.getElementById('btnPautaOrg'); if(b){ b.textContent='Pauta Orgánica firmada'; b.disabled=true; document.getElementById('pautaorg-estado').textContent = fecha ? ('Pauta Orgánica firmada el ' + fecha) : 'Pauta Orgánica firmada'; } }
           return;
         }
       }catch(_){}
@@ -572,10 +587,10 @@ entregasFiltradas = entregasOriginal.filter(e => {
           const j = await r.json();
 
           if (r.status === 409 || j?.error === 'ya_firmada'){
-            const fecha = j?.fechaLocal || '';
-            alert(`Ya estaba firmada (${fecha}).`);
-            if (tipo==='pauta'){ const b=document.getElementById('btnPauta'); if(b){ b.textContent='Pauta firmada'; b.disabled=true; document.getElementById('pauta-estado').textContent = 'Pauta firmada el ' + fecha; } }
-            else { const b=document.getElementById('btnPautaOrg'); if(b){ b.textContent='Pauta Orgánica firmada'; b.disabled=true; document.getElementById('pautaorg-estado').textContent = 'Pauta Orgánica firmada el ' + fecha; } }
+            const fecha = j?.fechaLocal || j?.fechaHora || '';
+            alert(`Ya estaba firmada${fecha ? ' (' + fecha + ')' : ''}.`);
+            if (tipo==='pauta'){ const b=document.getElementById('btnPauta'); if(b){ b.textContent='Pauta firmada'; b.disabled=true; document.getElementById('pauta-estado').textContent = fecha ? ('Pauta firmada el ' + fecha) : 'Pauta firmada'; } }
+            else { const b=document.getElementById('btnPautaOrg'); if(b){ b.textContent='Pauta Orgánica firmada'; b.disabled=true; document.getElementById('pautaorg-estado').textContent = fecha ? ('Pauta Orgánica firmada el ' + fecha) : 'Pauta Orgánica firmada'; } }
             return;
           }
 
@@ -613,6 +628,7 @@ entregasFiltradas = entregasOriginal.filter(e => {
     window.renderPautaButtons = function(user){
       try { if (user) window.USER = user; } catch(_) {}
       showOrgIfNeeded();
+      cargarEstado();
     };
   })();
   </script>
