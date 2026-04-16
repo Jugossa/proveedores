@@ -75,6 +75,38 @@ function setCookie(res, name, value, opts = {}) {
   res.setHeader("Set-Cookie", parts.join("; "));
 }
 
+// Helper GET JSON sin librerías externas
+function getJson(url, timeoutMs = 10000) {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, (res) => {
+      let body = "";
+
+      res.on("data", (chunk) => {
+        body += chunk;
+      });
+
+      res.on("end", () => {
+        try {
+          const data = JSON.parse(body || "{}");
+          resolve({ statusCode: res.statusCode, data, raw: body });
+        } catch (err) {
+          reject(
+            new Error(
+              `respuesta_invalida_apps_script: ${err.message} | body=${body}`
+            )
+          );
+        }
+      });
+    });
+
+    req.on("error", reject);
+
+    req.setTimeout(timeoutMs, () => {
+      req.destroy(new Error("timeout_consulta_apps_script"));
+    });
+  });
+}
+
 // -------------------- Datos en memoria --------------------
 let proveedores = [];
 let proFru = [];
@@ -212,7 +244,7 @@ app.post("/login", (req, res) => {
   setCookie(res, "auth", token, {
     httpOnly: true,
     sameSite: "Lax",
-    secure: isRender, // HTTPS en Render
+    secure: isRender,
     maxAge: TOKEN_TTL_SEC,
     path: "/",
   });
@@ -241,8 +273,6 @@ app.post("/logout", (req, res) => {
 });
 
 // -------------------- ENDPOINTS QUE TU PÁGINA NECESITA --------------------
-// Antes te daba: Cannot GET /profru
-// Ahora existe y devuelve datos filtrados por proveedor logueado.
 app.get("/profru", requireAuth, (req, res) => {
   if (req.user.tipo === "admin") return res.json(proFru || []);
   const prov = norm(req.user.nombre);
@@ -262,10 +292,42 @@ app.get("/lastUpdate", (req, res) => {
 });
 
 // -------------------- PAUTAS --------------------
-app.get("/api/pauta/estado", (req, res) => {
+app.get("/api/pauta/estado", async (req, res) => {
   const cuit = (req.query.cuit || "").replace(/[^0-9]/g, "");
-  if (!cuit) return res.json({ ok: false, error: "cuit_requerido" });
-  return res.json({ ok: true, pauta: { firmado: false } });
+  const tipo = String(req.query.tipo || "pauta").trim().toLowerCase();
+
+  if (!cuit) {
+    return res.json({ ok: false, error: "cuit_requerido" });
+  }
+
+  if (!webhookPautaURL) {
+    return res
+      .status(500)
+      .json({ ok: false, error: "webhook_no_configurado" });
+  }
+
+  try {
+    const url =
+      `${webhookPautaURL}?cuit=${encodeURIComponent(cuit)}` +
+      `&tipo=${encodeURIComponent(tipo)}`;
+
+    const result = await getJson(url);
+
+    if (!result?.data || result.data.ok === false) {
+      return res.json(
+        result?.data || { ok: false, error: "respuesta_apps_script_invalida" }
+      );
+    }
+
+    return res.json(result.data);
+  } catch (err) {
+    console.error("❌ Error consultando estado de pauta:", err.message);
+    return res.status(500).json({
+      ok: false,
+      error: "error_consulta_pauta",
+      detail: err.message,
+    });
+  }
 });
 
 app.post("/api/pauta/firmar", (req, res) => {
@@ -332,9 +394,7 @@ app.post("/api/pauta/firmar", (req, res) => {
 });
 
 // -------------------- ADMIN --------------------
-// Pantalla admin (UI)
 app.get("/admin/ingresos", requireAuth, requireAdmin, (req, res) => {
-  // UI historica: public/admin/ingresos.html
   res.sendFile(path.join(__dirname, "public", "admin", "ingresos.html"));
 });
 
@@ -350,7 +410,6 @@ app.get("/api/admin/profru25", requireAuth, requireAdmin, (req, res) => {
   res.json(proFru25 || []);
 });
 
-// Opcional: recargar JSON sin redeploy (solo admin)
 app.post("/api/admin/recargar", requireAuth, requireAdmin, (req, res) => {
   recargarTodo();
   res.json({ ok: true });
