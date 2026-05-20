@@ -56,6 +56,19 @@
       flex: 0 1 auto;
       flex-wrap: wrap;
     }
+
+
+    .alerta-pauta {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+      font-size: 14px;
+      font-weight: bold;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -78,6 +91,9 @@
   <div id="bienvenida"></div>
   <div id="aviso">Cualquier consulta comunicarse con la administración de Jugos SA.</div>
   <div id="infoCert"></div>
+  <div id="alertaPauta" class="alerta-pauta">
+    ⚠️ Debería firmar la pauta.
+  </div>
 
   <div id="filtros" style="display:none;">
     <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px;">
@@ -494,9 +510,14 @@ entregasFiltradas = entregasOriginal.filter(e => {
       const bO = document.getElementById('btnPautaOrg');
       const eP = document.getElementById('pauta-estado');
       const eO = document.getElementById('pautaorg-estado');
+      const alerta = document.getElementById('alertaPauta');
 
       const fechaPauta = s?.pauta?.fechaLocal || s?.pauta?.fechaHora || '';
       const fechaOrg = s?.pautaorganica?.fechaLocal || s?.pautaorganica?.fechaHora || '';
+
+      if (alerta) {
+        alerta.style.display = s?.pauta?.firmado ? 'none' : 'block';
+      }
 
       if (s?.pauta?.firmado){
         bP.textContent = 'Pauta firmada';
