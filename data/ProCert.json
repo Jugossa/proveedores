@@ -35,23 +35,9 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
-    "Nro": 40410,
-    "Nom": "MOSCHINI ALBERTO A.",
-    "ApcFecha": 46011,
-    "Ibr": "Letis",
-    "Via": "ArgUE - NOP"
-  },
-  {
     "Nro": 35002,
     "Nom": "LEGASPI JUAN, JAVIER E IRENE, BARUFFATO",
     "ApcFecha": 46025,
-    "Ibr": "Ecocert",
-    "Via": "ArgUE - NOP -Canada"
-  },
-  {
-    "Nro": 31092,
-    "Nom": "SUC.VANNICOLA RAUL A.",
-    "ApcFecha": 46042,
     "Ibr": "Ecocert",
     "Via": "ArgUE - NOP -Canada"
   },
@@ -63,15 +49,15 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
-    "Nro": 31297,
-    "Nom": "DE LA FOURNIERE ALEJANDRO M.F",
+    "Nro": 31072,
+    "Nom": "DALLA VILLA ALBERTO RAUL",
     "ApcFecha": 46080,
     "Ibr": "Ecocert",
     "Via": "ArgUE - NOP -Canada"
   },
   {
-    "Nro": 31072,
-    "Nom": "DALLA VILLA ALBERTO RAUL",
+    "Nro": 31297,
+    "Nom": "DE LA FOURNIERE ALEJANDRO M.F",
     "ApcFecha": 46080,
     "Ibr": "Ecocert",
     "Via": "ArgUE - NOP -Canada"
@@ -105,15 +91,15 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
-    "Nro": 30828,
-    "Nom": "COSTANZI EDGARDO",
+    "Nro": 30748,
+    "Nom": "COSTANZI CARLOS SILVIO",
     "ApcFecha": 46127,
     "Ibr": "Letis",
     "Via": "ArgUE - NOP"
   },
   {
-    "Nro": 30748,
-    "Nom": "COSTANZI CARLOS SILVIO",
+    "Nro": 30828,
+    "Nom": "COSTANZI EDGARDO",
     "ApcFecha": 46127,
     "Ibr": "Letis",
     "Via": "ArgUE - NOP"
@@ -126,13 +112,6 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
-    "Nro": 31362,
-    "Nom": "ROSAUER JUAN ERICH",
-    "ApcFecha": 46144,
-    "Ibr": "Letis",
-    "Via": "ArgUE - NOP -Canada"
-  },
-  {
     "Nro": 30710,
     "Nom": "ZOILO S.A.",
     "ApcFecha": 46144,
@@ -140,17 +119,24 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
-    "Nro": 12421,
-    "Nom": "DON CLEMENTE SRL",
-    "ApcFecha": 46156,
+    "Nro": 31362,
+    "Nom": "ROSAUER JUAN ERICH",
+    "ApcFecha": 46144,
     "Ibr": "Letis",
-    "Via": "ArgUE - NOP"
+    "Via": "ArgUE - NOP -Canada"
   },
   {
     "Nro": 40298,
     "Nom": "GALERA EMETERIO",
     "ApcFecha": 46176,
     "Ibr": "Letis",
+    "Via": "ArgUE - NOP -Canada"
+  },
+  {
+    "Nro": 31092,
+    "Nom": "SUC.VANNICOLA RAUL A.",
+    "ApcFecha": 46223,
+    "Ibr": "Ecocert",
     "Via": "ArgUE - NOP -Canada"
   },
   {
@@ -168,13 +154,6 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
-    "Nro": 40395,
-    "Nom": "DF PATAGONIA S.R.L",
-    "ApcFecha": 46365,
-    "Ibr": "OIA",
-    "Via": "ArgUE - NOP"
-  },
-  {
     "Nro": 40289,
     "Nom": "VALTIERRA SA",
     "ApcFecha": 46365,
@@ -182,11 +161,25 @@
     "Via": "ArgUE - NOP -Canada"
   },
   {
+    "Nro": 40395,
+    "Nom": "DF PATAGONIA S.R.L",
+    "ApcFecha": 46365,
+    "Ibr": "OIA",
+    "Via": "ArgUE - NOP"
+  },
+  {
     "Nro": 31430,
     "Nom": "MORAIS JORGE ARIEL",
     "ApcFecha": 46365,
     "Ibr": "OIA",
     "Via": "ArgUE - NOP -Canada"
+  },
+  {
+    "Nro": 40410,
+    "Nom": "MOSCHINI ALBERTO A.",
+    "ApcFecha": 46376,
+    "Ibr": "Letis",
+    "Via": "ArgUE - NOP"
   },
   {
     "Nro": 31261,
@@ -264,5 +257,12 @@
     "ApcFecha": 46514,
     "Ibr": "Ecocert",
     "Via": "ArgUE - NOP -Canada"
+  },
+  {
+    "Nro": 12421,
+    "Nom": "DON CLEMENTE SRL",
+    "ApcFecha": 46521,
+    "Ibr": "Letis",
+    "Via": "ArgUE - NOP"
   }
 ]
